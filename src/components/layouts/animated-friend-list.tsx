@@ -13,7 +13,7 @@ interface Item {
 
 let notifications = [
   {
-    name: "Pavel Sergeevich",
+    name: "Nick Szabo",
     description: "Hey, wanna be friends?",
     time: "15m ago",
 
@@ -21,28 +21,28 @@ let notifications = [
     color: "#00C9A7",
   },
   {
-    name: "Aleksandr Ponomarev",
+    name: "Hal Finney",
     description: "Can we be friends?",
     time: "10m ago",
     icon: "👤",
     color: "#FFB800",
   },
   {
-    name: "Victor Petrov",
+    name: "David Friedman",
     description: "Let’s be friends, okay?",
     time: "5m ago",
     icon: "💬",
     color: "#FF3D71",
   },
   {
-    name: "Marko Ivanovich",
+    name: "Adam Back",
     description: "I think we should be friends!",
     time: "2m ago",
     icon: "🗞️",
     color: "#1E86FF",
   },
   {
-    name: "Marina Aleksio",
+    name: "Phil Zimmermann",
     description: "Do you wanna be friends with me?",
     time: "2m ago",
     icon: "🗞️",
