@@ -30,12 +30,9 @@ const menu: NavbarLink[] = [
   { text: "F.A.Q.", href: "/faq" },
 ];
 
-export default function MainNavbar({
-  className,
-}: NavbarProps) {
-
+export default function MainNavbar({ className }: NavbarProps) {
   return (
-    <header className={cn("sticky top-0 z-50 mb-10 px-8 pb-4 font-semibold", className)}>
+    <header className={cn("relative top-0 z-50 mb-10 px-8 pb-4 font-semibold", className)}>
       <div className="fade-bottom bg-background/15 absolute left-0 h-24 w-full"></div>
       <div className="max-w-container relative mx-auto">
         <NavbarComponent>
