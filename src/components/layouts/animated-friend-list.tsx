@@ -13,30 +13,37 @@ interface Item {
 
 let notifications = [
   {
-    name: "Tonych",
-    description: "Magic UI",
+    name: "Pavel Sergeevich",
+    description: "Hey, wanna be friends?",
     time: "15m ago",
 
     icon: "💸",
     color: "#00C9A7",
   },
   {
-    name: "Aleksandr",
-    description: "Magic UI",
+    name: "Aleksandr Ponomarev",
+    description: "Can we be friends?",
     time: "10m ago",
     icon: "👤",
     color: "#FFB800",
   },
   {
-    name: "Victor",
-    description: "Magic UI",
+    name: "Victor Petrov",
+    description: "Let’s be friends, okay?",
     time: "5m ago",
     icon: "💬",
     color: "#FF3D71",
   },
   {
-    name: "Marko",
-    description: "Magic UI",
+    name: "Marko Ivanovich",
+    description: "I think we should be friends!",
+    time: "2m ago",
+    icon: "🗞️",
+    color: "#1E86FF",
+  },
+  {
+    name: "Marina Aleksio",
+    description: "Do you wanna be friends with me?",
     time: "2m ago",
     icon: "🗞️",
     color: "#1E86FF",
@@ -49,7 +56,7 @@ const Notification = ({ name, description, icon, color, time }: Item) => {
   return (
     <figure
       className={cn(
-        "relative mx-auto min-h-fit w-full max-w-[350px] overflow-hidden rounded-2xl p-4",
+        "relative mx-auto min-h-fit w-full max-w-[400px] overflow-hidden rounded-2xl p-4",
         // animation styles
         "transition-all duration-200 ease-in-out hover:scale-[103%]",
         // light styles
