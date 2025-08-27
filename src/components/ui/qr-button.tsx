@@ -68,7 +68,7 @@ const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
             >
               Android
             </a>{" "}
-            if you don't have one yet
+            if you don&apos;t have one yet
           </div>
         </DialogContent>
       </Dialog>
