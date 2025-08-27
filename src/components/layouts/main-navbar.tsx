@@ -2,19 +2,19 @@ import { Menu } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { Button } from "../../ui/button";
+import { Button } from "../ui/button";
 import {
   Navbar as NavbarComponent,
   NavbarLeft,
   NavbarRight,
-} from "../../ui/navbar";
+} from "../ui/navbar";
 
-import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "../../ui/sheet";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import Image from "next/image";
 import Link from "next/link";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 
-const name = "Friend"
+const name = "Obyte Friends"
 
 interface NavbarLink {
   text: string;
