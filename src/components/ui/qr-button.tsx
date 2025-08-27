@@ -1,3 +1,5 @@
+"use client"
+
 import cn from "classnames";
 import { QrCode } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
@@ -11,7 +13,7 @@ interface IQRButtonProps extends ButtonProps {
   href: string;
 }
 
-export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
+const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
   ({ children, href, disabled = false, ...props }, ref) => (
     <div className="flex">
       <Dialog>
@@ -96,3 +98,6 @@ export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
   )
 );
 
+export {
+  QRButton
+};
