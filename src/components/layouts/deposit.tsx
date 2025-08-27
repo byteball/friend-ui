@@ -33,8 +33,8 @@ export const Deposit = () => {
                 Here you can calculate the amount you can expect if you bring in new friends every day.
               </p>
             </div>
-
           </div>
+
         </div>
       </div>
     </div>

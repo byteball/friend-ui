@@ -1,5 +1,6 @@
 "use client";
 
+import { addDays, format } from "date-fns";
 import { useState } from "react";
 
 import { appConfig } from "@/appConfig";
@@ -10,11 +11,13 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Slider } from "../ui/slider";
 
 const MAX_LOCKED_TERM_DAYS = 365 * 4;
+const now = new Date();
 
 export const DepositForm = () => {
   const [currency, setCurrency] = useState("base");
   const [amount, setAmount] = useState({ value: "", valid: true });
   const [term, setTerm] = useState<number>(appConfig.MIN_LOCKED_TERM_DAYS);
+  const until = addDays(now, term);
 
   return <>
     <h2 className="text-3xl font-bold">New deposit</h2>
@@ -60,7 +63,7 @@ export const DepositForm = () => {
             />
           </div>
 
-          <div>Locking term: {formatDays(term)} — until September 4, 2028
+          <div>Locking term: {formatDays(term)} — until {format(until, "MMMM do, yyyy")}
           </div>
         </div>
 
