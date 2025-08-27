@@ -98,6 +98,8 @@ const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
   )
 );
 
+QRButton.displayName = "QRButton";
+
 export {
   QRButton
 };
