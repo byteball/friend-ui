@@ -9,4 +9,6 @@ export const appConfig = {
   ],
   MIN_BALANCE: 1e8, // TODO: 500e9 for mainnet
   MIN_LOCKED_TERM_DAYS: 1, // TODO: 365 for mainnet
+  DISCORD_BOT_URL: "obyte:Ama48/uKO+/Tjv28zFKwElBO4SEQNuWAM1VPJkl4DTZO@obyte.org/bb#0000",
+  TELEGRAM_BOT_URL: "obyte:A1KwcOAZSWwBnXwa1BKfmhEP2yow1kaUuoi5A6HLOzJZ@obyte.org/bb#0000",
 } as const;
