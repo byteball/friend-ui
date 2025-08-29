@@ -23,9 +23,9 @@ export const DepositForm = () => {
     <h2 className="text-3xl font-bold">New deposit</h2>
 
     <div className="grid gap-4 text-muted-foreground">
-      <div>Before depositing, you must be attested on <QRButton className="inline-block" variant="link" href="#">telegram</QRButton> [bot link] and/or discord [bot link]. This is important to notify you about follow-up rewards in the future.</div>
+      <div>Before depositing, you must be attested on <a className="text-blue-700" href={appConfig.TELEGRAM_BOT_URL}>telegram</a> and/or <a className="text-blue-700" href={appConfig.DISCORD_BOT_URL}>discord</a>. This is important to notify you about follow-up rewards in the future.</div>
 
-      <div>If you deposit less than 50 FRD (or equivalent), you must be real-name attested [bot link]. This measure helps prevent multiple accounts by the same user.</div>
+      <div>If you deposit less than 50 FRD (or equivalent), you must be <a className="text-blue-700" href="#">real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
     </div>
 
     <div>
