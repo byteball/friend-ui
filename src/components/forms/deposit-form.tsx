@@ -5,6 +5,8 @@ import { useState } from "react";
 
 import { appConfig } from "@/appConfig";
 import { formatDays } from "@/lib/formatDays";
+import { generateLink } from "@/lib/generateLink";
+import { getCountOfDecimals } from "@/lib/getCountOfDecimals";
 import { Input } from "../ui/input";
 import { QRButton } from "../ui/qr-button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
@@ -15,9 +17,29 @@ const now = new Date();
 
 export const DepositForm = () => {
   const [currency, setCurrency] = useState("base");
-  const [amount, setAmount] = useState({ value: "", valid: true });
+  const decimals = 9;
+
+  const [amount, setAmount] = useState<{ value: string; valid: boolean }>({ value: "", valid: true });
   const [term, setTerm] = useState<number>(appConfig.MIN_LOCKED_TERM_DAYS);
   const until = addDays(now, term);
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const isValid = /^\d*\.?\d*$/.test(value) && Number(value) > 0;
+
+    if (getCountOfDecimals(value) <= decimals && isNaN(Number(value)) === false) {
+      setAmount({ value: Number(value).toString(), valid: isValid });
+    }
+  }
+
+  const url = generateLink({
+    aa: appConfig.AA_ADDRESS, amount: Math.ceil(Number(amount.value) * 10 ** decimals), data: {
+      deposit: 1,
+      deposit_asset: currency === 'base' ? undefined : currency,
+      term
+    }
+  })
+
 
   return <div className="grid gap-4">
     <h2 className="text-3xl font-bold">New deposit</h2>
@@ -33,7 +55,7 @@ export const DepositForm = () => {
         <div className="flex gap-4 items-end">
           <div className="w-full">
             <label htmlFor="amount" className="text-muted-foreground pb-1">Amount</label>
-            <Input id="amount" placeholder={(appConfig.MIN_BALANCE / 1e9).toString()} />
+            <Input id="amount" value={amount.value} onChange={handleAmountChange} placeholder={(appConfig.MIN_BALANCE / 1e9).toString()} />
           </div>
 
           <Select defaultValue={currency} onValueChange={setCurrency}>
@@ -73,8 +95,8 @@ export const DepositForm = () => {
           </div>
         </div>
 
-        <QRButton href="#">
-          Send 500 {currency.toUpperCase()}
+        <QRButton disabled={!amount.valid || !amount.value} href={url}>
+          Send {amount.value ?? amount.valid ? amount.value : ''} {currency.toUpperCase()}
         </QRButton>
       </div>
     </div>
