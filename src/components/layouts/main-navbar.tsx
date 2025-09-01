@@ -9,9 +9,12 @@ import {
   NavbarRight,
 } from "../ui/navbar";
 
+import { WALLET_COOKIE_NAME } from "@/actions/constants";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
+import { AddWalletModal } from "../modals/add-wallet";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 
 const name = "Obyte Friends"
@@ -30,7 +33,10 @@ const menu: NavbarLink[] = [
   { text: "F.A.Q.", href: "/faq" },
 ];
 
-export default function MainNavbar({ className }: NavbarProps) {
+export default async function MainNavbar({ className }: NavbarProps) {
+  const cookiesData = await cookies();
+  const walletAddress = cookiesData.get(WALLET_COOKIE_NAME)?.value;
+
   return (
     <header className={cn("relative top-0 z-50 mb-10 px-8 pb-4 font-semibold", className)}>
       <div className="fade-bottom bg-background/15 absolute left-0 h-24 w-full"></div>
@@ -64,12 +70,10 @@ export default function MainNavbar({ className }: NavbarProps) {
               Download wallet
             </Link>
 
-            <Button
-              variant="default"
-              className="!mr-0 hidden md:block"
-            >
-              Add wallet
-            </Button>
+            <AddWalletModal
+              walletAddress={walletAddress}
+              triggerClassName="!mr-0 hidden md:block"
+            />
 
             <Sheet>
               <SheetTrigger asChild>
