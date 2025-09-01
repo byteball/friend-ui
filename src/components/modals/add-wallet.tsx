@@ -1,8 +1,7 @@
 "use client";
 
 import { saveWalletAction } from "@/actions/save-obyte-wallet";
-import obyte from "obyte";
-import { FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
@@ -17,9 +16,16 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [inputValue, setInputValue] = useState(walletAddress || "");
+  const [obyteUtils, setObyteUtils] = useState<{ isValidAddress: (address: string) => boolean } | null>(null);
+
+  useEffect(() => {
+    import("obyte").then((obyte) => {
+      setObyteUtils(obyte.default.utils);
+    });
+  }, []);
 
   const isChanged = walletAddress !== inputValue;
-  const isValid = inputValue.trim() !== "" && obyte.utils.isValidAddress(inputValue);
+  const isValid = inputValue.trim() !== "" && obyteUtils && obyteUtils.isValidAddress(inputValue);
 
   const restoreInputValue = () => {
     setTimeout(() => {
