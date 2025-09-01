@@ -25,7 +25,7 @@ export const Deposit = () => {
       <div className="col-span-1">
 
         <div className="rounded-lg px-4 py-5 sm:p-6">
-          <h2 className="text-3xl font-bold">Balance</h2>
+          <h2 className="text-3xl font-bold mb-4">Balance</h2>
 
           <div className="flex flex-col gap-4">
             <div>
