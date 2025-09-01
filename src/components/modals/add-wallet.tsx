@@ -3,6 +3,7 @@
 import { saveWalletAction } from "@/actions/save-obyte-wallet";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 
+import { isValidAddress as validateObyteAddress } from "@/lib/isValidAddress";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Input } from "../ui/input";
@@ -16,16 +17,25 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [inputValue, setInputValue] = useState(walletAddress || "");
-  const [obyteUtils, setObyteUtils] = useState<{ isValidAddress: (address: string) => boolean } | null>(null);
+  const [isValid, setIsValid] = useState<boolean>(false);
 
   useEffect(() => {
-    import("obyte").then((obyte) => {
-      setObyteUtils(obyte.default.utils);
-    });
-  }, []);
+    let cancelled = false;
+    const v = inputValue.trim();
+    if (!v) {
+      setIsValid(false);
+      return;
+    }
+    (async () => {
+      const ok = await validateObyteAddress(v);
+      if (!cancelled) setIsValid(ok);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [inputValue]);
 
   const isChanged = walletAddress !== inputValue;
-  const isValid = inputValue.trim() !== "" && obyteUtils && obyteUtils.isValidAddress(inputValue);
 
   const restoreInputValue = () => {
     setTimeout(() => {
