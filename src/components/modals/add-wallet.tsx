@@ -1,7 +1,7 @@
 "use client";
 
 import { saveWalletAction } from "@/actions/save-obyte-wallet";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
@@ -33,6 +33,15 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
     }, 500);
   }
 
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      submitButtonRef?.current?.click();
+
+      if (isValid) closeButtonRef?.current?.click();
+    }
+  }, [isValid]);
+
   return (<Dialog onOpenChange={(open) => {
     if (!open) restoreInputValue();
   }}>
@@ -55,14 +64,7 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
           name="wallet"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value || "")}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              submitButtonRef?.current?.click();
-
-              if (isValid) closeButtonRef?.current?.click();
-            }
-          }}
+          onKeyDown={handleKeyDown}
         />
 
         <DialogFooter>
