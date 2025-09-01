@@ -1,11 +1,13 @@
 "use client";
 
 import { addDays, format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+import { WALLET_COOKIE_NAME } from "@/actions/constants";
 import { appConfig } from "@/appConfig";
 import { formatDays } from "@/lib/formatDays";
 import { generateLink } from "@/lib/generateLink";
+import { getCookie } from "@/lib/getCookie.client";
 import { getCountOfDecimals } from "@/lib/getCountOfDecimals";
 import { Input } from "../ui/input";
 import { QRButton } from "../ui/qr-button";
@@ -18,6 +20,13 @@ const now = new Date();
 export const DepositForm = () => {
   const [currency, setCurrency] = useState("base");
   const decimals = 9;
+  const [walletAddress, setWalletAddress] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    // Read cookie client-side only to avoid hydration mismatch
+    const walletFromCookie = getCookie(WALLET_COOKIE_NAME);
+    if (walletFromCookie) setWalletAddress(walletFromCookie);
+  }, []);
 
   const [amount, setAmount] = useState<{ value: string; valid: boolean }>({ value: "", valid: true });
   const [term, setTerm] = useState<number>(appConfig.MIN_LOCKED_TERM_DAYS);
@@ -33,10 +42,10 @@ export const DepositForm = () => {
   }
 
   const url = generateLink({
-    aa: appConfig.AA_ADDRESS, amount: Math.ceil(Number(amount.value) * 10 ** decimals), data: {
+    aa: appConfig.AA_ADDRESS, amount: Math.ceil(Number(amount.value) * 10 ** decimals), from_address: walletAddress, data: {
       deposit: 1,
       deposit_asset: currency === 'base' ? undefined : currency,
-      term
+      term,
     }
   })
 
