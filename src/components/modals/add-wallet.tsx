@@ -37,7 +37,9 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
     if (!open) restoreInputValue();
   }}>
     <DialogTrigger asChild>
-      <Button ref={closeButtonRef} variant="default" className={triggerClassName}>{walletAddress ? `${walletAddress.slice(0, 3)}...${walletAddress.slice(-3)}` : "Add wallet"}</Button>
+      <Button ref={closeButtonRef} variant="default" className={triggerClassName}>
+        {walletAddress ? `${walletAddress.slice(0, 3)}...${walletAddress.slice(-3)}` : "Add wallet"}
+      </Button>
     </DialogTrigger>
 
     <DialogContent className="sm:max-w-[425px]">
@@ -52,7 +54,7 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
         <Input
           name="wallet"
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => setInputValue(e.target.value || "")}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
