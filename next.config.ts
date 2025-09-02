@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["obyte"],
   },
+  output: "standalone"
 };
 
 export default nextConfig;
