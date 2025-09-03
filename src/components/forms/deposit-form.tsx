@@ -1,7 +1,7 @@
 "use client";
 
 import { addDays, format } from "date-fns";
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 
 import { WALLET_COOKIE_NAME } from "@/actions/constants";
 import { appConfig } from "@/appConfig";
@@ -22,10 +22,15 @@ interface DepositFormProps {
   tokens: (TokenMeta | undefined)[];
 }
 
+const gbyteTokenMeta: TokenMeta = {
+  asset: "base",
+  symbol: "GBYTE",
+  decimals: 9,
+};
+
 export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
-  const [currency, setCurrency] = useState("base");
-  const decimals = 9;
-  const [walletAddress, setWalletAddress] = useState<string | undefined>(undefined);
+  const [currency, setCurrency] = useState<TokenMeta>(gbyteTokenMeta);
+  const [walletAddress, setWalletAddress] = useState<string | undefined>();
 
   useEffect(() => {
     // Read cookie client-side only to avoid hydration mismatch
@@ -41,15 +46,22 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
     const value = e.target.value;
     const isValid = /^\d*\.?\d*$/.test(value) && Number(value) > 0;
 
-    if (getCountOfDecimals(value) <= decimals && isNaN(Number(value)) === false) {
+    if (getCountOfDecimals(value) <= currency.decimals && isNaN(Number(value)) === false) {
       setAmount({ value: Number(value).toString(), valid: isValid });
     }
   }
 
+  const handleTokenChange = useCallback((asset: string) => {
+    const token = tokens.find((token) => token?.asset === asset);
+    if (!token) throw new Error("Unknown token");
+
+    setCurrency(token);
+  }, [tokens]);
+
   const url = generateLink({
-    aa: appConfig.AA_ADDRESS, amount: Math.ceil(Number(amount.value) * 10 ** decimals), from_address: walletAddress, data: {
+    aa: appConfig.AA_ADDRESS, amount: Math.ceil(Number(amount.value) * 10 ** currency?.decimals), from_address: walletAddress, data: {
       deposit: 1,
-      deposit_asset: currency === 'base' ? undefined : currency,
+      deposit_asset: currency?.asset === 'base' ? undefined : currency,
       term,
     }
   })
@@ -72,7 +84,7 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
             <Input id="amount" value={amount.value} onChange={handleAmountChange} placeholder={(appConfig.MIN_BALANCE / 1e9).toString()} />
           </div>
 
-          <Select defaultValue={currency} onValueChange={setCurrency}>
+          <Select defaultValue={currency.asset} onValueChange={handleTokenChange}>
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder="Select a token" />
             </SelectTrigger>
@@ -111,7 +123,7 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
         </div>
 
         <QRButton disabled={!amount.valid || !amount.value} href={url}>
-          Send {amount.value ?? amount.valid ? amount.value : ''} {currency.toUpperCase()}
+          Send {amount.value ?? amount.valid ? amount.value : ''} {currency?.symbol.toUpperCase()}
         </QRButton>
       </div>
     </div>
