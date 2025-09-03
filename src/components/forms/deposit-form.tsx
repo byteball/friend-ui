@@ -1,7 +1,7 @@
 "use client";
 
 import { addDays, format } from "date-fns";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import { WALLET_COOKIE_NAME } from "@/actions/constants";
 import { appConfig } from "@/appConfig";
@@ -9,6 +9,7 @@ import { formatDays } from "@/lib/formatDays";
 import { generateLink } from "@/lib/generateLink";
 import { getCookie } from "@/lib/getCookie.client";
 import { getCountOfDecimals } from "@/lib/getCountOfDecimals";
+
 import { Input } from "../ui/input";
 import { QRButton } from "../ui/qr-button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
@@ -17,7 +18,11 @@ import { Slider } from "../ui/slider";
 const MAX_LOCKED_TERM_DAYS = 365 * 4;
 const now = new Date();
 
-export const DepositForm = () => {
+interface DepositFormProps {
+  tokens: (TokenMeta | undefined)[];
+}
+
+export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
   const [currency, setCurrency] = useState("base");
   const decimals = 9;
   const [walletAddress, setWalletAddress] = useState<string | undefined>(undefined);
@@ -74,10 +79,11 @@ export const DepositForm = () => {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Currency</SelectLabel>
-                <SelectItem value="base">GBYTE</SelectItem>
-                <SelectItem value="frd">FRD</SelectItem>
-                <SelectItem value="usdc">USDC</SelectItem>
-                <SelectItem value="btc">BTC</SelectItem>
+                {tokens.filter((token): token is TokenMeta => token !== undefined).map((token) => (
+                  <SelectItem key={token.asset} value={token.asset}>
+                    {token.symbol}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>

@@ -1,9 +1,14 @@
+"use server";
+
 import { Deposit } from "@/components/layouts/deposit";
 import { HeroBlock } from "@/components/layouts/hero-block";
 import { HowItWorksBlock } from "@/components/layouts/how-it-works";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getDepositTokens } from "@/lib/getDepositTokens.server";
 
-export default function Home() {
+export default async function Home() {
+  const depositTokens = await getDepositTokens();
+
   return <div className="grid space-y-8">
     <HeroBlock />
     <HowItWorksBlock />
@@ -25,7 +30,7 @@ export default function Home() {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="deposit">
-        <Deposit />
+        <Deposit tokens={depositTokens} />
       </TabsContent>
       <TabsContent value="claim">
         <p className="text-muted-foreground p-4 text-center text-xs">

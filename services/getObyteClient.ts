@@ -8,15 +8,6 @@ export const runtime = 'nodejs';
 const AUTO_RECONNECT = true;
 const HEARTBEAT_INTERVAL = 10 * 1000;
 
-declare global {
-  // eslint-disable-next-line no-var
-  var __OBYTE_CLIENT__: Obyte.Client | undefined;
-  // eslint-disable-next-line no-var
-  var __OBYTE_HEARTBEAT__: ReturnType<typeof setInterval> | undefined;
-  // eslint-disable-next-line no-var 
-  var __OBYTE_CONNECTS_TOTAL__: number | undefined;
-}
-
 export const getObyteClient = async () => {
   if (globalThis.__OBYTE_CLIENT__) return globalThis.__OBYTE_CLIENT__;
 

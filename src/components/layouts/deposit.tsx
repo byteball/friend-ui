@@ -1,6 +1,12 @@
+import { FC } from "react";
+
 import { DepositForm } from "@/components/forms/deposit-form";
 
-export const Deposit = () => {
+interface DepositProps {
+  tokens: (TokenMeta | undefined)[];
+}
+
+export const Deposit: FC<DepositProps> = ({ tokens }) => {
 
   return <>
     {/* <div className="">
@@ -18,7 +24,7 @@ export const Deposit = () => {
 
       <div className="col-span-2 rounded-lg bg-gray-50">
         <div className="px-4 py-5 sm:p-6 w-full">
-          <DepositForm />
+          <DepositForm tokens={tokens ?? []} />
         </div>
       </div>
 
