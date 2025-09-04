@@ -6,6 +6,7 @@ export const runtime = 'nodejs';
 
 const AUTO_RECONNECT = true;
 const HEARTBEAT_INTERVAL = 10 * 1000;
+const MAX_STATE_VARS_LOAD_ITERATIONS = 100 as const; // Safety limit
 
 export async function register() {
   console.log("Start bootstrapping...");
@@ -46,7 +47,49 @@ export async function register() {
 
     console.log('log(bootstrap): all symbols are loaded', globalThis.__SYMBOL_STORAGE__.size);
 
-    console.error('symbolStorage:', globalThis.__SYMBOL_STORAGE__.get("base"));
+    // load all stateVars
+
+    let aaState: object = {};
+    let iteration = 0;
+
+    // TODO: WARNING: You should have more than 1 state vars
+
+    try {
+      let lastKey = "";
+
+      while (true) {
+        if (iteration++ > MAX_STATE_VARS_LOAD_ITERATIONS) {
+          throw new Error(`Reached maximum iterations (${MAX_STATE_VARS_LOAD_ITERATIONS}) when fetching AA state vars`);
+        }
+
+        let chunkData: object = {};
+
+        chunkData = (await client.api.getAaStateVars({
+          address: appConfig.AA_ADDRESS,
+          // @ts-expect-error
+          var_prefix_from: lastKey,
+        })) as object;
+
+        const keys = Object.keys(chunkData);
+
+        if (keys.length > 1) {
+          aaState = { ...aaState, ...chunkData };
+          lastKey = keys[keys.length - 1];
+        } else {
+          break;
+        }
+      }
+    } catch (e) {
+      console.log("error(bootstrap): can't load state vars", e);
+      process.exit(0);
+    }
+
+    for (const [key, value] of Object.entries(aaState)) {
+      globalThis.__STATE_VARS_STORAGE__.set(key, value);
+    }
+
+    console.error('log(bootstrap): all state vars are loaded', globalThis.__STATE_VARS_STORAGE__.size);
+
   });
 }
 
