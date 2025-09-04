@@ -1,4 +1,9 @@
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { getCookie } from 'cookies-next/server';
 import { Menu } from "lucide-react";
+import { cookies } from "next/headers";
+import Image from "next/image";
+import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
@@ -10,10 +15,6 @@ import {
 } from "../ui/navbar";
 
 import { WALLET_COOKIE_NAME } from "@/actions/constants";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { cookies } from "next/headers";
-import Image from "next/image";
-import Link from "next/link";
 import { AddWalletModal } from "../modals/add-wallet";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 
@@ -34,8 +35,7 @@ const menu: NavbarLink[] = [
 ];
 
 export default async function MainNavbar({ className }: NavbarProps) {
-  const cookiesData = await cookies();
-  const walletAddress = cookiesData.get(WALLET_COOKIE_NAME)?.value;
+  const walletAddress = await getCookie(WALLET_COOKIE_NAME, { cookies });
 
   return (
     <header className={cn("relative top-0 z-50 mb-10 px-8 pb-4 font-semibold", className)}>

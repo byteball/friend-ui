@@ -1,9 +1,12 @@
 "use client";
 
+import { useReactiveGetCookie } from "cookies-next";
 import { FC } from "react";
 
+import { WALLET_COOKIE_NAME } from "@/actions/constants";
 import { useData } from "@/app/context";
 import { DepositForm } from "@/components/forms/deposit-form";
+
 
 interface DepositProps {
   tokens: (TokenMeta | undefined)[];
@@ -11,19 +14,12 @@ interface DepositProps {
 
 export const Deposit: FC<DepositProps> = ({ tokens }) => {
   const data = useData();
+  const getCookie = useReactiveGetCookie();
+  const wallet = getCookie(WALLET_COOKIE_NAME);
+
+  const userData = data?.state[`user_${wallet}`] ?? { balances: {} }
 
   return <>
-    {/* <div className="">
-      <h2 className="text-5xl font-bold text-center">Let’s start {" "}
-        <Highlighter action="underline" color="#27ae60">
-          earning
-        </Highlighter>
-      </h2>
-      <p className="mt-2 text-xl text-gray-500 text-center">
-        Make a deposit to your account.
-      </p>
-    </div> */}
-
     <div className="grid grid-cols-3 gap-4 max-w-5xl mx-auto mt-16">
 
       <div className="col-span-2 rounded-lg bg-gray-50">
@@ -36,14 +32,18 @@ export const Deposit: FC<DepositProps> = ({ tokens }) => {
       <div className="col-span-1">
 
         <div className="rounded-lg px-4 py-5 sm:p-6">
-          <h2 className="text-3xl font-bold mb-4">Balance</h2>
+          <h2 className="text-3xl font-bold mb-4">Deposit</h2>
 
           <div className="flex flex-col gap-4">
-            <div>
+            {wallet ? <div>
               <p className="text-md text-muted-foreground">
-                Here you can calculate the amount you can expect if you bring in new friends every day.
+                balances: {JSON.stringify(userData.balances)}
               </p>
-            </div>
+            </div> : <div>
+              <p className="text-md text-muted-foreground">
+                Please add your wallet address
+              </p>
+            </div>}
           </div>
 
         </div>

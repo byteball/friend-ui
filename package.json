@@ -23,6 +23,7 @@
     "classnames": "^2.5.1",
     "client-only": "^0.0.1",
     "clsx": "^2.1.1",
+    "cookies-next": "^6.1.0",
     "date-fns": "^4.1.0",
     "lru-cache": "^11.1.0",
     "lucide-react": "^0.540.0",

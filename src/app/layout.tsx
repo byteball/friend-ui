@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import Navbar from "@/components/layouts/main-navbar";
+
+import { ClientProviders } from "./client-providers";
 import { DataProvider } from "./context";
 
 import "./globals.css";
@@ -32,9 +34,11 @@ export default async function RootLayout({
         className={`${InterFont.className} antialiased`}
       >
         <DataProvider value={data}>
-          <Navbar />
+          <ClientProviders>
+            <Navbar />
 
-          <div className="container mx-auto p-5">{children}</div>
+            <div className="container mx-auto p-5">{children}</div>
+          </ClientProviders>
         </DataProvider>
       </body>
     </html>

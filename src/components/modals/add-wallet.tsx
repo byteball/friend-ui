@@ -1,9 +1,11 @@
 "use client";
 
-import { saveWalletAction } from "@/actions/save-obyte-wallet";
+import { useRouter } from 'next/navigation';
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 
+import { WALLET_COOKIE_NAME } from "@/actions/constants";
 import { isValidAddress as validateObyteAddress } from "@/lib/isValidAddress";
+import { useReactiveSetCookie } from "cookies-next";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Input } from "../ui/input";
@@ -18,6 +20,9 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [inputValue, setInputValue] = useState(walletAddress || "");
   const [isValid, setIsValid] = useState<boolean>(false);
+
+  const router = useRouter();
+  const setCookie = useReactiveSetCookie();
 
   useEffect(() => {
     let cancelled = false;
@@ -52,6 +57,12 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
     }
   }, [isValid]);
 
+  const saveWallet = (value: string) => {
+    setCookie(WALLET_COOKIE_NAME, value);
+    closeButtonRef.current?.click();
+    router.refresh();
+  }
+
   return (<Dialog onOpenChange={(open) => {
     if (!open) restoreInputValue();
   }}>
@@ -62,25 +73,23 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
     </DialogTrigger>
 
     <DialogContent className="sm:max-w-[425px]">
-      <form action={saveWalletAction} className="grid gap-4">
-        <DialogHeader>
-          <DialogTitle>Add wallet</DialogTitle>
-          <DialogDescription>
-            <a href="https://obyte.org/#download" className="text-blue-700">Install Obyte wallet</a> if you don&apos;t have one yet, and copy/paste your address here.
-          </DialogDescription>
-        </DialogHeader>
+      <DialogHeader>
+        <DialogTitle>Add wallet</DialogTitle>
+        <DialogDescription>
+          <a href="https://obyte.org/#download" className="text-blue-700">Install Obyte wallet</a> if you don&apos;t have one yet, and copy/paste your address here.
+        </DialogDescription>
+      </DialogHeader>
 
-        <Input
-          name="wallet"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value || "")}
-          onKeyDown={handleKeyDown}
-        />
+      <Input
+        name="wallet"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value || "")}
+        onKeyDown={handleKeyDown}
+      />
 
-        <DialogFooter>
-          <Button disabled={!isChanged || !isValid} ref={submitButtonRef} type="submit">Save changes</Button>
-        </DialogFooter>
-      </form>
+      <DialogFooter>
+        <Button onClick={() => saveWallet(inputValue)} disabled={!isChanged || !isValid} ref={submitButtonRef}>Save changes</Button>
+      </DialogFooter>
     </DialogContent>
 
   </Dialog>)
