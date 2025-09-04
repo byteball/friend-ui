@@ -2,13 +2,13 @@
 
 import { addDays, format } from "date-fns";
 import { FC, useCallback, useEffect, useState } from "react";
+import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
 import { WALLET_COOKIE_NAME } from "@/actions/constants";
 import { appConfig } from "@/appConfig";
 import { formatDays } from "@/lib/formatDays";
 import { generateLink } from "@/lib/generateLink";
 import { getCookie } from "@/lib/getCookie.client";
-import { getCountOfDecimals } from "@/lib/getCountOfDecimals";
 
 import { Input } from "../ui/input";
 import { QRButton } from "../ui/qr-button";
@@ -38,18 +38,9 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
     if (walletFromCookie) setWalletAddress(walletFromCookie);
   }, []);
 
-  const [amount, setAmount] = useState<{ value: string; valid: boolean }>({ value: "", valid: true });
+  const [amount, setAmount] = useState<string>("0.1");
   const [term, setTerm] = useState<number>(appConfig.MIN_LOCKED_TERM_DAYS);
   const until = addDays(now, term);
-
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const isValid = /^\d*\.?\d*$/.test(value) && Number(value) > 0;
-
-    if (getCountOfDecimals(value) <= currency.decimals && isNaN(Number(value)) === false) {
-      setAmount({ value: Number(value).toString(), valid: isValid });
-    }
-  }
 
   const handleTokenChange = useCallback((asset: string) => {
     const token = tokens.find((token) => token?.asset === asset);
@@ -59,13 +50,12 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
   }, [tokens]);
 
   const url = generateLink({
-    aa: appConfig.AA_ADDRESS, amount: Math.ceil(Number(amount.value) * 10 ** currency?.decimals), from_address: walletAddress, data: {
+    aa: appConfig.AA_ADDRESS, amount: Math.ceil(Number(amount) * 10 ** currency?.decimals), from_address: walletAddress, data: {
       deposit: 1,
       deposit_asset: currency?.asset === 'base' ? undefined : currency,
       term,
     }
   })
-
 
   return <div className="grid gap-4">
     <h2 className="text-3xl font-bold">New deposit</h2>
@@ -81,7 +71,25 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
         <div className="flex gap-4 items-end">
           <div className="w-full">
             <label htmlFor="amount" className="text-muted-foreground pb-1">Amount</label>
-            <Input id="amount" value={amount.value} onChange={handleAmountChange} placeholder={(appConfig.MIN_BALANCE / 1e9).toString()} />
+
+            <NumericFormat
+              value={amount}
+              id="amount"
+              decimalScale={currency.decimals}
+              maxLength={currency.decimals + 6}
+              security="auto"
+              allowNegative={false}
+              allowLeadingZeros={false}
+              // pass custom input
+              customInput={Input}
+              // returns parsed values; values.value is numeric string like "0.5"
+              onValueChange={(values: NumberFormatValues) => {
+                let value = values.value ?? '';
+                if (value.startsWith(".")) value = "0" + value;
+                setAmount(value);
+              }}
+              inputMode="decimal"
+            />
           </div>
 
           <Select defaultValue={currency.asset} onValueChange={handleTokenChange}>
@@ -122,8 +130,8 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
           </div>
         </div>
 
-        <QRButton disabled={!amount.valid || !amount.value} href={url}>
-          Send {amount.value ?? amount.valid ? amount.value : ''} {currency?.symbol.toUpperCase()}
+        <QRButton disabled={!amount || Number(amount) <= 0} href={url}>
+          Send {!Number(amount) ? '' : amount} {currency?.symbol.toUpperCase()}
         </QRButton>
       </div>
     </div>
