@@ -7,6 +7,8 @@ module globalThis {
   var __OBYTE_CONNECTS_TOTAL__: number | undefined;
 
   var __SYMBOL_STORAGE__: LRUCache<string, TokenMeta> | undefined;
+
+  var __STATE_VARS_STORAGE__: LRUCache<string, any> | undefined;
 }
 
 type TokenMeta = {
@@ -14,3 +16,4 @@ type TokenMeta = {
   symbol: string; // e.g. "GBYTE", "USDC"
   decimals: number; // e.g. 9 for GBYTE, 6 for USDC
 }
+

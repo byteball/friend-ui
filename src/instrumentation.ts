@@ -22,6 +22,11 @@ export async function register() {
     ttl: 0,
   });
 
+  globalThis.__STATE_VARS_STORAGE__ = new LRUCache<string, any>({
+    max: 10000,
+    ttl: 0,
+  });
+
   client.onConnect(async () => {
     console.log("Bootstrapping completed.");
 
