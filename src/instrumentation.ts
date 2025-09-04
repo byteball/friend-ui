@@ -3,6 +3,7 @@ import { LRUCache } from 'lru-cache';
 import { appConfig } from '@/appConfig';
 
 export const runtime = 'nodejs';
+
 const AUTO_RECONNECT = true;
 const HEARTBEAT_INTERVAL = 10 * 1000;
 
