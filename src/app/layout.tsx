@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: "Become friends with someone and get rewards, or claim follow-up rewards",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
