@@ -1,5 +1,8 @@
+"use client";
+
 import { FC } from "react";
 
+import { useData } from "@/app/context";
 import { DepositForm } from "@/components/forms/deposit-form";
 
 interface DepositProps {
@@ -7,6 +10,7 @@ interface DepositProps {
 }
 
 export const Deposit: FC<DepositProps> = ({ tokens }) => {
+  const data = useData();
 
   return <>
     {/* <div className="">
@@ -24,6 +28,7 @@ export const Deposit: FC<DepositProps> = ({ tokens }) => {
 
       <div className="col-span-2 rounded-lg bg-gray-50">
         <div className="px-4 py-5 sm:p-6 w-full">
+          total_locked_bytes:  {JSON.stringify(data?.state?.total_locked_bytes)}
           <DepositForm tokens={tokens ?? []} />
         </div>
       </div>

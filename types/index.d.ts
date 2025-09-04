@@ -17,3 +17,7 @@ type TokenMeta = {
   decimals: number; // e.g. 9 for GBYTE, 6 for USDC
 }
 
+interface IClientData {
+  state: Record<string, any>;
+  symbols: Record<string, TokenMeta>;
+}
