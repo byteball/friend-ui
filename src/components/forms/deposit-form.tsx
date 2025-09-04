@@ -10,6 +10,7 @@ import { formatDays } from "@/lib/formatDays";
 import { generateLink } from "@/lib/generateLink";
 import { getCookie } from "@/lib/getCookie.client";
 
+import { useData } from "@/app/context";
 import { toLocalString } from "@/lib/toLocalString";
 import { Input } from "../ui/input";
 import { QRButton } from "../ui/qr-button";
@@ -41,6 +42,12 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
 
   const [amount, setAmount] = useState<string>("0.1");
   const [term, setTerm] = useState<number>(appConfig.MIN_LOCKED_TERM_DAYS);
+  const data = useData();
+
+  const state = data?.state ?? {};
+  const frdAsset = state?.constants?.asset;
+  const frdMeta: TokenMeta | undefined = frdAsset ? data?.symbols?.[frdAsset] : undefined;
+
   const until = addDays(now, term);
 
   const handleTokenChange = useCallback((asset: string) => {
@@ -64,7 +71,7 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
     <div className="grid gap-4 text-muted-foreground">
       <div>Before depositing, you must be attested on <a className="text-blue-700" href={appConfig.TELEGRAM_BOT_URL}>telegram</a> and/or <a className="text-blue-700" href={appConfig.DISCORD_BOT_URL}>discord</a>. This is important to notify you about follow-up rewards in the future.</div>
 
-      <div>If you deposit less than 50 FRD (or equivalent), you must be <a className="text-blue-700" href="#">real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
+      <div>If you deposit less than {toLocalString(appConfig.MIN_BALANCE / 10 ** (frdMeta?.decimals ?? 0))} FRD (or equivalent), you must be <a className="text-blue-700" href="#">real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
     </div>
 
     <div>
@@ -111,8 +118,6 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
         </div>
 
         <div className="flex w-full flex-col gap-4">
-          {/* <div className="w-[50%]">Term: {formatDays(term)}</div> */}
-
           <div>
             <label htmlFor="term" className="text-muted-foreground">Locked term</label>
 
