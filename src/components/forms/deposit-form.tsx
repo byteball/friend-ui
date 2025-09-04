@@ -10,6 +10,7 @@ import { formatDays } from "@/lib/formatDays";
 import { generateLink } from "@/lib/generateLink";
 import { getCookie } from "@/lib/getCookie.client";
 
+import { toLocalString } from "@/lib/toLocalString";
 import { Input } from "../ui/input";
 import { QRButton } from "../ui/qr-button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
@@ -131,7 +132,7 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
         </div>
 
         <QRButton disabled={!amount || Number(amount) <= 0} href={url}>
-          Send {!Number(amount) ? '' : amount} {currency?.symbol.toUpperCase()}
+          Send {!Number(amount) ? '' : toLocalString(amount)} {currency?.symbol.toUpperCase()}
         </QRButton>
       </div>
     </div>

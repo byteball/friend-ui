@@ -21,3 +21,14 @@ interface IClientData {
   state: Record<string, any>;
   symbols: Record<string, TokenMeta>;
 }
+
+type IUserData = {
+  balances: Record<string, number>; // asset -> balance
+  current_ghost_num: number; // current ghost number
+  reg_ts: number; // registration timestamp in seconds
+  unlock_date: string; // unlock date as a string
+  [key: string]: any; // allow additional properties
+}
+
+// total_locked_bytes: number; // total locked bytes
+// total_locked: number; // total locked amount

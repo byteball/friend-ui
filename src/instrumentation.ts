@@ -88,6 +88,15 @@ export async function register() {
       globalThis.__STATE_VARS_STORAGE__.set(key, value);
     }
 
+    // load FRD token meta
+    const constants = globalThis.__STATE_VARS_STORAGE__.get('constants');
+
+    const tokenRegistry = client.api.getOfficialTokenRegistryAddress();
+    const symbol = await client.api.getSymbolByAsset(tokenRegistry, constants.asset);
+    const decimals = await client.api.getDecimalsBySymbolOrAsset(tokenRegistry, constants.asset);
+
+    globalThis.__SYMBOL_STORAGE__.set(constants.asset, { asset: constants.asset, symbol, decimals });
+
     console.error('log(bootstrap): all state vars are loaded', globalThis.__STATE_VARS_STORAGE__.size);
 
   });
