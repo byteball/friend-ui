@@ -34,7 +34,7 @@ export const HowItWorksBlock = () => (<div>
   <div className="grid grid-cols-3 items-center gap-8 max-w-5xl mx-auto mt-8">
 
     <div className="col-span-1">
-      <img src="/tim-may.png" alt="Tim May" className="w-[250px] h-[250px] mx-auto rounded-xl" />
+      <img src="/tim-may.png" alt="Tim May" className="w-[250px] h-[250px] mx-auto" />
     </div>
 
     <div className="col-span-2 space-y-4">
