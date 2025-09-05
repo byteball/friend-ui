@@ -1,5 +1,6 @@
 "use server";
 
+import { Claim } from "@/components/layouts/claim";
 import { Deposit } from "@/components/layouts/deposit";
 import { HeroBlock } from "@/components/layouts/hero-block";
 import { HowItWorksBlock } from "@/components/layouts/how-it-works";
@@ -33,9 +34,7 @@ export default async function Home() {
         <Deposit tokens={depositTokens} />
       </TabsContent>
       <TabsContent value="claim">
-        <p className="text-muted-foreground p-4 text-center text-xs">
-          Claim
-        </p>
+        <Claim tokens={depositTokens} />
       </TabsContent>
     </Tabs>
 
