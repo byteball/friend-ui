@@ -1,7 +1,7 @@
 "use client";
 
 import { addDays, format } from "date-fns";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
 import { WALLET_COOKIE_NAME } from "@/actions/constants";
@@ -33,6 +33,7 @@ const gbyteTokenMeta: TokenMeta = {
 export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
   const [currency, setCurrency] = useState<TokenMeta>(gbyteTokenMeta);
   const [walletAddress, setWalletAddress] = useState<string | undefined>();
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     // Read cookie client-side only to avoid hydration mismatch
@@ -56,6 +57,12 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
 
     setCurrency(token);
   }, [tokens]);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === "Enter") {
+      btnRef.current?.click();
+    }
+  }, [btnRef]);
 
   const url = generateLink({
     aa: appConfig.AA_ADDRESS, amount: Math.ceil(Number(amount) * 10 ** currency?.decimals), from_address: walletAddress, data: {
@@ -88,6 +95,7 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
               security="auto"
               allowNegative={false}
               allowLeadingZeros={false}
+              onKeyDown={handleKeyDown}
               // pass custom input
               customInput={Input}
               // returns parsed values; values.value is numeric string like "0.5"
@@ -136,7 +144,7 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
           </div>
         </div>
 
-        <QRButton disabled={!amount || Number(amount) <= 0} href={url}>
+        <QRButton ref={btnRef} disabled={!amount || Number(amount) <= 0} href={url}>
           Send {!Number(amount) ? '' : toLocalString(amount)} {currency?.symbol.toUpperCase()}
         </QRButton>
       </div>
