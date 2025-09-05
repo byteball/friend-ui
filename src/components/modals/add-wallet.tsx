@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 
-import { WALLET_COOKIE_NAME } from "@/actions/constants";
+import { WALLET_COOKIE_NAME } from "@/constants";
 import { isValidAddress as validateObyteAddress } from "@/lib/isValidAddress";
 import { useReactiveSetCookie } from "cookies-next";
 import { Button } from "../ui/button";

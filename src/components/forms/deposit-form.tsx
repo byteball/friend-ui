@@ -4,8 +4,8 @@ import { addDays, format } from "date-fns";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
-import { WALLET_COOKIE_NAME } from "@/actions/constants";
 import { appConfig } from "@/appConfig";
+import { GBYTE_TOKEN_META, WALLET_COOKIE_NAME } from "@/constants";
 import { formatDays } from "@/lib/formatDays";
 import { generateLink } from "@/lib/generateLink";
 import { getCookie } from "@/lib/getCookie.client";
@@ -24,14 +24,8 @@ interface DepositFormProps {
   tokens: (TokenMeta | undefined)[];
 }
 
-const gbyteTokenMeta: TokenMeta = {
-  asset: "base",
-  symbol: "GBYTE",
-  decimals: 9,
-};
-
 export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
-  const [currency, setCurrency] = useState<TokenMeta>(gbyteTokenMeta);
+  const [currency, setCurrency] = useState<TokenMeta>(GBYTE_TOKEN_META);
   const [walletAddress, setWalletAddress] = useState<string | undefined>();
   const btnRef = useRef<HTMLButtonElement>(null);
 

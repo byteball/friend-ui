@@ -14,7 +14,7 @@ import {
   NavbarRight,
 } from "../ui/navbar";
 
-import { WALLET_COOKIE_NAME } from "@/actions/constants";
+import { WALLET_COOKIE_NAME } from "@/constants";
 import { AddWalletModal } from "../modals/add-wallet";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 
