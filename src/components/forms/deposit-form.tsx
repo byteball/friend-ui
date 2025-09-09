@@ -1,6 +1,7 @@
 "use client";
 
-import { addDays, format } from "date-fns";
+import { addDays } from "date-fns";
+import { formatInTimeZone } from 'date-fns-tz';
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
@@ -134,7 +135,7 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
             />
           </div>
 
-          <div>Locking term: {formatDays(term)} — until {format(until, "MMMM do, yyyy")}
+          <div>Locking term: {formatDays(term)} — until {formatInTimeZone(until, "UTC", "MMMM do, yyyy")}
           </div>
         </div>
 
