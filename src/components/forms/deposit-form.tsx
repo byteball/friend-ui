@@ -1,18 +1,19 @@
 "use client";
 
+import { useGetCookie } from "cookies-next";
 import { addDays } from "date-fns";
 import { formatInTimeZone } from 'date-fns-tz';
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useRef, useState } from "react";
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
 import { appConfig } from "@/appConfig";
 import { GBYTE_TOKEN_META, WALLET_COOKIE_NAME } from "@/constants";
 import { formatDays } from "@/lib/formatDays";
 import { generateLink } from "@/lib/generateLink";
-import { getCookie } from "@/lib/getCookie.client";
 
 import { useData } from "@/app/context";
 import { toLocalString } from "@/lib/toLocalString";
+
 import { Input } from "../ui/input";
 import { QRButton } from "../ui/qr-button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
@@ -27,18 +28,13 @@ interface DepositFormProps {
 
 export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
   const [currency, setCurrency] = useState<TokenMeta>(GBYTE_TOKEN_META);
-  const [walletAddress, setWalletAddress] = useState<string | undefined>();
   const btnRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    // Read cookie client-side only to avoid hydration mismatch
-    const walletFromCookie = getCookie(WALLET_COOKIE_NAME);
-    if (walletFromCookie) setWalletAddress(walletFromCookie);
-  }, []);
-
   const [amount, setAmount] = useState<string>("0.1");
   const [term, setTerm] = useState<number>(appConfig.MIN_LOCKED_TERM_DAYS);
   const data = useData();
+  const getCookie = useGetCookie();
+
+  const walletAddress = getCookie(WALLET_COOKIE_NAME) as string | undefined;
 
   const state = data?.state ?? {};
   const frdAsset = state?.constants?.asset;
