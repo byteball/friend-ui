@@ -1,15 +1,17 @@
 "use client";
 
+import { getCookie } from "cookies-next/client";
 import { FC, useCallback, useRef } from "react";
+
+import { DescriptionDetail, DescriptionGroup, DescriptionList, DescriptionTerm } from "../ui/description-list";
+import { Input } from "../ui/input";
+import { QRButton } from "../ui/qr-button";
 
 import { appConfig } from "@/appConfig";
 import { BOUNCE_FEES, WALLET_COOKIE_NAME } from "@/constants";
 import { generateLink } from "@/lib/generateLink";
 
 import { useData } from "@/app/context";
-import { getCookie } from "cookies-next/client";
-import { Input } from "../ui/input";
-import { QRButton } from "../ui/qr-button";
 
 interface DepositFormProps {
   tokens: (TokenMeta | undefined)[];
@@ -55,6 +57,28 @@ export const ClaimForm: FC<DepositFormProps> = ({ tokens }) => {
 
           <QRButton href={url}>Claim</QRButton>
         </div>
+
+        <DescriptionList>
+          <DescriptionGroup>
+            <DescriptionTerm>Locked rewards</DescriptionTerm>
+            <DescriptionDetail>
+              <div>312312 FRD (1% of your total balance 312312 FRD)</div>
+              <div>10 FRD (new user reward)</div>
+              <div>10 FRD (referral reward)</div>
+            </DescriptionDetail>
+          </DescriptionGroup>
+          <DescriptionGroup horizontal>
+            <DescriptionTerm>Total rewards</DescriptionTerm>
+            <DescriptionDetail>3123123.12312 FRD</DescriptionDetail>
+          </DescriptionGroup>
+          <DescriptionGroup horizontal>
+            <DescriptionTerm>Liquid rewards</DescriptionTerm>
+            <DescriptionDetail>
+              123.123 FRD (0.1% of your total balance 123.123 FRD)
+            </DescriptionDetail>
+          </DescriptionGroup>
+        </DescriptionList>
+
       </div>
     </div>
   </div>
