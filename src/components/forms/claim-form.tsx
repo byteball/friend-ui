@@ -55,7 +55,8 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
     amount: BOUNCE_FEES,
     from_address: walletAddress,
     data: {
-      deposit: 1,
+      connect: 1,
+      friend: inputFriendWallet.value.trim()
     }
   })
 

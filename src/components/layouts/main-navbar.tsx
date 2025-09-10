@@ -64,7 +64,8 @@ export default async function MainNavbar({ className }: NavbarProps) {
           </NavbarLeft>
           <NavbarRight>
             <Link
-              href="/"
+              href="https://obyte.org/#download"
+              target="_blank"
               className="hidden text-sm md:block"
             >
               Download wallet
