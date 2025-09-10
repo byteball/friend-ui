@@ -63,13 +63,20 @@ export default async function MainNavbar({ className }: NavbarProps) {
 
           </NavbarLeft>
           <NavbarRight>
-            <Link
+            {/* <Link
               href="https://obyte.org/#download"
               target="_blank"
               className="hidden text-sm md:block"
             >
               Download wallet
-            </Link>
+            </Link> */}
+
+            {walletAddress ? <Link
+              href={`/user/${walletAddress}`}
+              className="hidden text-sm md:block"
+            >
+              Profile
+            </Link> : null}
 
             <AddWalletModal
               walletAddress={walletAddress}
