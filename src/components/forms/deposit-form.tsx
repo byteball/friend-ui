@@ -69,7 +69,7 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
     <div className="grid gap-4 text-muted-foreground">
       <div>Before depositing, you must be attested on <a className="text-blue-700" href={appConfig.TELEGRAM_BOT_URL}>telegram</a> and/or <a className="text-blue-700" href={appConfig.DISCORD_BOT_URL}>discord</a>. This is important to notify you about follow-up rewards in the future.</div>
 
-      <div>If you deposit less than {toLocalString(appConfig.MIN_BALANCE / 10 ** (frdMeta?.decimals ?? 0))} FRD (or equivalent), you must be <a className="text-blue-700" href="#">real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
+      <div>If you deposit less than {toLocalString(appConfig.MIN_BALANCE / 10 ** (frdMeta?.decimals ?? 0))} <small>{frdMeta?.symbol}</small> (or equivalent), you must be <a className="text-blue-700" href="#">real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
     </div>
 
     <div>
@@ -136,7 +136,7 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
         </div>
 
         <QRButton ref={btnRef} disabled={!amount || Number(amount) <= 0} href={url}>
-          Send {!Number(amount) ? '' : toLocalString(amount)} {currency?.symbol.toUpperCase()}
+          Send {!Number(amount) ? '' : toLocalString(amount)} <small>{currency?.symbol.toUpperCase()}</small>
         </QRButton>
       </div>
     </div>
