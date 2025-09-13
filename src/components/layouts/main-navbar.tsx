@@ -45,6 +45,7 @@ export default async function MainNavbar({ className }: NavbarProps) {
           <NavbarLeft>
             <Link
               href="/"
+              prefetch={false}
               className="flex items-center gap-2 text-xl font-bold"
             >
               <Image src="/logo.svg" alt="Logo" width={32} height={32} />
@@ -54,6 +55,7 @@ export default async function MainNavbar({ className }: NavbarProps) {
             {menu.map((link, index) => (
               <Link
                 key={index}
+                prefetch={false}
                 href={link.href}
                 className="text-muted-foreground hover:text-foreground hidden text-sm md:block"
               >
@@ -73,6 +75,7 @@ export default async function MainNavbar({ className }: NavbarProps) {
 
             {walletAddress ? <Link
               href={`/user/${walletAddress}`}
+              prefetch={false}
               className="hidden text-sm md:block"
             >
               Profile
@@ -112,6 +115,7 @@ export default async function MainNavbar({ className }: NavbarProps) {
                       <Link
                         href={link.href}
                         className="text-muted-foreground hover:text-foreground"
+                        prefetch={false}
                       >
                         {link.text}
                       </Link>
