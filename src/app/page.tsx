@@ -7,6 +7,8 @@ import { HowItWorksBlock } from "@/components/layouts/how-it-works";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getDepositTokens } from "@/lib/getDepositTokens.server";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const depositTokens = await getDepositTokens();
 
