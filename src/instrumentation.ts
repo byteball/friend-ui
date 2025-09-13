@@ -1,3 +1,5 @@
+import { EventEmitter } from 'events';
+
 import { LRUCache } from 'lru-cache';
 
 import { appConfig } from '@/appConfig';
@@ -28,11 +30,42 @@ export async function register() {
     ttl: 0,
   });
 
+  // init shared emitter once
+  if (!globalThis.__DATA_EVENT_EMITTER__) {
+    globalThis.__DATA_EVENT_EMITTER__ = new EventEmitter();
+    // avoid memory leak warnings — we control listeners
+    globalThis.__DATA_EVENT_EMITTER__.setMaxListeners(1000);
+  }
+
+  const emitSnapshot = () => {
+    try {
+      const payload = {
+        state: Object.fromEntries(globalThis.__STATE_VARS_STORAGE__!.entries()),
+        symbols: Object.fromEntries(globalThis.__SYMBOL_STORAGE__!.entries()),
+      } satisfies IClientData;
+      globalThis.__DATA_EVENT_EMITTER__!.emit('snapshot', payload);
+    } catch (e) {
+      console.error('error(emitter): failed to emit snapshot', e);
+    }
+  };
+
   client.onConnect(async () => {
     console.log("Bootstrapping completed.");
 
     // base symbol
-    globalThis.__SYMBOL_STORAGE__.set('base', { asset: 'base', symbol: 'GBYTE', decimals: 9 });
+    const symSet = globalThis.__SYMBOL_STORAGE__.set.bind(globalThis.__SYMBOL_STORAGE__);
+    const stateSet = globalThis.__STATE_VARS_STORAGE__.set.bind(globalThis.__STATE_VARS_STORAGE__);
+
+    const setSymbol = (k: string, v: TokenMeta) => {
+      symSet(k, v);
+      emitSnapshot();
+    };
+    const setStateVar = (k: string, v: any) => {
+      stateSet(k, v);
+      emitSnapshot();
+    };
+
+    setSymbol('base', { asset: 'base', symbol: 'GBYTE', decimals: 9 });
 
     // symbols from config
     for (const asset of appConfig.ALLOWED_TOKEN_ASSETS) {
@@ -42,7 +75,7 @@ export async function register() {
       const symbol = await client.api.getSymbolByAsset(tokenRegistry, asset);
       const decimals = await client.api.getDecimalsBySymbolOrAsset(tokenRegistry, asset);
 
-      globalThis.__SYMBOL_STORAGE__.set(asset, { asset, symbol, decimals });
+      setSymbol(asset, { asset, symbol, decimals });
     }
 
     console.log('log(bootstrap): all symbols are loaded', globalThis.__SYMBOL_STORAGE__.size);
@@ -80,24 +113,27 @@ export async function register() {
         }
       }
     } catch (e) {
-      console.log("error(bootstrap): can't load state vars", e);
-      process.exit(0);
+      console.error("error(bootstrap): can't load state vars", e);
+      // Don't terminate the process in Next.js; continue without state vars
     }
 
     for (const [key, value] of Object.entries(aaState)) {
-      globalThis.__STATE_VARS_STORAGE__.set(key, value);
+      setStateVar(key, value);
     }
 
-    // load FRD token meta
+    // load FRD token meta (if constants available)
     const constants = globalThis.__STATE_VARS_STORAGE__.get('constants');
-
-    const tokenRegistry = client.api.getOfficialTokenRegistryAddress();
-    const symbol = await client.api.getSymbolByAsset(tokenRegistry, constants.asset);
-    const decimals = await client.api.getDecimalsBySymbolOrAsset(tokenRegistry, constants.asset);
-
-    globalThis.__SYMBOL_STORAGE__.set(constants.asset, { asset: constants.asset, symbol, decimals });
+    if (constants?.asset) {
+      const tokenRegistry = client.api.getOfficialTokenRegistryAddress();
+      const symbol = await client.api.getSymbolByAsset(tokenRegistry, constants.asset);
+      const decimals = await client.api.getDecimalsBySymbolOrAsset(tokenRegistry, constants.asset);
+      setSymbol(constants.asset, { asset: constants.asset, symbol, decimals });
+    } else {
+      console.warn('warn(bootstrap): constants missing, skip FRD token meta');
+    }
 
     console.error('log(bootstrap): all state vars are loaded', globalThis.__STATE_VARS_STORAGE__.size);
+    emitSnapshot();
 
   });
 }

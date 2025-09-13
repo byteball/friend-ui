@@ -9,6 +9,8 @@ module globalThis {
   var __SYMBOL_STORAGE__: LRUCache<string, TokenMeta> | undefined;
 
   var __STATE_VARS_STORAGE__: LRUCache<string, any> | undefined;
+
+  var __DATA_EVENT_EMITTER__: import('events').EventEmitter | undefined;
 }
 
 type TokenMeta = {
