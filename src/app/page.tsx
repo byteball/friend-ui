@@ -1,5 +1,3 @@
-"use server";
-
 import { Claim } from "@/components/layouts/claim";
 import { Deposit } from "@/components/layouts/deposit";
 import { HeroBlock } from "@/components/layouts/hero-block";
