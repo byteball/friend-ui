@@ -19,6 +19,7 @@ export class GlobalStore extends EventEmitter {
   tokens: LRUCache<string, TokenMeta>;
 
   ready: boolean = false;
+  stateUpdateId: number;
 
   constructor({ initState, initTokens }: GlobalStoreOptions = { initState: {}, initTokens: {} }) {
     super();
@@ -39,6 +40,7 @@ export class GlobalStore extends EventEmitter {
     this.initializeTokens(initTokens);
 
     this.ready = true;
+    this.stateUpdateId = 0;
   }
 
   initializeState(initState: IAaState) {
@@ -47,6 +49,8 @@ export class GlobalStore extends EventEmitter {
     for (const [k, v] of Object.entries(initState)) {
       this.state.set(k, v);
     }
+
+    this.stateUpdateId += 1;
   }
 
   initializeTokens(initTokens: IInitialSymbols) {
@@ -87,6 +91,7 @@ export class GlobalStore extends EventEmitter {
     }
 
     this.sendStateUpdate(newStateVars);
+    this.stateUpdateId += 1;
   }
 
   sendStateUpdate(update: IAaState) {
