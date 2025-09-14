@@ -9,6 +9,8 @@ function formatSse(data: unknown) {
   return `data: ${JSON.stringify(data)}\n\n`;
 }
 
+const SSE_HEARTBEAT_MS = 15_000; // clients should reconnect if no messages within this window
+
 export async function GET(_req: NextRequest) {
   const encoder = new TextEncoder();
 
@@ -33,7 +35,7 @@ export async function GET(_req: NextRequest) {
 
       const sendToClient = (data: unknown) => safeEnqueue(formatSse(data));
 
-      heartbeat = setInterval(() => safeEnqueue(': keepalive\n\n'), 15000);
+      heartbeat = setInterval(() => safeEnqueue(': keepalive\n\n'), SSE_HEARTBEAT_MS);
 
       // Instruct EventSource clients to wait before reconnecting (in ms)
       const sendRetry = (ms: number) => safeEnqueue(`retry: ${ms}\n\n`);
