@@ -35,6 +35,10 @@ export async function GET(_req: NextRequest) {
 
       heartbeat = setInterval(() => safeEnqueue(': keepalive\n\n'), 15000);
 
+      // Instruct EventSource clients to wait before reconnecting (in ms)
+      const sendRetry = (ms: number) => safeEnqueue(`retry: ${ms}\n\n`);
+      sendRetry(5000);
+
       const initialSnapshot = globalThis.__GLOBAL_STORE__?.getSnapshot() || { state: {}, tokens: {} };
 
       sendToClient({ event: STORE_EVENTS.SNAPSHOT, data: initialSnapshot }); // send initial snapshot
