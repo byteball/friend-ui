@@ -11,7 +11,7 @@ export const GBYTE_TOKEN_META: TokenMeta = {
 
 export const STORE_EVENTS = {
   SNAPSHOT: "SNAPSHOT",
-  STORE_UPDATE: "STORE_UPDATE",
+  STATE_UPDATE: "STATE_UPDATE",
 } as const;
 
 export type STORE_EVENTS = typeof STORE_EVENTS[keyof typeof STORE_EVENTS];

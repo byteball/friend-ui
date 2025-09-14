@@ -36,11 +36,11 @@ export function DataProvider({ children, value }: DataProviderProps) {
 
         if (incoming.event === STORE_EVENTS.SNAPSHOT) {
           console.log('log(context): msg value', incoming.data);
-          setData(incoming.data as IClientSnapshot); // inital full snapshot
-        } else if (incoming.event === STORE_EVENTS.STORE_UPDATE) {
+          setData(incoming.data as IClientSnapshot); // initial full snapshot
+        } else if (incoming.event === STORE_EVENTS.STATE_UPDATE) {
           console.log('log(context): msg value', incoming.data);
           setData((prev) => ({
-            state: { ...(prev?.state ?? {}), ...(incoming.data as IAaStore) },
+            state: { ...(prev?.state ?? {}), ...(incoming.data as IAaState) },
             tokens: prev?.tokens ?? {},
           }));
         }

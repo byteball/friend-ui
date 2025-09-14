@@ -10,7 +10,7 @@ interface IInitialSymbols {
 }
 
 interface GlobalStoreOptions {
-  initState: IAaStore;
+  initState: IAaState;
   initTokens: IInitialSymbols;
 }
 
@@ -41,7 +41,7 @@ export class GlobalStore extends EventEmitter {
     this.ready = true;
   }
 
-  initializeState(initState: IAaStore) {
+  initializeState(initState: IAaState) {
     if (!this.state) throw new Error("State storage is not initialized");
 
     for (const [k, v] of Object.entries(initState)) {
@@ -73,7 +73,7 @@ export class GlobalStore extends EventEmitter {
     this.send(STORE_EVENTS.SNAPSHOT, this.getSnapshot());
   }
 
-  getState(): IAaStore {
+  getState(): IAaState {
     return Object.fromEntries(this.state.entries());
   }
 
@@ -81,7 +81,7 @@ export class GlobalStore extends EventEmitter {
     return Object.fromEntries(this.tokens.entries());
   }
 
-  updateState(newStateVars: IAaStore) {
+  updateState(newStateVars: IAaState) {
     for (const [k, v] of Object.entries(newStateVars)) {
       this.state.set(k, v);
     }
@@ -89,7 +89,7 @@ export class GlobalStore extends EventEmitter {
     this.sendStateUpdate(newStateVars);
   }
 
-  sendStateUpdate(update: IAaStore) {
-    this.send(STORE_EVENTS.STORE_UPDATE, update);
+  sendStateUpdate(update: IAaState) {
+    this.send(STORE_EVENTS.STATE_UPDATE, update);
   }
 }

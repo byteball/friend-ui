@@ -33,7 +33,7 @@ export async function register() {
     console.log('log(bootstrap): all tokens are loaded', Object.entries(initTokens).length);
 
     // load all stateVars
-    let initState: IAaStore = {};
+    let initState: IAaState = {};
     let iteration = 0;
 
     // TODO: WARNING: You should have more than 1 state vars
@@ -125,6 +125,57 @@ const getObyteClient = async () => {
       globalThis.__OBYTE_HEARTBEAT__ = undefined;
     }
 
+    if (!globalThis.__OBYTE_CLIENT__) {
+      console.error("error(bootstrap): obyte client missing");
+      return;
+    }
+
+    await globalThis.__OBYTE_CLIENT__.justsaying("light/new_aa_to_watch", {
+      aa: appConfig.AA_ADDRESS
+    });
+
+    globalThis.__OBYTE_CLIENT__.subscribe((err, result) => {
+      if (err) {
+        console.error("error(bootstrap): WebSocket problem", err);
+        return;
+      }
+
+      const { subject } = result[1];
+
+      switch (subject) {
+        case "light/aa_request":
+          console.error("warn(bootstrap): aa_request not handled");
+          // aaRequestHandler(err, result);
+          break;
+        case "light/aa_response": {
+          const { body } = result[1];
+          const { updatedStateVars, timestamp } = body;
+
+          console.log('log(bootstrap): new aa_response', timestamp);
+          const aaStateDiff: IAaState = {};
+
+          if (updatedStateVars && Object.keys(updatedStateVars).length > 0) {
+            for (const address in updatedStateVars) {
+              for (const var_name in updatedStateVars[address]) {
+                if (address === appConfig.AA_ADDRESS) {
+                  aaStateDiff[var_name] = updatedStateVars[address][var_name].value;
+                } else {
+                  // TODO: add support for other AA addresses if needed (GOVERNANCE)
+                }
+              }
+            }
+          }
+
+          if (Object.keys(aaStateDiff).length > 0) {
+            console.log('log(bootstrap): state diff', aaStateDiff);
+            globalThis.__GLOBAL_STORE__?.updateState(aaStateDiff);
+          }
+
+          break;
+        }
+
+      }
+    });
 
     globalThis.__OBYTE_HEARTBEAT__ = setInterval(async () => {
       if (!globalThis.__OBYTE_CLIENT__) {

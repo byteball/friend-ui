@@ -16,7 +16,7 @@ export async function GET(_req: NextRequest) {
   let closed = false;
 
   let onSnapshot: ((payload: IClientSnapshot) => void) | null = null;
-  let onStateUpdate: ((payload: IAaStore) => void) | null = null;
+  let onStateUpdate: ((payload: IAaState) => void) | null = null;
 
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {
@@ -43,13 +43,13 @@ export async function GET(_req: NextRequest) {
         sendToClient({ event: STORE_EVENTS.SNAPSHOT, data: payload });
       }
 
-      onStateUpdate = (payload: IAaStore) => {
-        sendToClient({ event: STORE_EVENTS.STORE_UPDATE, data: payload });
+      onStateUpdate = (payload: IAaState) => {
+        sendToClient({ event: STORE_EVENTS.STATE_UPDATE, data: payload });
       }
 
       try {
         globalThis.__GLOBAL_STORE__?.on(STORE_EVENTS.SNAPSHOT, onSnapshot);
-        globalThis.__GLOBAL_STORE__?.on(STORE_EVENTS.STORE_UPDATE, onStateUpdate);
+        globalThis.__GLOBAL_STORE__?.on(STORE_EVENTS.STATE_UPDATE, onStateUpdate);
       } catch { }
     },
     cancel() {
@@ -60,7 +60,7 @@ export async function GET(_req: NextRequest) {
       }
       try {
         if (onSnapshot) globalThis.__GLOBAL_STORE__?.off(STORE_EVENTS.SNAPSHOT, onSnapshot);
-        if (onStateUpdate) globalThis.__GLOBAL_STORE__?.off(STORE_EVENTS.STORE_UPDATE, onStateUpdate);
+        if (onStateUpdate) globalThis.__GLOBAL_STORE__?.off(STORE_EVENTS.STATE_UPDATE, onStateUpdate);
       } catch { }
     },
   });
