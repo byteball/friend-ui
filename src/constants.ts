@@ -8,3 +8,10 @@ export const GBYTE_TOKEN_META: TokenMeta = {
   symbol: "GBYTE",
   decimals: 9,
 };
+
+export const STORE_EVENTS = {
+  SNAPSHOT: "SNAPSHOT",
+  STORE_UPDATE: "STORE_UPDATE",
+} as const;
+
+export type STORE_EVENTS = typeof STORE_EVENTS[keyof typeof STORE_EVENTS];

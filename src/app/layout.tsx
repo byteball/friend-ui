@@ -23,17 +23,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const data: IClientData = {
-    state: globalThis.__STATE_VARS_STORAGE__ ? Object.fromEntries(globalThis.__STATE_VARS_STORAGE__.entries()) : {},
-    symbols: globalThis.__SYMBOL_STORAGE__ ? Object.fromEntries(globalThis.__SYMBOL_STORAGE__.entries()) : {}
-  }
+  const snapshot = globalThis.__GLOBAL_STORE__?.getSnapshot();
 
   return (
     <html lang="en">
       <body
         className={`${InterFont.className} antialiased`}
       >
-        <DataProvider value={data}>
+        <DataProvider value={snapshot ?? null}>
           <ClientProviders>
             <Navbar />
 

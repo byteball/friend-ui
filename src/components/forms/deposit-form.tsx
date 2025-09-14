@@ -22,11 +22,9 @@ import { Slider } from "../ui/slider";
 const MAX_LOCKED_TERM_DAYS = 365 * 4;
 const now = new Date();
 
-interface DepositFormProps {
-  tokens: (TokenMeta | undefined)[];
-}
+interface DepositFormProps { }
 
-export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
+export const DepositForm: FC<DepositFormProps> = () => {
   const [currency, setCurrency] = useState<TokenMeta>(GBYTE_TOKEN_META);
   const btnRef = useRef<HTMLButtonElement>(null);
   const [amount, setAmount] = useState<string>("0.1");
@@ -38,16 +36,16 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
 
   const state = data?.state ?? {};
   const frdAsset = state?.constants?.asset;
-  const frdMeta: TokenMeta | undefined = frdAsset ? data?.symbols?.[frdAsset] : undefined;
+  const frdMeta: TokenMeta | undefined = frdAsset ? data?.tokens?.[frdAsset] : undefined;
 
   const until = addDays(now, term);
 
   const handleTokenChange = useCallback((asset: string) => {
-    const token = tokens.find((token) => token?.asset === asset);
+    const token = data?.tokens?.[asset];
     if (!token) throw new Error("Unknown token");
 
     setCurrency(token);
-  }, [tokens]);
+  }, [data?.tokens]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.code === "Enter") {
@@ -106,7 +104,7 @@ export const DepositForm: FC<DepositFormProps> = ({ tokens }) => {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Currency</SelectLabel>
-                {tokens.filter((token): token is TokenMeta => token !== undefined).map((token) => (
+                {Object.entries(data?.tokens ?? {}).map(([_tokenKey, token]) => (
                   <SelectItem key={token.asset} value={token.asset}>
                     {token.symbol}
                   </SelectItem>

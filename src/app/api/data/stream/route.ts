@@ -3,6 +3,8 @@ import { NextRequest } from 'next/server';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+import { STORE_EVENTS } from '@/constants';
+
 function formatSse(data: unknown) {
   return `data: ${JSON.stringify(data)}\n\n`;
 }
@@ -12,7 +14,9 @@ export async function GET(_req: NextRequest) {
 
   let heartbeat: ReturnType<typeof setInterval> | null = null;
   let closed = false;
-  let onSnapshot: ((payload: IClientData) => void) | null = null;
+
+  let onSnapshot: ((payload: IClientSnapshot) => void) | null = null;
+  let onStateUpdate: ((payload: IAaStore) => void) | null = null;
 
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {
@@ -27,24 +31,25 @@ export async function GET(_req: NextRequest) {
         }
       };
 
-      const send = (data: unknown) => safeEnqueue(formatSse(data));
+      const sendToClient = (data: unknown) => safeEnqueue(formatSse(data));
 
       heartbeat = setInterval(() => safeEnqueue(': keepalive\n\n'), 15000);
 
-      const initial = {
-        state: globalThis.__STATE_VARS_STORAGE__
-          ? Object.fromEntries(globalThis.__STATE_VARS_STORAGE__.entries())
-          : {},
-        symbols: globalThis.__SYMBOL_STORAGE__
-          ? Object.fromEntries(globalThis.__SYMBOL_STORAGE__.entries())
-          : {},
-      } satisfies IClientData;
+      const initialSnapshot = globalThis.__GLOBAL_STORE__?.getSnapshot() || { state: {}, tokens: {} };
 
-      send(initial);
+      sendToClient({ event: STORE_EVENTS.SNAPSHOT, data: initialSnapshot }); // send initial snapshot
 
-      onSnapshot = (payload: IClientData) => send(payload);
+      onSnapshot = (payload: IClientSnapshot) => {
+        sendToClient({ event: STORE_EVENTS.SNAPSHOT, data: payload });
+      }
+
+      onStateUpdate = (payload: IAaStore) => {
+        sendToClient({ event: STORE_EVENTS.STORE_UPDATE, data: payload });
+      }
+
       try {
-        globalThis.__DATA_EVENT_EMITTER__?.on('snapshot', onSnapshot);
+        globalThis.__GLOBAL_STORE__?.on(STORE_EVENTS.SNAPSHOT, onSnapshot);
+        globalThis.__GLOBAL_STORE__?.on(STORE_EVENTS.STORE_UPDATE, onStateUpdate);
       } catch { }
     },
     cancel() {
@@ -54,7 +59,8 @@ export async function GET(_req: NextRequest) {
         heartbeat = null;
       }
       try {
-        if (onSnapshot) globalThis.__DATA_EVENT_EMITTER__?.off('snapshot', onSnapshot);
+        if (onSnapshot) globalThis.__GLOBAL_STORE__?.off(STORE_EVENTS.SNAPSHOT, onSnapshot);
+        if (onStateUpdate) globalThis.__GLOBAL_STORE__?.off(STORE_EVENTS.STORE_UPDATE, onStateUpdate);
       } catch { }
     },
   });

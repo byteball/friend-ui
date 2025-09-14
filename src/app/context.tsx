@@ -1,46 +1,58 @@
 "use client";
+import "client-only";
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 
-const DataContext = createContext<IClientData | null>(null);
+import { STORE_EVENTS } from "@/constants";
+
+const DataContext = createContext<IClientSnapshot | null>(null);
 
 export function useData() {
   return useContext(DataContext);
 }
 
-type DataProviderProps = { value: IClientData; children: React.ReactNode };
+type DataProviderProps = { children: React.ReactNode, value: IClientSnapshot | null };
 
-export function DataProvider({ value, children }: DataProviderProps) {
-  const [data, setData] = useState<IClientData>(value);
+export function DataProvider({ children, value }: DataProviderProps) {
+  const [data, setData] = useState<IClientSnapshot>(value || { state: {}, tokens: {} });
   const sseRef = useRef<EventSource | null>(null);
-
-  useEffect(() => {
-    setData(value);
-  }, [value]);
 
   useEffect(() => {
     let cancelled = false;
 
-    const apply = (incoming: IClientData) =>
-      setData((prev) => ({
-        state: { ...prev.state, ...incoming.state },
-        symbols: { ...prev.symbols, ...incoming.symbols },
-      }));
-
     const es = new EventSource("/api/data/stream");
     sseRef.current = es;
 
+    console.log('log(context): SSE connecting...');
+
     es.onmessage = (ev) => {
+      console.log('log(context): SSE message received', ev);
+
       try {
-        const incoming = JSON.parse(ev.data) as IClientData;
-        if (!cancelled) apply(incoming);
-      } catch {
+        console.log('cancelled', cancelled)
+        if (cancelled) return;
+
+        const incoming = JSON.parse(ev.data);
+        console.log('log(context): msg status', incoming.event);
+
+        if (incoming.event === STORE_EVENTS.SNAPSHOT) {
+          console.log('log(context): msg value', incoming.data);
+          setData(incoming.data as IClientSnapshot); // inital full snapshot
+        } else if (incoming.event === STORE_EVENTS.STORE_UPDATE) {
+          console.log('log(context): msg value', incoming.data);
+          setData((prev) => ({
+            state: { ...(prev?.state ?? {}), ...(incoming.data as IAaStore) },
+            tokens: prev?.tokens ?? {},
+          }));
+        }
+      } catch (err) {
+        console.log("error(context): failed to parse incoming SSE message", err);
         // ignore parse errors
       }
     };
 
     es.onerror = () => {
       // if in case of error the browser will try to reconnect automatically
-      console.warn("SSE connection error, retrying automatically...");
+      console.warn("log(context): SSE connection error, retrying automatically...");
     };
 
     return () => {
@@ -54,5 +66,5 @@ export function DataProvider({ value, children }: DataProviderProps) {
 
   const ctx = useMemo(() => data, [data]);
 
-  return <DataContext.Provider value={ctx}>{children}</DataContext.Provider>;
+  return <DataContext.Provider value={ctx || null}>{children}</DataContext.Provider>;
 }
