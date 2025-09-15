@@ -39,6 +39,8 @@ export const DepositForm: FC<DepositFormProps> = () => {
   const frdMeta: TokenMeta | undefined = frdAsset ? data?.tokens?.[frdAsset] : undefined;
 
   const until = addDays(now, term);
+  const userData = (walletAddress ? state[`user_${walletAddress}`] : undefined) as IUserData | undefined;
+  console.log('userData', userData);
 
   const handleTokenChange = useCallback((asset: string) => {
     const token = data?.tokens?.[asset];

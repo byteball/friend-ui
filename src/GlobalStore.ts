@@ -14,9 +14,13 @@ interface GlobalStoreOptions {
   initTokens: IInitialSymbols;
 }
 
+const ATTESTATION_TTL = 1000 * 60 * 60; // 1 hour
+
 export class GlobalStore extends EventEmitter {
   state: LRUCache<string, any>;
   tokens: LRUCache<string, TokenMeta>;
+  tgAttestations: LRUCache<string, string>;
+  discordAttestations: LRUCache<string, string>;
 
   ready: boolean = false;
   stateUpdateId: number;
@@ -34,6 +38,16 @@ export class GlobalStore extends EventEmitter {
     this.tokens = new LRUCache<string, TokenMeta>({
       max: 500,
       ttl: 0,
+    });
+
+    this.tgAttestations = new LRUCache<string, string>({
+      max: 500,
+      ttl: ATTESTATION_TTL
+    });
+
+    this.discordAttestations = new LRUCache<string, string>({
+      max: 500,
+      ttl: ATTESTATION_TTL
     });
 
     this.initializeState(initState);
