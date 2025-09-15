@@ -34,6 +34,11 @@ type IUserData = {
   current_ghost_num: number; // current ghost number
   reg_ts: number; // registration timestamp in seconds
   unlock_date: string; // unlock date as a string
+  last_date?: string; // last connect date as a string
+  liquid_rewards?: number; // liquid rewards amount
+  locked_rewards?: number; // locked rewards amount
+  total_streak?: number; // total connect streak
+  new_user_rewards?: number; // new user rewards amount
   [key: string]: any; // allow additional properties
 }
 

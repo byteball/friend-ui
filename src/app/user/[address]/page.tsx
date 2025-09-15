@@ -17,11 +17,17 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
   if (!address) return <div>Address not provided</div>
 
   const username = await getProfileUsername(address).catch(() => address.slice(0, 6) + "..." + address.slice(-4));
-  const state = globalThis.__GLOBAL_STORE__?.getState();
-  const userData = state?.[`user_${address}`];
+  const state = globalThis.__GLOBAL_STORE__?.getState() ?? {};
+  const userData: IUserData | undefined = state?.[`user_${address}`];
   const unlockDate = userData ? parseISO(userData.unlock_date) : null;
   const minLockedDate = unlockDate ? addDays(new Date(), appConfig.MIN_LOCKED_TERM_DAYS) : null;
   const isActive = minLockedDate && unlockDate ? isAfter(unlockDate, minLockedDate) : false;
+  const currentGhostNum = userData?.current_ghost_num ?? 0;
+
+  // Вынести в отдельную функцию
+  const friends = Object.entries(state)
+    .filter(([key]) => key.startsWith(`friend_${address}_`));
+
 
   const url = generateLink({
     aa: appConfig.AA_ADDRESS,
@@ -46,7 +52,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
 
       <div className="flex items-end flex-col gap-2">
         <QRButton href={url} disabled={!isActive} variant="secondary">Add friend</QRButton>
-        <small className="text-muted-foreground">Before sending a request, please contact {username} first.</small>
+        <small className="text-muted-foreground text-xs">Before sending a request, please contact {username} first</small>
       </div>
     </div>
 
@@ -70,7 +76,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
       <Card>
         <CardContent>
           <CardTitle>Current ghost</CardTitle>
-          <div className="text-3xl mt-2 text-green-700">Tim May</div>
+          <div className="text-3xl mt-2 text-green-700">Tim May <small>(Level {currentGhostNum})</small></div>
           <div className="text-sm mt-2"><a href="#">Address: Tim May St, Obyte City </a></div>
         </CardContent>
       </Card>
@@ -79,7 +85,11 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
       <Card>
         <CardContent>
           <CardTitle>Total friends</CardTitle>
-          <div className="text-3xl mt-2">{toLocalString(642)}</div>
+          <div className="text-3xl mt-2">{toLocalString(friends.length)}</div>
+          {userData?.last_date
+            ? <div className="text-muted-foreground text-sm mt-2">
+              Last friend activity: {userData?.last_date}</div>
+            : null}
         </CardContent>
       </Card>
     </div>
@@ -98,27 +108,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
           <div className="text-xl font-semibold">Tony</div>
           <div>Live at <a href='#' className="text-green-700">Tim May Street, 575381/N17929</a></div>
           <div className="text-muted-foreground">Friends since 2025-10-12</div>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <h2 className="text-2xl font-semibold mt-10 mb-4">Last activity</h2>
-
-      <div className="flex flex-col gap-4">
-        <div className="">
-          <div className="text-md">Deposited 5000 FRD</div>
-          <div className="text-sm text-muted-foreground">2025-10-12</div>
-        </div>
-
-        <div className="">
-          <div className="text-md">Became friend with <b>testuser</b></div>
-          <div className="text-sm text-muted-foreground">2025-10-12</div>
-        </div>
-
-        <div className="">
-          <div className="text-md">Received follow up reward with <b>testuser</b></div>
-          <div className="text-sm text-muted-foreground">2025-10-12</div>
         </div>
       </div>
     </div>

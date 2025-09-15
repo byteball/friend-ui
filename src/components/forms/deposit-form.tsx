@@ -58,7 +58,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
   const url = generateLink({
     aa: appConfig.AA_ADDRESS, amount: Math.ceil(Number(amount) * 10 ** currency?.decimals), from_address: walletAddress, data: {
       deposit: 1,
-      deposit_asset: currency?.asset === 'base' ? undefined : currency,
+      deposit_asset: currency?.asset === 'base' ? undefined : currency?.asset,
       term,
     }
   })
