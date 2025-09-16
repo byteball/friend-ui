@@ -3,14 +3,12 @@ import { Deposit } from "@/components/layouts/deposit";
 import { HeroBlock } from "@/components/layouts/hero-block";
 import { HowItWorksBlock } from "@/components/layouts/how-it-works";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getDepositTokens } from "@/lib/getDepositTokens.server";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 export const fetchCache = 'force-no-store';
 
-export default async function Home() {
-  const depositTokens = await getDepositTokens();
+export default function Home() {
 
   return <div className="grid space-y-8">
     <HeroBlock />
@@ -33,10 +31,10 @@ export default async function Home() {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="deposit">
-        <Deposit tokens={depositTokens} />
+        <Deposit />
       </TabsContent>
       <TabsContent value="claim">
-        <Claim tokens={depositTokens} />
+        <Claim />
       </TabsContent>
     </Tabs>
 
