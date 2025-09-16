@@ -13,6 +13,7 @@ import { BOUNCE_FEES, WALLET_COOKIE_NAME } from "@/constants";
 import { generateLink } from "@/lib/generateLink";
 
 import { useData } from "@/app/context";
+import { getRewards } from "@/lib/calculations/getRewards";
 import { toLocalString } from "@/lib/toLocalString";
 
 interface ClaimFormProps { }
@@ -22,10 +23,12 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
   const walletAddress = getCookie(WALLET_COOKIE_NAME);
   const data = useData();
   const [inputFriendWallet, setInputFriendWallet] = useState({ value: '', isValid: false });
+  const [error, setError] = useState<string | null>(null);
+  const [rewards, setRewards] = useState<IRewards | null>(null);
 
   const state = data?.state ?? {};
   const frdAsset = state?.constants?.asset;
-  const frdTokenMeta = data?.symbols?.[frdAsset || ''];
+  const frdTokenMeta = data?.tokens?.[frdAsset || ''];
   const frdSmb = frdTokenMeta?.symbol || 'FRD';
 
   useEffect(() => {
@@ -36,7 +39,7 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
       return;
     }
     (async () => {
-      const ok = await validateObyteAddress(v);
+      const ok = await validateObyteAddress(v).catch(() => false);
       if (!cancelled) setInputFriendWallet((prev) => ({ ...prev, isValid: ok }));
     })();
     return () => {
@@ -60,6 +63,33 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
     }
   })
 
+  useEffect(() => {
+    (async () => {
+      console.log('Calculating rewards...', inputFriendWallet.isValid);
+
+      if (inputFriendWallet.isValid) {
+        const userData1: IUserData = walletAddress ? state[`user_${walletAddress}`] : undefined;
+        const userData2: IUserData = inputFriendWallet.isValid ? state[`user_${inputFriendWallet.value.trim()}`] : undefined;
+
+        if (!userData1 || !userData2) {
+          if (!walletAddress) {
+            setError("Please add your wallet first");
+          } else {
+            setError("Both you and your friend must have deposited before claiming rewards");
+          }
+
+          setRewards(null);
+          return;
+        }
+
+        const rewards = await getRewards(userData1, userData2, state.constants);
+        setRewards(rewards);
+        setError(null);
+      }
+
+    })();
+  }, [data?.state, walletAddress, inputFriendWallet.value, inputFriendWallet.isValid]);
+
   return <div className="grid gap-4">
     <h2 className="text-3xl font-bold">Claim reward</h2>
 
@@ -80,28 +110,36 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
             />
           </div>
 
-          <QRButton href={url} disabled={!inputFriendWallet.isValid} ref={btnRef}>Claim</QRButton>
+          <QRButton href={url} disabled={!inputFriendWallet.isValid || !!error} ref={btnRef}>Claim</QRButton>
         </div>
-        <DescriptionList>
+
+        {error ? <div className="text-red-700">{error}</div> : null}
+
+        {rewards ? <DescriptionList>
           <DescriptionGroup>
             <DescriptionTerm>Locked rewards</DescriptionTerm>
             <DescriptionDetail>
-              <div>{toLocalString(1231.312)} <small>{frdSmb}</small> (1% of your total balance {toLocalString(1231.312)} <small>{frdSmb}</small>)</div>
-              <div>{toLocalString(10)} <small>{frdSmb}</small> (new user reward)</div>
-              <div>{toLocalString(10)} <small>{frdSmb}</small> (referral reward)</div>
+              <div>
+                {toLocalString((rewards.user1.totalBalance * 0.01) / 10 ** 9)} <small>{frdSmb}</small> (1% of your total balance {toLocalString(rewards.user1.totalBalance / 10 ** 9)} <small>{frdSmb}</small>)</div>
+              <div>
+                {toLocalString((rewards?.user1?.new_user_reward ?? 0) / 10 ** 9)} <small>{frdSmb}</small> (new user reward)
+              </div>
+              {/* TODO: implement referral reward */}
+              {/* <div>{toLocalString(rewards.user1.referral_reward / 10 ** 9)} <small>{frdSmb}</small> (referral reward)</div> */}
             </DescriptionDetail>
           </DescriptionGroup>
           <DescriptionGroup horizontal>
             <DescriptionTerm>Total rewards</DescriptionTerm>
-            <DescriptionDetail>{toLocalString(132231.312)} <small>{frdSmb}</small></DescriptionDetail>
+            {/* TODO: add referral reward */}
+            <DescriptionDetail>{toLocalString(rewards.user1.locked / 10 ** 9)} <small>{frdSmb}</small></DescriptionDetail>
           </DescriptionGroup>
           <DescriptionGroup horizontal>
             <DescriptionTerm>Liquid rewards</DescriptionTerm>
             <DescriptionDetail>
-              {toLocalString(1231.312)} <small>{frdSmb}</small> (0.1% of your total balance {toLocalString(1231.312)} <small>{frdSmb}</small>)
+              {toLocalString(rewards.user1.liquid / 10 ** 9)} <small>{frdSmb}</small> (0.1% of your total balance {toLocalString(rewards.user1.totalBalance / 10 ** 9)} <small>{frdSmb}</small>)
             </DescriptionDetail>
           </DescriptionGroup>
-        </DescriptionList>
+        </DescriptionList> : null}
 
       </div>
     </div>
