@@ -149,7 +149,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
       </div>
     </div> : null}
 
-    <div>
+    {rewards.length ? <div>
       <h2 className="text-2xl font-semibold mt-10 mb-4 first-letter:uppercase">{username}&apos;s rewards</h2>
 
       <div className="grid gap-4">
@@ -157,7 +157,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
           At <span className="text-muted-foreground">{fromUnixTime(f.accept_ts).toLocaleString()}</span>, {username} received an {f.index.split('_').join(" #")} reward: {toLocalString(f.liquid! / 10 ** frdDecimals)} <small>{frdSymbol}</small> (liquid) + {toLocalString((f.locked ?? 0) / 10 ** frdDecimals)} <small>{frdSymbol}</small> (locked){f.new_user_reward ? <> + {toLocalString(f.new_user_reward / 10 ** frdDecimals)} <small>{frdSymbol}</small> (new user)</> : '.'}
         </div>))}
       </div>
-    </div>
+    </div> : null}
 
   </div>
 }
