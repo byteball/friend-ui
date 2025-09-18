@@ -14,7 +14,7 @@ const referral_reward = 10e9;
 
 const balance_cap = 200e9;
 
-const getCeilingPrice = (aaConstants: IConstants) => {
+export const getCeilingPrice = (aaConstants: IConstants) => {
   const now = getUnixTime(new Date());
 
   return 2 ** ((now - aaConstants.launch_ts) / YEAR);
@@ -26,7 +26,7 @@ const getDepositAssetExchangeRate = async (asset: string): Promise<number> => {
 }
 
 // 57 str
-const getTotalBalance = async (balances: Balances, ceilingPrice: number) => {
+export const getTotalBalance = async (balances: Balances, ceilingPrice: number) => {
   const totals = { in_bytes: (balances.base ?? 0) * bytes_reducer };
 
   for (const [asset, balance] of Object.entries(balances)) {
