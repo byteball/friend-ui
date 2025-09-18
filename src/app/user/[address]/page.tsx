@@ -96,13 +96,13 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
 
       <Card>
         <CardContent>
-          <CardTitle>Total friends</CardTitle>
+          <CardTitle>Total rewards</CardTitle>
           <div className="text-3xl mt-2">
-            {toLocalString((totalRewards / 10 ** frdDecimals).toPrecision(frdDecimals))}
+            {toLocalString((totalRewards / 10 ** frdDecimals).toPrecision(frdDecimals))} <small>{frdSymbol}</small>
           </div>
           {userData?.last_date
             ? <div className="text-muted-foreground text-sm mt-2">
-              Last friend activity: {userData?.last_date}</div>
+              including {toLocalString((lockedRewards / 10 ** frdDecimals).toPrecision(frdDecimals))} locked</div>
             : null}
         </CardContent>
       </Card>
@@ -111,6 +111,10 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
         <CardContent>
           <CardTitle>Total friends</CardTitle>
           <div className="text-3xl mt-2">{toLocalString(friends.length)}</div>
+          {userData?.last_date
+            ? <div className="text-muted-foreground text-sm mt-2">
+              Last friend activity: {userData?.last_date}</div>
+            : null}
         </CardContent>
       </Card>
 
