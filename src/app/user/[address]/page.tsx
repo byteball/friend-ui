@@ -95,18 +95,18 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
     </div>
 
     <div>
-      <h2 className="text-2xl font-semibold mt-10 mb-4">Friend list</h2>
+      <h2 className="text-2xl font-semibold mt-10 mb-4">Friends</h2>
 
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <div className="text-xl font-semibold">Taump</div>
-          <div>Live at <a href='#' className="text-red-700">Phil Zimmermann Avenue, 350847/W32126</a></div>
+          <div>Lives at <a href='#' className="text-red-700">Phil Zimmermann Avenue, 350847/W32126</a></div>
           <div className="text-muted-foreground">Friends since 2025-10-12</div>
         </div>
 
         <div className="flex flex-col gap-2">
           <div className="text-xl font-semibold">Tony</div>
-          <div>Live at <a href='#' className="text-green-700">Tim May Street, 575381/N17929</a></div>
+          <div>Lives at <a href='#' className="text-green-700">Tim May Street, 575381/N17929</a></div>
           <div className="text-muted-foreground">Friends since 2025-10-12</div>
         </div>
       </div>
