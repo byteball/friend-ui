@@ -7,6 +7,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { QRButton } from "@/components/ui/qr-button";
 import { BOUNCE_FEES } from "@/constants";
 import { getFriendList } from "@/lib/calculations/getFriendList";
+import { getFriendship } from "@/lib/calculations/getFriendship";
 import { getCeilingPrice, getTotalBalance } from "@/lib/calculations/getRewards";
 import { generateLink } from "@/lib/generateLink";
 import { getProfileUsername } from "@/lib/getProfileUsername.server";
@@ -41,6 +42,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
   const lockedRewards = userData?.locked_rewards ?? 0;
   const newUserRewards = userData?.new_user_rewards ?? 0;
   const totalRewards = liquidRewards + lockedRewards + newUserRewards;
+  const rewards = getFriendship(state, address);
 
   const url = generateLink({
     aa: appConfig.AA_ADDRESS,
@@ -69,12 +71,12 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
         <small className="text-muted-foreground text-xs">Before sending a request, please contact {username} first</small>
       </div>
     </div>
-    {/* 
+
     <div className="grid gap-4 mt-5">
       <div>
         <a href={`https://city.obyte.org/user/${address}`} target="_blank" rel="noopener noreferrer" className="text-blue-700">Link on CITY profile</a>
       </div>
-    </div> */}
+    </div>
 
     <div className="grid grid-cols-3 gap-8 mt-10">
       <Card>
@@ -118,6 +120,20 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
         </CardContent>
       </Card>
 
+      <Card>
+        <CardContent>
+          <CardTitle>Total streak</CardTitle>
+          <div className="text-3xl mt-2">{toLocalString(userData?.total_streak ?? 0)}</div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent>
+          <CardTitle>Current streak</CardTitle>
+          <div className="text-3xl mt-2">{toLocalString(userData?.current_streak ?? 0)}</div>
+        </CardContent>
+      </Card>
+
     </div>
 
     {friends.length ? <div>
@@ -132,5 +148,16 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
         </div>)}
       </div>
     </div> : null}
+
+    <div>
+      <h2 className="text-2xl font-semibold mt-10 mb-4 first-letter:uppercase">{username}&apos;s rewards</h2>
+
+      <div className="grid gap-4">
+        {rewards.map((f => <div key={f.index + f.accept_ts} className="p-4 border rounded-md">
+          At <span className="text-muted-foreground">{fromUnixTime(f.accept_ts).toLocaleString()}</span>, {username} received an {f.index.split('_').join(" #")} reward: {toLocalString(f.liquid! / 10 ** frdDecimals)} <small>{frdSymbol}</small> (liquid) + {toLocalString((f.locked ?? 0) / 10 ** frdDecimals)} <small>{frdSymbol}</small> (locked){f.new_user_reward ? <> + {toLocalString(f.new_user_reward / 10 ** frdDecimals)} <small>{frdSymbol}</small> (new user)</> : '.'}
+        </div>))}
+      </div>
+    </div>
+
   </div>
 }
