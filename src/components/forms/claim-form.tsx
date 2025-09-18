@@ -71,19 +71,14 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
         const userData1: IUserData = walletAddress ? state[`user_${walletAddress}`] : undefined;
         const userData2: IUserData = inputFriendWallet.isValid ? state[`user_${inputFriendWallet.value.trim()}`] : undefined;
 
-        if (!userData1 || !userData2) {
-          if (!walletAddress) {
-            setError("Please add your wallet first");
-          } else {
-            setError("Both you and your friend must have deposited before claiming rewards");
-          }
-
+        if (!userData2) {
+          setError("Both you and your friend must have deposited before claiming rewards");
           setRewards(null);
           return;
         }
 
         const rewards = await getRewards(userData1, userData2, state.constants);
-        setRewards(rewards);
+        setRewards(walletAddress ? rewards : null);
         setError(null);
       }
 
@@ -139,8 +134,9 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
               {toLocalString(rewards.user1.liquid / 10 ** 9)} <small>{frdSmb}</small> (0.1% of your total balance {toLocalString(rewards.user1.totalBalance / 10 ** 9)} <small>{frdSmb}</small>)
             </DescriptionDetail>
           </DescriptionGroup>
-        </DescriptionList> : null}
-
+        </DescriptionList> : <div className="text-yellow-600">
+          Add a wallet to see more detailed information
+        </div>}
       </div>
     </div>
   </div>
