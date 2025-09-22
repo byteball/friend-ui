@@ -1,10 +1,12 @@
-import { appConfig } from "@/appConfig"
-import Link from "next/link"
-import Faq from "./components/Faq"
+import { appConfig } from "@/appConfig";
+import Link from "next/link";
+import Faq from "./components/Faq";
 
 export const dynamic = 'force-static'
 
 export default async function FaqPage() {
+  const symbol = "FRDT";
+
   return (
     <div className="prose prose-2xl">
       <h1 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-6xl">Frequently asked questions</h1>
@@ -35,7 +37,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              You and your friend are rewarded with 1% of your locked balances, which are added to your locked balances, and 0.1% paid in liquid FRD tokens, which you can immediately spend. If you or your friend are new to Obyte Friends and are making your or their first friend connection, you both receive an additional new user reward. See more details below.
+              You and your friend are rewarded with 1% of your locked balances, which are added to your locked balances, and 0.1% paid in liquid {symbol} tokens, which you can immediately spend. If you or your friend are new to Obyte Friends and are making your or their first friend connection, you both receive an additional new user reward. See more details below.
             </p>
 
             <p>
@@ -57,7 +59,7 @@ export default async function FaqPage() {
           <Faq.Title>What are the rewards?</Faq.Title>
           <Faq.Content>
             <p>
-              When you make a new friend, you receive 1% of your locked balance added to it, and 0.1% of your locked balance paid in liquid FRD tokens to your Obyte wallet. Your friend receives 1% and 0.1% of their balance respectively.
+              When you make a new friend, you receive 1% of your locked balance added to it, and 0.1% of your locked balance paid in liquid {symbol} tokens to your Obyte wallet. Your friend receives 1% and 0.1% of their balance respectively.
             </p>
 
             <p>
@@ -77,20 +79,20 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              If you deposit in assets other than FRD, reducers are applied to your balances in these assets. The reducer of GBYTE deposits is 0.75 and for other assets (such as USDC, ETH) it is 0.5. This means that only 75% of your GBYTE assets and 50% of your USDC or ETH assets actually work, and the rewards for making friends are 0.75% and 0.5% respectively on top of their balances. This measure is to incentivize deposits in FRD, supporting demand for it and its price.
+              If you deposit in assets other than {symbol}, reducers are applied to your balances in these assets. The reducer of GBYTE deposits is 0.75 and for other assets (such as USDC, ETH) it is 0.5. This means that only 75% of your GBYTE assets and 50% of your USDC or ETH assets actually work, and the rewards for making friends are 0.75% and 0.5% respectively on top of their balances. This measure is to incentivize deposits in {symbol}, supporting demand for it and its price.
             </p>
 
             <p>
-              If neither you nor your friend are new users (i.e. making your or their first friend), your balance is capped by 200 FRD when calculating the reward. So, if your actual balance is above 200 FRD, you&rsquo;ll receive 1%/0.1% rewards only from 200 FRD: 2 FRD and 0.2 FRD respectively. There is no cap when making friends with new users. This is to incentivize making connections with new users, who would need to buy FRD, supporting its price.
+              If neither you nor your friend are new users (i.e. making your or their first friend), your balance is capped by 200 {symbol} when calculating the reward. So, if your actual balance is above 200 {symbol}, you&rsquo;ll receive 1%/0.1% rewards only from 200 {symbol}: 2 {symbol} and 0.2 {symbol} respectively. There is no cap when making friends with new users. This is to incentivize making connections with new users, who would need to buy {symbol}, supporting its price.
             </p>
 
             <p>
-              When your account becomes more than 60 days old (since your first deposit), you will be allowed to make friends with existing users (in-friends) only every other day. After 150 days &mdash; every 3rd day, and so on, the frequency of allowed in-friends decreases over time. In the remaining days, you are allowed to make friends only with new users. This is to incentivize recruiting new users, who would buy FRD and support its price. You can still be allowed to make in-friends on these days if you burn 2 FRD or deposit at least 10 FRD on the same day.
+              When your account becomes more than 60 days old (since your first deposit), you will be allowed to make friends with existing users (in-friends) only every other day. After 150 days &mdash; every 3rd day, and so on, the frequency of allowed in-friends decreases over time. In the remaining days, you are allowed to make friends only with new users. This is to incentivize recruiting new users, who would buy {symbol} and support its price. You can still be allowed to make in-friends on these days if you burn 2 {symbol} or deposit at least 10 {symbol} on the same day.
             </p>
 
 
             <p>
-              When you are a new user (making your first friend) or you are becoming friends with a new user, you both receive an additional reward of 10 FRD (but not more than the smaller of your balances) to your locked balances. Again, this is to incentivize recruiting new users, who would buy FRD and support its price.
+              When you are a new user (making your first friend) or you are becoming friends with a new user, you both receive an additional reward of 10 {symbol} (but not more than the smaller of your balances) to your locked balances. Again, this is to incentivize recruiting new users, who would buy {symbol} and support its price.
             </p>
 
             <p>
@@ -115,13 +117,13 @@ export default async function FaqPage() {
 
             <ol>
               <li>
-                Bring new users in and become friends with them. You receive 10 FRD new user reward + 1% to your locked balance + 0.1% in liquid FRD tokens (see above).
+                Bring new users in and become friends with them. You receive 10 {symbol} new user reward + 1% to your locked balance + 0.1% in liquid {symbol} tokens (see above).
               </li>
               <li>
                 Make friends with existing users. You receive 1%/0.1% rewards as above but your balance is capped when calculating the reward. Better befriend new ones.
               </li>
               <li>
-                Refer new users to Obyte Friends. You receive 10 FRD referral reward when they make their first friend (which can be you) and 2% or 1% of all their deposits, depending on the token being deposited (see below).
+                Refer new users to Obyte Friends. You receive 10 {symbol} referral reward when they make their first friend (which can be you) and 2% or 1% of all their deposits, depending on the token being deposited (see below).
               </li>
             </ol>
           </Faq.Content>
@@ -135,10 +137,10 @@ export default async function FaqPage() {
             <p>You can get your referral link from your profile page. If new users make their first deposit from this link, you receive two kinds of rewards:</p>
             <ol>
               <li>
-                Deposit referral reward. Every time this user makes a deposit (not just their first deposit), you receive 2% of their deposit if they deposit in FRD, or 1% if they deposit in any other token. The reward is paid in liquid FRD directly to your wallet.
+                Deposit referral reward. Every time this user makes a deposit (not just their first deposit), you receive 2% of their deposit if they deposit in {symbol}, or 1% if they deposit in any other token. The reward is paid in liquid {symbol} directly to your wallet.
               </li>
               <li>
-                Referred user reward. When the new user makes their first friend (it can be you or anyone else), both you and the new user receive 10 FRD (but not more than the user&rsquo;s balance) to your locked balances. This is in addition to the regular new user reward (see above), which is also 10 FRD.
+                Referred user reward. When the new user makes their first friend (it can be you or anyone else), both you and the new user receive 10 {symbol} (but not more than the user&rsquo;s balance) to your locked balances. This is in addition to the regular new user reward (see above), which is also 10 {symbol}.
               </li>
             </ol>
 
@@ -169,15 +171,15 @@ export default async function FaqPage() {
           </Faq.Title>
           <Faq.Content>
             <p>
-              You can make deposits in FRD, GBYTE or external assets such as USDC or ETH. You can make multiple deposits in any of these tokens.
+              You can make deposits in {symbol}, GBYTE or external assets such as USDC or ETH. You can make multiple deposits in any of these tokens.
             </p>
 
             <p>
-              Reducers are applied to your balances in GBYTE and external assets (see above) when calculating rewards for making friends. So, FRD deposits are more profitable, but also more risky as the FRD exchange rate can change during the locking period.
+              Reducers are applied to your balances in GBYTE and external assets (see above) when calculating rewards for making friends. So, {symbol} deposits are more profitable, but also more risky as the {symbol} exchange rate can change during the locking period.
             </p>
 
             <p>
-              When the locking period expires, you can get your locked tokens back, plus the accrued rewards in FRD.
+              When the locking period expires, you can get your locked tokens back, plus the accrued rewards in {symbol}.
             </p>
 
             <p>
@@ -214,7 +216,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              If you deposit less than 50 FRD (or equivalent in other tokens), you need to be <Link href={appConfig.REAL_NAME_BOT_URL}>real-name attested</Link> too. You don&rsquo;t need to disclose your real name to anyone (except the verification service) but this requirement helps to ensure that the system is not abused by creating multiple accounts belonging to the same person, making them friends with each other, and receiving rewards without bringing any real users in.
+              If you deposit less than 50 {symbol} (or equivalent in other tokens), you need to be <Link href={appConfig.REAL_NAME_BOT_URL}>real-name attested</Link> too. You don&rsquo;t need to disclose your real name to anyone (except the verification service) but this requirement helps to ensure that the system is not abused by creating multiple accounts belonging to the same person, making them friends with each other, and receiving rewards without bringing any real users in.
             </p>
           </Faq.Content>
         </Faq.Item>
@@ -226,7 +228,7 @@ export default async function FaqPage() {
             <p>In 60 days after becoming friends, you and your friend become eligible for follow-up rewards. </p>
 
             <p>
-              Percentage-wise, they are 1/10th of the initial rewards, that is 0.1% to the locked balance and 0.01% in liquid FRD. However, they are applied to your new balance, which is likely much higher than the balance you had when you became friends.
+              Percentage-wise, they are 1/10th of the initial rewards, that is 0.1% to the locked balance and 0.01% in liquid {symbol}. However, they are applied to your new balance, which is likely much higher than the balance you had when you became friends.
             </p>
 
             <p>
@@ -280,28 +282,28 @@ export default async function FaqPage() {
 
 
         <Faq.Item>
-          <Faq.Title>What is FRD token?</Faq.Title>
+          <Faq.Title>What is {symbol} token?</Faq.Title>
           <Faq.Content>
-            FRD is the main token of Obyte Friends. Rewards are paid in FRD, and it&rsquo;s the main token for deposits. Deposits can be made in GBYTE, USDC, and ETH too &mdash; this protects against changes in FRD exchange rate, but the rewards are also smaller in this case (see the question about rewards above).
+            {symbol} is the main token of Obyte Friends. Rewards are paid in {symbol}, and it&rsquo;s the main token for deposits. Deposits can be made in GBYTE, USDC, and ETH too &mdash; this protects against changes in {symbol} exchange rate, but the rewards are also smaller in this case (see the question about rewards above).
           </Faq.Content>
         </Faq.Item>
 
 
         <Faq.Item>
           <Faq.Title>
-            What drives supply and demand on FRD?
+            What drives supply and demand on {symbol}?
           </Faq.Title>
           <Faq.Content>
             <p>
-              The main source of FRD supply is the rewards paid for making friends. Most of the rewards are paid to locked balances of the new friends and do not immediately hit the market. The smaller part is paid in liquid FRD tokens, which can be freely sold on the market.
+              The main source of {symbol} supply is the rewards paid for making friends. Most of the rewards are paid to locked balances of the new friends and do not immediately hit the market. The smaller part is paid in liquid {symbol} tokens, which can be freely sold on the market.
             </p>
 
             <p>
-              On the demand side, there are new users who need to make deposits and choose to deposit FRD, which they have to buy from the market. Not all new users buy FRD &mdash; some may choose the safer option of depositing GBYTE, USDC, or ETH, content with the smaller rewards. Others, seeking larger rewards, choose to deposit FRD. The rewards for GBYTE are 75%, and for USDC and ETH they are 50% of the rewards for FRD.
+              On the demand side, there are new users who need to make deposits and choose to deposit {symbol}, which they have to buy from the market. Not all new users buy {symbol} &mdash; some may choose the safer option of depositing GBYTE, USDC, or ETH, content with the smaller rewards. Others, seeking larger rewards, choose to deposit {symbol}. The rewards for GBYTE are 75%, and for USDC and ETH they are 50% of the rewards for {symbol}.
             </p>
 
             <p>
-              So, incentives are there to buy and deposit FRD rather than other tokens.
+              So, incentives are there to buy and deposit {symbol} rather than other tokens.
             </p>
 
             <p>
@@ -309,15 +311,15 @@ export default async function FaqPage() {
             </p>
 
             <ol>
-              <li>new user reward 10 FRD paid to locked accounts of both friends</li>
-              <li>referral reward 10 FRD paid to locked accounts of both friends</li>
-              <li>referral reward of 2% (or 1% if paid in tokens other than FRD) for lifetime deposits of the referred user</li>
+              <li>new user reward 10 {symbol} paid to locked accounts of both friends</li>
+              <li>referral reward 10 {symbol} paid to locked accounts of both friends</li>
+              <li>referral reward of 2% (or 1% if paid in tokens other than {symbol}) for lifetime deposits of the referred user</li>
               <li>rewards from making friends with existing users are capped, making recruiting new users more profitable</li>
               <li>the allowed frequency of making friends with existing users is limited and decreases over time, again pushing users to look for new members</li>
             </ol>
 
             <p>
-              In addition to demand from new users, the existing users might need to buy FRD too. On days when they are not normally allowed to make in-friends, they can still gain this right by burning 2 FRD or making a new deposit of at least 10 FRD. This option might be necessary for users who need to keep their streak but are unable to recruit a new user on that day.
+              In addition to demand from new users, the existing users might need to buy {symbol} too. On days when they are not normally allowed to make in-friends, they can still gain this right by burning 2 {symbol} or making a new deposit of at least 10 {symbol}. This option might be necessary for users who need to keep their streak but are unable to recruit a new user on that day.
             </p>
 
             <p>
@@ -328,10 +330,10 @@ export default async function FaqPage() {
 
 
         <Faq.Item>
-          <Faq.Title>Is FRD inflationary?</Faq.Title>
+          <Faq.Title>Is {symbol} inflationary?</Faq.Title>
           <Faq.Content>
             <p>
-              Yes, its supply grows, due to rewards paid for making friends. However, most of the new emissions go to locked balances and don't immediately affect the market, and the emissions of liquid FRD are designed to be counteracted by demand for FRD from new users (see the previous answer).
+              Yes, its supply grows, due to rewards paid for making friends. However, most of the new emissions go to locked balances and don't immediately affect the market, and the emissions of liquid {symbol} are designed to be counteracted by demand for {symbol} from new users (see the previous answer).
             </p>
 
             <p>
@@ -342,13 +344,13 @@ export default async function FaqPage() {
 
 
         <Faq.Item>
-          <Faq.Title>What is the initial supply of FRD tokens?</Faq.Title>
+          <Faq.Title>What is the initial supply of {symbol} tokens?</Faq.Title>
           <Faq.Content>The initial supply is 0. Tokens are minted only as rewards for making friends.</Faq.Content>
         </Faq.Item>
 
 
         <Faq.Item>
-          <Faq.Title>What is the FRD price?</Faq.Title>
+          <Faq.Title>What is the {symbol} price?</Faq.Title>
           <Faq.Content>
             <p>
               It is determined by the market, based on the supply and demand discussed above.
@@ -362,7 +364,7 @@ export default async function FaqPage() {
         <Faq.Item>
           <Faq.Title>What is the ceiling price?</Faq.Title>
           <Faq.Content>
-            The ceiling price is a preprogrammed price of FRD in terms of GBYTE that doubles every year. The market price is not guaranteed to match it. This price is used only when replacing one deposited token for another.
+            The ceiling price is a preprogrammed price of {symbol} in terms of GBYTE that doubles every year. The market price is not guaranteed to match it. This price is used only when replacing one deposited token for another.
           </Faq.Content>
         </Faq.Item>
 
@@ -372,23 +374,23 @@ export default async function FaqPage() {
           <Faq.Title>Can I deposit one token and then replace it with another?</Faq.Title>
           <Faq.Content>
             <p>
-              Yes. For example, you can initially deposit GBYTE and later replace it with FRD (i.e. deposit some FRD and get GBYTE back) without waiting for expiry of your locking period.
+              Yes. For example, you can initially deposit GBYTE and later replace it with {symbol} (i.e. deposit some {symbol} and get GBYTE back) without waiting for expiry of your locking period.
             </p>
 
             <p>
-              The ceiling price is used to calculate how much FRD you need to deposit to release your GBYTE.
+              The ceiling price is used to calculate how much {symbol} you need to deposit to release your GBYTE.
             </p>
 
             <p>
-              You can also do a reverse replacement, or replace external tokens such as USDC and ETH for FRD, or vice versa. For external tokens, a combination of the ceiling price and the token&rsquo;s price against GBYTE from an <Link href="https://oswap.io/" target="_blank" rel="noopener noreferrer">Oswap</Link> pool is used to determine the replacement ratio. The <Link href="/governance">governance</Link> decides which Oswap pool is used.
+              You can also do a reverse replacement, or replace external tokens such as USDC and ETH for {symbol}, or vice versa. For external tokens, a combination of the ceiling price and the token&rsquo;s price against GBYTE from an <Link href="https://oswap.io/" target="_blank" rel="noopener noreferrer">Oswap</Link> pool is used to determine the replacement ratio. The <Link href="/governance">governance</Link> decides which Oswap pool is used.
             </p>
 
             <p>
-              The ceiling price limits the rate of growth of FRD price against GBYTE. If its market price exceeds the ceiling price, it becomes profitable to replace the locked FRD with GBYTE and then sell the released FRD on the market for profit, thus pushing its price down.
+              The ceiling price limits the rate of growth of {symbol} price against GBYTE. If its market price exceeds the ceiling price, it becomes profitable to replace the locked {symbol} with GBYTE and then sell the released {symbol} on the market for profit, thus pushing its price down.
             </p>
 
             <p>
-              This limit reduces the incentive to hold liquid FRD in hopes of its appreciation due to efforts of others, and pushes users to lock FRD instead and start making more money by connecting with friends.
+              This limit reduces the incentive to hold liquid {symbol} in hopes of its appreciation due to efforts of others, and pushes users to lock {symbol} instead and start making more money by connecting with friends.
             </p>
           </Faq.Content>
         </Faq.Item>
@@ -435,7 +437,7 @@ export default async function FaqPage() {
           </Faq.Title>
           <Faq.Content>
             <p>
-              It is not always required &mdash; it&rsquo;s unnecessary when you deposit 50 FRD or more.
+              It is not always required &mdash; it&rsquo;s unnecessary when you deposit 50 {symbol} or more.
             </p>
 
             <p>
@@ -453,7 +455,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              The rewards scheme can be updated in rather significant ways. For example, it may add an option to burn some amount of FRD to receive double rewards in the next 3 days in exchange. It can also link rewards to the user&rsquo;s status in <Link href="https://city.obyte.org/" target="_blank" rel="noopener noreferrer">Obyte City</Link>. It can be tuned to pay higher rewards to users with longer streaks. These are just some ideas, and there are many more possibilities.
+              The rewards scheme can be updated in rather significant ways. For example, it may add an option to burn some amount of {symbol} to receive double rewards in the next 3 days in exchange. It can also link rewards to the user&rsquo;s status in <Link href="https://city.obyte.org/" target="_blank" rel="noopener noreferrer">Obyte City</Link>. It can be tuned to pay higher rewards to users with longer streaks. These are just some ideas, and there are many more possibilities.
             </p>
           </Faq.Content>
         </Faq.Item>
