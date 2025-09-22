@@ -51,7 +51,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
       connect: 1,
       friend: address
     }
-  })
+  });
 
   return <div>
     <div className="flex items-center justify-between">
