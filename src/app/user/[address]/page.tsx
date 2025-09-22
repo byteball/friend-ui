@@ -53,8 +53,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
     }
   })
 
-  console.log('userData', userData);
-
   return <div>
     <div className="flex items-center justify-between">
       <div className="flex space-x-4">
