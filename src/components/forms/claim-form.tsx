@@ -2,6 +2,7 @@
 
 import { isValidAddress as validateObyteAddress } from "@/lib/isValidAddress";
 import { getCookie } from "cookies-next/client";
+import { format } from "date-fns";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 
 import { DescriptionDetail, DescriptionGroup, DescriptionList, DescriptionTerm } from "../ui/description-list";
@@ -13,8 +14,10 @@ import { BOUNCE_FEES, WALLET_COOKIE_NAME } from "@/constants";
 import { generateLink } from "@/lib/generateLink";
 
 import { useData } from "@/app/context";
+import { AddWalletModal } from "@/components/modals/add-wallet";
 import { getRewards } from "@/lib/calculations/getRewards";
 import { toLocalString } from "@/lib/toLocalString";
+
 
 interface ClaimFormProps { }
 
@@ -77,9 +80,20 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
           return;
         }
 
+        if (userData2.last_date) {
+          if (format(new Date(userData2.last_date), 'yyyy-MM-dd') === format(Date.now(), 'yyyy-MM-dd')) {
+            setError("Your friend has already claimed today.");
+            setRewards(null);
+            return;
+          }
+        }
+
         const rewards = await getRewards(userData1, userData2, state.constants);
         setRewards(walletAddress ? rewards : null);
         setError(null);
+      } else {
+        setError("Invalid address");
+        setRewards(null);
       }
 
     })();
@@ -108,7 +122,7 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
           <QRButton href={url} disabled={!inputFriendWallet.isValid || !!error} ref={btnRef}>Claim</QRButton>
         </div>
 
-        {error ? <div className="text-red-700">{error}</div> : null}
+        {error && inputFriendWallet.value ? <div className="text-red-700">{error}</div> : null}
 
         {rewards ? <DescriptionList>
           <DescriptionGroup>
@@ -134,9 +148,11 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
               {toLocalString(rewards.user1.liquid / 10 ** 9)} <small>{frdSmb}</small> (0.1% of your total balance {toLocalString(rewards.user1.totalBalance / 10 ** 9)} <small>{frdSmb}</small>)
             </DescriptionDetail>
           </DescriptionGroup>
-        </DescriptionList> : <div className="text-yellow-600">
-          Add a wallet to see more detailed information
-        </div>}
+        </DescriptionList> : (!walletAddress ? <div className="text-yellow-600">
+          <AddWalletModal walletAddress={walletAddress}>
+            <span className="cursor-pointer underline">Add your address</span>
+          </AddWalletModal> to see the rewards for this friendship
+        </div> : null)}
       </div>
     </div>
   </div>
