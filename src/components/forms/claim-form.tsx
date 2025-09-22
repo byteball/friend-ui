@@ -2,22 +2,23 @@
 
 import { isValidAddress as validateObyteAddress } from "@/lib/isValidAddress";
 import { getCookie } from "cookies-next/client";
-import { format } from "date-fns";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 
 import { DescriptionDetail, DescriptionGroup, DescriptionList, DescriptionTerm } from "../ui/description-list";
 import { Input } from "../ui/input";
 import { QRButton } from "../ui/qr-button";
 
-import { appConfig } from "@/appConfig";
 import { BOUNCE_FEES, WALLET_COOKIE_NAME } from "@/constants";
-import { generateLink } from "@/lib/generateLink";
 
 import { useData } from "@/app/context";
 import { AddWalletModal } from "@/components/modals/add-wallet";
+
 import { getRewards } from "@/lib/calculations/getRewards";
+import { generateLink } from "@/lib/generateLink";
+import { isSameDayUTC } from "@/lib/isSameDayUTC";
 import { toLocalString } from "@/lib/toLocalString";
 
+import { appConfig } from "@/appConfig";
 
 interface ClaimFormProps { }
 
@@ -81,7 +82,7 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
         }
 
         if (userData2.last_date) {
-          if (format(new Date(userData2.last_date), 'yyyy-MM-dd') === format(Date.now(), 'yyyy-MM-dd')) {
+          if (isSameDayUTC(new Date(userData2.last_date), new Date())) {
             setError("Your friend has already claimed today.");
             setRewards(null);
             return;
