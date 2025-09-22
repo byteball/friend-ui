@@ -14,18 +14,17 @@ export default function Home() {
     <HeroBlock />
     <HowItWorksBlock />
 
-
     <Tabs defaultValue="deposit" className="items-center">
       <TabsList className="gap-1 bg-transparent">
         <TabsTrigger
           value="deposit"
-          className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full data-[state=active]:shadow-none"
+          className="data-[state=active]:after:bg-primary relative rounded-none py-2 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
         >
           Deposit
         </TabsTrigger>
         <TabsTrigger
           value="claim"
-          className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full data-[state=active]:shadow-none"
+          className="data-[state=active]:after:bg-primary relative rounded-none py-2 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
         >
           Claim
         </TabsTrigger>
