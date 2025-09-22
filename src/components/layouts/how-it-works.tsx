@@ -20,7 +20,7 @@ export const HowItWorksBlock = () => (<div>
           Claim rewards for becoming friends. Each of you gets 1% added to your locked balance, plus 0.1% in liquid FRD (Friend) tokens, which you can spend immediately. Additionally, you get a 10 FRD new user reward and a 10 FRD referral reward (1 FRD ≈ $2).
         </div>
       </div>
-      <div>
+      <div className="text-muted-foreground text-sm">
         The 1% daily rewards compound. If you deposit 1 FRD and make one friend every day for a year, your locked balance will grow to 37.8 FRD, and you’ll receive 3.68 liquid FRD over the course of the year (not including new user and referral rewards).
       </div>
     </div>
