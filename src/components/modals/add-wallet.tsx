@@ -13,9 +13,10 @@ import { Input } from "../ui/input";
 interface AddWalletModalProps {
   triggerClassName?: string;
   walletAddress?: string;
+  children?: React.ReactNode;
 }
 
-export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "", walletAddress }) => {
+export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "", walletAddress, children }) => {
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [inputValue, setInputValue] = useState(walletAddress || "");
@@ -67,9 +68,9 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
     if (!open) restoreInputValue();
   }}>
     <DialogTrigger asChild>
-      <Button ref={closeButtonRef} variant="default" className={triggerClassName}>
+      {!children ? <Button ref={closeButtonRef} variant="default" className={triggerClassName}>
         {walletAddress ? `${walletAddress.slice(0, 3)}...${walletAddress.slice(-3)}` : "Add wallet"}
-      </Button>
+      </Button> : children}
     </DialogTrigger>
 
     <DialogContent className="sm:max-w-[425px]">
