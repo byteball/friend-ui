@@ -18,13 +18,13 @@ export default function Home() {
       <TabsList className="gap-1 bg-transparent">
         <TabsTrigger
           value="deposit"
-          className="text-md data-[state=active]:after:bg-primary relative rounded-none py-2 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+          className="cursor-pointer text-md data-[state=active]:after:bg-primary relative rounded-none py-2 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
         >
           Deposit
         </TabsTrigger>
         <TabsTrigger
           value="claim"
-          className="text-md data-[state=active]:after:bg-primary relative rounded-none py-2 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+          className="cursor-pointer text-md data-[state=active]:after:bg-primary relative rounded-none py-2 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
         >
           Claim
         </TabsTrigger>
