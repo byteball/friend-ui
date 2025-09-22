@@ -6,8 +6,8 @@ export const dynamic = 'force-static'
 
 export default async function FaqPage() {
   return (
-    <div className="prose prose-xl">
-      <h1 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">Frequently asked questions</h1>
+    <div className="prose prose-2xl">
+      <h1 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-6xl">Frequently asked questions</h1>
 
       <Faq.Container>
         <Faq.Item>
@@ -17,8 +17,8 @@ export default async function FaqPage() {
         </Faq.Item>
 
         <Faq.Item>
-          <Faq.Title>What’s the purpose of Obyte Friends?</Faq.Title>
-          <Faq.Content>The purpose is to encourage Obyte community members to spread the word about <Link href="https://obyte.org" target="_blank" rel="noopener noreferrer">Obyte’s uncensorable, unstoppable, truly decentralized network</Link>, and create closer connections with each other. By doing so, they become each other’s friends, as well as Obyte’s friends. We believe this helps to build a strong, coherent, and cooperative community.</Faq.Content>
+          <Faq.Title>What&rsquo;s the purpose of Obyte Friends?</Faq.Title>
+          <Faq.Content>The purpose is to encourage Obyte community members to spread the word about <Link href="https://obyte.org" target="_blank" rel="noopener noreferrer">Obyte&rsquo;s uncensorable, unstoppable, truly decentralized network</Link>, and create closer connections with each other. By doing so, they become each other&rsquo;s friends, as well as Obyte&rsquo;s friends. We believe this helps to build a strong, coherent, and cooperative community.</Faq.Content>
         </Faq.Item>
 
 
@@ -31,7 +31,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              Then, you need to find friends and claim rewards together. To claim rewards, you and your friend need to send claiming requests within 10 minutes of each other. In the requests, you indicate your new friend’s Obyte address, and the friend indicates yours.
+              Then, you need to find friends and claim rewards together. To claim rewards, you and your friend need to send claiming requests within 10 minutes of each other. In the requests, you indicate your new friend&rsquo;s Obyte address, and the friend indicates yours.
             </p>
 
             <p>
@@ -47,7 +47,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              If you make friends every day and complete a long enough streak, you are allowed to become friends with a “ghost” of a famous cypherpunk, such as Satoshi Nakamoto, Tim May, etc (they are not real users). These achievements will be displayed in your profile.
+              If you make friends every day and complete a long enough streak, you are allowed to become friends with a &ldquo;ghost&rdquo; of a famous cypherpunk, such as Satoshi Nakamoto, Tim May, etc (they are not real users). These achievements will be displayed in your profile.
             </p>
           </Faq.Content>
         </Faq.Item>
@@ -69,11 +69,11 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              If you add the 0.1% liquid rewards back to your locked deposit every day, your locked balance will grow 1.011<sup>365</sup> = 54.2 times after 1 year. That’s the power of compounding interest.
+              If you add the 0.1% liquid rewards back to your locked deposit every day, your locked balance will grow 1.011<sup>365</sup> = 54.2 times after 1 year. That&rsquo;s the power of compounding interest.
             </p>
 
             <p>
-              The unlock dates of both your and your friend’s deposits must be at least 1 year in the future. You can extend your locking period as often as you like.
+              The unlock dates of both your and your friend&rsquo;s deposits must be at least 1 year in the future. You can extend your locking period as often as you like.
             </p>
 
             <p>
@@ -81,11 +81,11 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              If neither you nor your friend are new users (i.e. making your or their first friend), your balance is capped by 200 FRD when calculating the reward. So, if your actual balance is above 200 FRD, you’ll receive 1%/0.1% rewards only from 200 FRD: 2 FRD and 0.2 FRD respectively. There is no cap when making friends with new users. This is to incentivize making connections with new users, who would need to buy FRD, supporting its price.
+              If neither you nor your friend are new users (i.e. making your or their first friend), your balance is capped by 200 FRD when calculating the reward. So, if your actual balance is above 200 FRD, you&rsquo;ll receive 1%/0.1% rewards only from 200 FRD: 2 FRD and 0.2 FRD respectively. There is no cap when making friends with new users. This is to incentivize making connections with new users, who would need to buy FRD, supporting its price.
             </p>
 
             <p>
-              When your account becomes more than 60 days old (since your first deposit), you will be allowed to make friends with existing users (in-friends) only every other day. After 150 days — every 3rd day, and so on, the frequency of allowed in-friends decreases over time. In the remaining days, you are allowed to make friends only with new users. This is to incentivize recruiting new users, who would buy FRD and support its price. You can still be allowed to make in-friends on these days if you burn 2 FRD or deposit at least 10 FRD on the same day.
+              When your account becomes more than 60 days old (since your first deposit), you will be allowed to make friends with existing users (in-friends) only every other day. After 150 days &mdash; every 3rd day, and so on, the frequency of allowed in-friends decreases over time. In the remaining days, you are allowed to make friends only with new users. This is to incentivize recruiting new users, who would buy FRD and support its price. You can still be allowed to make in-friends on these days if you burn 2 FRD or deposit at least 10 FRD on the same day.
             </p>
 
 
@@ -94,11 +94,11 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              When you refer someone, or are referred by someone, you both receive additional rewards — see below.
+              When you refer someone, or are referred by someone, you both receive additional rewards &mdash; see below.
             </p>
 
             <p>
-              In 60 days, 150 days, and so on, after becoming friends, you both can receive follow-up rewards — see below.
+              In 60 days, 150 days, and so on, after becoming friends, you both can receive follow-up rewards &mdash; see below.
             </p>
           </Faq.Content>
         </Faq.Item>
@@ -110,7 +110,7 @@ export default async function FaqPage() {
           </Faq.Title>
           <Faq.Content>
             <p>
-              By spreading the word about Obyte’s censorship-resistant tech which stands out among other crypto networks. You get more people to learn about it and are rewarded for Obyte’s (and your) new friends.
+              By spreading the word about Obyte&rsquo;s censorship-resistant tech which stands out among other crypto networks. You get more people to learn about it and are rewarded for Obyte&rsquo;s (and your) new friends.
             </p>
 
             <ol>
@@ -138,7 +138,7 @@ export default async function FaqPage() {
                 Deposit referral reward. Every time this user makes a deposit (not just their first deposit), you receive 2% of their deposit if they deposit in FRD, or 1% if they deposit in any other token. The reward is paid in liquid FRD directly to your wallet.
               </li>
               <li>
-                Referred user reward. When the new user makes their first friend (it can be you or anyone else), both you and the new user receive 10 FRD (but not more than the user’s balance) to your locked balances. This is in addition to the regular new user reward (see above), which is also 10 FRD.
+                Referred user reward. When the new user makes their first friend (it can be you or anyone else), both you and the new user receive 10 FRD (but not more than the user&rsquo;s balance) to your locked balances. This is in addition to the regular new user reward (see above), which is also 10 FRD.
               </li>
             </ol>
 
@@ -159,7 +159,7 @@ export default async function FaqPage() {
         <Faq.Item>
           <Faq.Title>Is it like staking?</Faq.Title>
           <Faq.Content>
-            Somewhat. Similar to staking, you lock funds for a term and receive percentage-based rewards. However, while staking is mostly passive (you don’t have to do anything to earn the rewards), here you have to work for your rewards — bring new friends in. Call it “active staking” if you will. The rewards are also way larger in Obyte Friends than in typical staking schemes.
+            Somewhat. Similar to staking, you lock funds for a term and receive percentage-based rewards. However, while staking is mostly passive (you don&rsquo;t have to do anything to earn the rewards), here you have to work for your rewards &mdash; bring new friends in. Call it &ldquo;active staking&rdquo; if you will. The rewards are also way larger in Obyte Friends than in typical staking schemes.
           </Faq.Content>
         </Faq.Item>
 
@@ -210,11 +210,11 @@ export default async function FaqPage() {
           </Faq.Title>
           <Faq.Content>
             <p>
-              Before depositing funds you need to be attested on <Link href={appConfig.TELEGRAM_BOT_URL}>telegram</Link> and/or <Link href={appConfig.DISCORD_BOT_URL}>discord</Link>. The attestations link your Obyte address to your telegram or discord username, allowing us to notify you when it’s time to receive your follow-up rewards.
+              Before depositing funds you need to be attested on <Link href={appConfig.TELEGRAM_BOT_URL}>telegram</Link> and/or <Link href={appConfig.DISCORD_BOT_URL}>discord</Link>. The attestations link your Obyte address to your telegram or discord username, allowing us to notify you when it&rsquo;s time to receive your follow-up rewards.
             </p>
 
             <p>
-              If you deposit less than 50 FRD (or equivalent in other tokens), you need to be <Link href={appConfig.REAL_NAME_BOT_URL}>real-name attested</Link> too. You don’t need to disclose your real name to anyone (except the verification service) but this requirement helps to ensure that the system is not abused by creating multiple accounts belonging to the same person, making them friends with each other, and receiving rewards without bringing any real users in.
+              If you deposit less than 50 FRD (or equivalent in other tokens), you need to be <Link href={appConfig.REAL_NAME_BOT_URL}>real-name attested</Link> too. You don&rsquo;t need to disclose your real name to anyone (except the verification service) but this requirement helps to ensure that the system is not abused by creating multiple accounts belonging to the same person, making them friends with each other, and receiving rewards without bringing any real users in.
             </p>
           </Faq.Content>
         </Faq.Item>
@@ -230,7 +230,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              A bot will notify you about the rewards in telegram and/or discord, and you have 10 days to claim them. If you miss them, that doesn’t forfeit your subsequent follow-up rewards with the same friend.
+              A bot will notify you about the rewards in telegram and/or discord, and you have 10 days to claim them. If you miss them, that doesn&rsquo;t forfeit your subsequent follow-up rewards with the same friend.
             </p>
 
             <p>
@@ -262,7 +262,7 @@ export default async function FaqPage() {
               </li>
 
               <li>
-                Go to the “Claim” section on the homepage of this website, enter your friend’s address, click “Claim” and confirm the transaction in your Obyte wallet. Your friend needs to do the same (but enter your address) at about the same time. You need to send your claiming requests within 10 minutes of each other. It doesn’t matter who claims first. If the second claim comes too late, no worries, you can try as many times as necessary.
+                Go to the &ldquo;Claim&rdquo; section on the homepage of this website, enter your friend&rsquo;s address, click &ldquo;Claim&rdquo; and confirm the transaction in your Obyte wallet. Your friend needs to do the same (but enter your address) at about the same time. You need to send your claiming requests within 10 minutes of each other. It doesn&rsquo;t matter who claims first. If the second claim comes too late, no worries, you can try as many times as necessary.
               </li>
             </ol>
           </Faq.Content>
@@ -271,7 +271,7 @@ export default async function FaqPage() {
 
         <Faq.Item>
           <Faq.Title>
-            How can I be sure the rules are actually what’s described here, can’t be changed, and my money can’t be stolen?
+            How can I be sure the rules are actually what&rsquo;s described here, can&rsquo;t be changed, and my money can&rsquo;t be stolen?
           </Faq.Title>
           <Faq.Content>
             The rules are implemented by <Link href="https://obyte.org/platform/autonomous-agents" target="_blank" rel="noopener noreferrer">Autonomous Agents (AAs)</Link>, which are soulless code-driven actors on <Link href="https://obyte.org/" target="_blank" rel="noopener noreferrer">Obyte DAG</Link>. Nobody can intervene with their operation, nobody can tell them what to do, nobody can take their money, and nobody can change their code. Even the Obyte team, which created them. Their code is <Link href="https://github.com/byteball/friend-aa" target="_blank" rel="noopener noreferrer">available on github</Link>, so anyone can see what rules the agents actually follow and compare with what we describe here.
@@ -282,7 +282,7 @@ export default async function FaqPage() {
         <Faq.Item>
           <Faq.Title>What is FRD token?</Faq.Title>
           <Faq.Content>
-            FRD is the main token of Obyte Friends. Rewards are paid in FRD, and it’s the main token for deposits. Deposits can be made in GBYTE, USDC, and ETH too — this protects against changes in FRD exchange rate, but the rewards are also smaller in this case (see the question about rewards above).
+            FRD is the main token of Obyte Friends. Rewards are paid in FRD, and it&rsquo;s the main token for deposits. Deposits can be made in GBYTE, USDC, and ETH too &mdash; this protects against changes in FRD exchange rate, but the rewards are also smaller in this case (see the question about rewards above).
           </Faq.Content>
         </Faq.Item>
 
@@ -297,7 +297,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              On the demand side, there are new users who need to make deposits and choose to deposit FRD, which they have to buy from the market. Not all new users buy FRD — some may choose the safer option of depositing GBYTE, USDC, or ETH, content with the smaller rewards. Others, seeking larger rewards, choose to deposit FRD. The rewards for GBYTE are 75%, and for USDC and ETH they are 50% of the rewards for FRD.
+              On the demand side, there are new users who need to make deposits and choose to deposit FRD, which they have to buy from the market. Not all new users buy FRD &mdash; some may choose the safer option of depositing GBYTE, USDC, or ETH, content with the smaller rewards. Others, seeking larger rewards, choose to deposit FRD. The rewards for GBYTE are 75%, and for USDC and ETH they are 50% of the rewards for FRD.
             </p>
 
             <p>
@@ -380,7 +380,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              You can also do a reverse replacement, or replace external tokens such as USDC and ETH for FRD, or vice versa. For external tokens, a combination of the ceiling price and the token’s price against GBYTE from an <Link href="https://oswap.io/" target="_blank" rel="noopener noreferrer">Oswap</Link> pool is used to determine the replacement ratio. The <Link href="/governance">governance</Link> decides which Oswap pool is used.
+              You can also do a reverse replacement, or replace external tokens such as USDC and ETH for FRD, or vice versa. For external tokens, a combination of the ceiling price and the token&rsquo;s price against GBYTE from an <Link href="https://oswap.io/" target="_blank" rel="noopener noreferrer">Oswap</Link> pool is used to determine the replacement ratio. The <Link href="/governance">governance</Link> decides which Oswap pool is used.
             </p>
 
             <p>
@@ -402,7 +402,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              As soon as you complete your first 4-day streak, you get the right to become friends with a virtual account (a “ghost”) of a famous cypherpunk. You can choose among several cypherpunks: Satoshi Nakamoto, Tim May, Hal Finney, etc.
+              As soon as you complete your first 4-day streak, you get the right to become friends with a virtual account (a &ldquo;ghost&rdquo;) of a famous cypherpunk. You can choose among several cypherpunks: Satoshi Nakamoto, Tim May, Hal Finney, etc.
             </p>
 
             <p>
@@ -420,7 +420,7 @@ export default async function FaqPage() {
           </Faq.Title>
           <Faq.Content>
             <p>
-              By attesting your discord and telegram accounts you link them to your Obyte address, which is your only identifier in Obyte Friends. Having that link allows us to notify you when follow-up rewards become available, so that you and your neighbor won’t miss them.
+              By attesting your discord and telegram accounts you link them to your Obyte address, which is your only identifier in Obyte Friends. Having that link allows us to notify you when follow-up rewards become available, so that you and your neighbor won&rsquo;t miss them.
             </p>
             <p>
               It is recommended to link both discord and telegram to be able to connect on the platform that is most convenient to both you and your future friends.
@@ -435,7 +435,7 @@ export default async function FaqPage() {
           </Faq.Title>
           <Faq.Content>
             <p>
-              It is not always required — it’s unnecessary when you deposit 50 FRD or more.
+              It is not always required &mdash; it&rsquo;s unnecessary when you deposit 50 FRD or more.
             </p>
 
             <p>
@@ -453,7 +453,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              The rewards scheme can be updated in rather significant ways. For example, it may add an option to burn some amount of FRD to receive double rewards in the next 3 days in exchange. It can also link rewards to the user’s status in <Link href="https://city.obyte.org/" target="_blank" rel="noopener noreferrer">Obyte City</Link>. It can be tuned to pay higher rewards to users with longer streaks. These are just some ideas, and there are many more possibilities.
+              The rewards scheme can be updated in rather significant ways. For example, it may add an option to burn some amount of FRD to receive double rewards in the next 3 days in exchange. It can also link rewards to the user&rsquo;s status in <Link href="https://city.obyte.org/" target="_blank" rel="noopener noreferrer">Obyte City</Link>. It can be tuned to pay higher rewards to users with longer streaks. These are just some ideas, and there are many more possibilities.
             </p>
           </Faq.Content>
         </Faq.Item>
@@ -477,11 +477,11 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              Voting weight is equal to the square root of the user’s locked balance. This way of weighing gives more power to smaller users and dampens the power of whales. At the same time, a larger balance still provides more voting power to reflect a greater stake in the game. This kind of “quadratic” voting lies halfway between plain balance-based voting and one-man-one-vote systems.
+              Voting weight is equal to the square root of the user&rsquo;s locked balance. This way of weighing gives more power to smaller users and dampens the power of whales. At the same time, a larger balance still provides more voting power to reflect a greater stake in the game. This kind of &ldquo;quadratic&rdquo; voting lies halfway between plain balance-based voting and one-man-one-vote systems.
             </p>
 
             <p>
-              The voting is resistant to manipulation as the requirement of real-name attestation makes it impossible to split one’s balance into many smaller ones to gain more voting weight.
+              The voting is resistant to manipulation as the requirement of real-name attestation makes it impossible to split one&rsquo;s balance into many smaller ones to gain more voting weight.
             </p>
           </Faq.Content>
         </Faq.Item>
@@ -491,7 +491,7 @@ export default async function FaqPage() {
           <Faq.Title>Who develops and supports Obyte City?</Faq.Title>
           <Faq.Content>
             <p>
-              The <Link href="https://obyte.org/" target="_blank" rel="noopener noreferrer">Obyte</Link> team has developed the <Link href="https://github.com/byteball/friend-aa" target="_blank" rel="noopener noreferrer">Friends AA</Link>, which is what handles user balances, deposits, withdrawals, rewards, and the governance framework. After that, the team doesn’t operate the AA — it’s an autonomous agent, and the team has no power over it. Neither can it change the AA — it’s set in stone and nothing can be changed except a few parameters manageable by the community <Link href="/governance">governance</Link>. In particular, the governance can change the rules on how rewards are calculated.
+              The <Link href="https://obyte.org/" target="_blank" rel="noopener noreferrer">Obyte</Link> team has developed the <Link href="https://github.com/byteball/friend-aa" target="_blank" rel="noopener noreferrer">Friends AA</Link>, which is what handles user balances, deposits, withdrawals, rewards, and the governance framework. After that, the team doesn&rsquo;t operate the AA &mdash; it&rsquo;s an autonomous agent, and the team has no power over it. Neither can it change the AA &mdash; it&rsquo;s set in stone and nothing can be changed except a few parameters manageable by the community <Link href="/governance">governance</Link>. In particular, the governance can change the rules on how rewards are calculated.
             </p>
 
             <p>
@@ -519,8 +519,8 @@ export default async function FaqPage() {
         </Faq.Item> */}
       </Faq.Container>
 
-      <div className="mt-15">
-        <p className="mt-4 text-pretty text-base/7 text-gray-600">Can’t find the answer you’re looking for? Reach out to our <a href="#" className="font-semibold text-blue-700 hover:text-blue-500">discord</a>.</p>
+      <div className="mt-20">
+        <p className="mt-4 text-pretty text-lg text-gray-700">Can&rsquo;t find the answer you&rsquo;re looking for? Reach out to our <a href="https://discord.obyte.org" target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-700 hover:text-blue-500">discord</a>.</p>
       </div>
     </div>
   )
