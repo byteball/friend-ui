@@ -17,20 +17,7 @@ export async function register() {
   const client = await getObyteClient();
 
   client.onConnect(async () => {
-    const initTokens: Record<string, TokenMeta> = { base: { asset: 'base', symbol: 'GBYTE', decimals: 9 } };
 
-    // tokens from config
-    for (const asset of appConfig.ALLOWED_TOKEN_ASSETS) {
-      if (asset === "base") continue;
-
-      const tokenRegistry = client.api.getOfficialTokenRegistryAddress();
-      const symbol = await client.api.getSymbolByAsset(tokenRegistry, asset);
-      const decimals = await client.api.getDecimalsBySymbolOrAsset(tokenRegistry, asset);
-
-      initTokens[asset] = { asset, symbol, decimals };
-    }
-
-    console.log('log(bootstrap): all tokens are loaded', Object.entries(initTokens).length);
 
     // load all stateVars
     let initState: IAaState = {};
@@ -71,6 +58,29 @@ export async function register() {
     console.log('log(bootstrap): all state vars are loaded', Object.entries(initState).length);
 
     const constants = initState.constants ? initState.constants : undefined;
+
+    const initTokens: Record<string, TokenMeta> = { base: { asset: 'base', symbol: 'GBYTE', decimals: 9 } };
+    const assets: string[] = [];
+
+    Object.keys(initState).forEach(key => {
+      if (key.startsWith('deposit_asset_')) {
+        const asset = key.slice(14);
+        assets.push(asset);
+      }
+    });
+
+    // tokens from config
+    for (const asset of assets) {
+      if (asset === "base") continue;
+
+      const tokenRegistry = client.api.getOfficialTokenRegistryAddress();
+      const symbol = await client.api.getSymbolByAsset(tokenRegistry, asset);
+      const decimals = await client.api.getDecimalsBySymbolOrAsset(tokenRegistry, asset);
+
+      initTokens[asset] = { asset, symbol, decimals };
+    }
+
+    console.log('log(bootstrap): all tokens are loaded', Object.entries(initTokens).length);
 
     if (constants?.asset) {
       const tokenRegistry = client.api.getOfficialTokenRegistryAddress();
