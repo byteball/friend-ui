@@ -8,7 +8,7 @@ export const fetchCache = 'force-no-store';
 export default async function Leaderboard() {
   const data = globalThis.__GLOBAL_STORE__?.getLeaderboardData() || [];
   const tokens = globalThis.__GLOBAL_STORE__?.getTokens() || {};
-  const constants = globalThis.__GLOBAL_STORE__?.getState().constants || {};
+  const constants = globalThis.__GLOBAL_STORE__?.getState().constants as IConstants;
   const asset = constants?.asset || 'base';
   const frdToken = tokens[asset];
 
