@@ -64,3 +64,9 @@ interface IRewards {
   user2: IReward;
   referrers: Record<string, number>; // referrer address -> reward
 }
+
+type UserRank = {
+  username: string;
+  amount: number;
+  friends: number;
+}
