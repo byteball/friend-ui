@@ -25,13 +25,15 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   decimals: number;
   symbols: string;
+  usernames: { address: string; username: string | null }[];
 }
 
 export function LeaderboardTable<TData, TValue>({
   columns,
   data,
   decimals,
-  symbols
+  symbols,
+  usernames
 }: DataTableProps<TData, TValue>) {
 
   const [sorting, setSorting] = useState<SortingState>([
@@ -43,7 +45,8 @@ export function LeaderboardTable<TData, TValue>({
     columns,
     meta: {
       decimals,
-      symbols
+      symbols,
+      usernames
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

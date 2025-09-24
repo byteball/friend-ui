@@ -1,3 +1,4 @@
+import { getProfileUsername } from "@/lib/getProfileUsername.server";
 import { columns } from "./columns";
 import { LeaderboardTable } from "./leaderboard-table";
 
@@ -11,6 +12,13 @@ export default async function Leaderboard() {
   const constants = globalThis.__GLOBAL_STORE__?.getState().constants as IConstants;
   const asset = constants?.asset || 'base';
   const frdToken = tokens[asset];
+  const users = globalThis.__GLOBAL_STORE__?.leaderboardData.keys() || [];
+
+  const usernameGetters = users
+    .map((address) => getProfileUsername(address)
+      .then((username) => ({ address, username })));
+
+  const usernames = await Promise.all(usernameGetters);
 
   return <div>
     <h1 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-6xl">Leader board</h1>
@@ -21,6 +29,7 @@ export default async function Leaderboard() {
         decimals={frdToken.decimals}
         symbols={frdToken.symbol}
         columns={columns}
+        usernames={usernames}
       />
     </div>
   </div>
