@@ -17,7 +17,7 @@ export const columns: ColumnDef<UserRank>[] = [
       const meta = table.options.meta;
       const address = row.getValue("username") as string;
 
-      const username = meta.usernames.find((u: any) => u.address === address)?.username;
+      const username = meta?.usernames?.find((u: any) => u.address === address)?.username;
 
       return <>
         <Link className="text-blue-700" href={`/user/${address}`}>{username ?? address}</Link>

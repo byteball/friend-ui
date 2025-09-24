@@ -12,11 +12,10 @@ export default async function Leaderboard() {
   const constants = globalThis.__GLOBAL_STORE__?.getState().constants as IConstants;
   const asset = constants?.asset || 'base';
   const frdToken = tokens[asset];
-  const users = globalThis.__GLOBAL_STORE__?.leaderboardData.keys() || [];
 
-  const usernameGetters = users
-    .map((address) => getProfileUsername(address)
-      .then((username) => ({ address, username })));
+
+  const usernameGetters = data?.map((d) => getProfileUsername(d.username)
+    .then((username) => ({ address: d.username, username })));
 
   const usernames = await Promise.all(usernameGetters);
 
