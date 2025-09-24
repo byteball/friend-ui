@@ -1,7 +1,9 @@
 export const BOUNCE_FEES = 1e4;
 
 export const WALLET_COOKIE_NAME = 'friend.wallet';
+export const REF_COOKIE_NAME = 'friend.ref';
 export const WALLET_COOKIE_EXPIRES = 60 * 60 * 24 * 28; // 28 days
+export const REF_COOKIE_EXPIRES = 60 * 60 * 24 * 365; // 30 days
 export const YEAR = 31536000;
 
 export const GBYTE_TOKEN_META: TokenMeta = {

@@ -7,7 +7,7 @@ import { FC, useCallback, useRef, useState } from "react";
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
 import { appConfig } from "@/appConfig";
-import { GBYTE_TOKEN_META, WALLET_COOKIE_NAME } from "@/constants";
+import { GBYTE_TOKEN_META, REF_COOKIE_NAME, WALLET_COOKIE_NAME } from "@/constants";
 import { formatDays } from "@/lib/formatDays";
 import { generateLink } from "@/lib/generateLink";
 
@@ -30,17 +30,19 @@ export const DepositForm: FC<DepositFormProps> = () => {
   const [amount, setAmount] = useState<string>("0.1");
   const [term, setTerm] = useState<number>(appConfig.MIN_LOCKED_TERM_DAYS);
   const data = useData();
+
   const getCookie = useGetCookie();
 
   const walletAddress = getCookie(WALLET_COOKIE_NAME) as string | undefined;
+  const referralAddress = getCookie(REF_COOKIE_NAME) as string | undefined;
 
   const state = data?.state ?? {};
   const frdAsset = state?.constants?.asset;
   const frdMeta: TokenMeta | undefined = frdAsset ? data?.tokens?.[frdAsset] : undefined;
+  const userData = (walletAddress ? state[`user_${walletAddress}`] : undefined) as IUserData | undefined;
+
 
   const until = addDays(now, term);
-  const userData = (walletAddress ? state[`user_${walletAddress}`] : undefined) as IUserData | undefined;
-  console.log('userData', userData);
 
   const handleTokenChange = useCallback((asset: string) => {
     const token = data?.tokens?.[asset];
@@ -60,6 +62,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
       deposit: 1,
       deposit_asset: currency?.asset === 'base' ? undefined : currency?.asset,
       term,
+      ref: (!userData || !walletAddress) ? referralAddress : undefined
     }
   })
 
