@@ -21,27 +21,37 @@ import {
 import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  decimals: number;
+  symbols: string;
 }
 
 export function LeaderboardTable<TData, TValue>({
   columns,
   data,
+  decimals,
+  symbols
 }: DataTableProps<TData, TValue>) {
 
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "amount", desc: true },
+  ]);
 
   const table = useReactTable({
     data,
     columns,
+    meta: {
+      decimals,
+      symbols
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     state: {
       sorting
-    },
+    }
   })
 
   return (

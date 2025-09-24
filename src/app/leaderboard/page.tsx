@@ -5,28 +5,23 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 export const fetchCache = 'force-no-store';
 
-const data: UserRank[] = [
-  {
-    // id: "728ed52f",
-    amount: 100,
-    friends: 5,
-    username: "tonych",
-  },
-  {
-    // id: "728e4f",
-    amount: 14,
-    friends: 2,
-    username: "taumper",
-  }
-];
-
 export default async function Leaderboard() {
+  const data = globalThis.__GLOBAL_STORE__?.getLeaderboardData() || [];
+  const tokens = globalThis.__GLOBAL_STORE__?.getTokens() || {};
+  const constants = globalThis.__GLOBAL_STORE__?.getState().constants || {};
+  const asset = constants?.asset || 'base';
+  const frdToken = tokens[asset];
 
   return <div>
     <h1 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-6xl">Leader board</h1>
 
     <div className="mt-8">
-      <LeaderboardTable data={data} columns={columns} />
+      <LeaderboardTable
+        data={data}
+        decimals={frdToken.decimals}
+        symbols={frdToken.symbol}
+        columns={columns}
+      />
     </div>
   </div>
 }

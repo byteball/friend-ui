@@ -4,6 +4,7 @@ import { LRUCache } from "lru-cache";
 import { EventEmitter } from "stream";
 
 import { STORE_EVENTS } from "./constants";
+import { getCeilingPrice, getTotalBalance } from "./lib/calculations/getRewards";
 
 interface IInitialSymbols {
   [key: string]: TokenMeta;
@@ -19,6 +20,8 @@ const ATTESTATION_TTL = 1000 * 60 * 60; // 1 hour
 export class GlobalStore extends EventEmitter {
   state: LRUCache<string, any>;
   tokens: LRUCache<string, TokenMeta>;
+  leaderboardData: LRUCache<string, UserRank>;
+
   tgAttestations: LRUCache<string, string>;
   discordAttestations: LRUCache<string, string>;
 
@@ -37,6 +40,11 @@ export class GlobalStore extends EventEmitter {
 
     this.tokens = new LRUCache<string, TokenMeta>({
       max: 500,
+      ttl: 0,
+    });
+
+    this.leaderboardData = new LRUCache<string, UserRank>({
+      max: 150,
       ttl: 0,
     });
 
@@ -65,6 +73,7 @@ export class GlobalStore extends EventEmitter {
     }
 
     this.stateUpdateId += 1;
+    this.revalidateLeaderboardData();
   }
 
   initializeTokens(initTokens: IInitialSymbols) {
@@ -99,16 +108,60 @@ export class GlobalStore extends EventEmitter {
     return Object.fromEntries(this.tokens.entries());
   }
 
+  getLeaderboardData(): UserRank[] {
+    return Array.from(this.leaderboardData.values());
+  }
+
   updateState(newStateVars: IAaState) {
     for (const [k, v] of Object.entries(newStateVars)) {
       this.state.set(k, v);
     }
 
     this.sendStateUpdate(newStateVars);
+    this.revalidateLeaderboardData();
     this.stateUpdateId += 1;
   }
 
   sendStateUpdate(update: IAaState) {
     this.send(STORE_EVENTS.STATE_UPDATE, update);
+  }
+
+  async revalidateLeaderboardData() {
+    const friends: { [key: string]: string[] } = {};
+    const totalBalances: Map<string, number> = new Map();
+
+    const constants = this.state.get('constants');
+    if (!constants) return;
+    const ceilPrice = getCeilingPrice(constants as IConstants);
+
+    for (const [key, value] of this.state.entries()) {
+      if (key.startsWith('friend_')) {
+        const [, addr] = key.split('_');
+        if (!friends[addr]) friends[addr] = [];
+        friends[addr].push(value);
+      } else if (key.startsWith('user_') && !value.ghost) {
+        const [, addr] = key.split('_');
+        const totalBalance = await getTotalBalance(value.balances ?? {}, ceilPrice);
+        totalBalances.set(addr, totalBalance);
+      }
+    }
+
+    const newEntries: Array<[string, UserRank]> = [];
+    for (const [addr, totalBalance] of totalBalances.entries()) {
+      const userFriends = friends[addr] || [];
+      newEntries.push([
+        addr,
+        {
+          username: addr,
+          amount: totalBalance,
+          friends: userFriends.length,
+        },
+      ]);
+    }
+
+    this.leaderboardData.clear();
+    for (const [addr, data] of newEntries) {
+      this.leaderboardData.set(addr, data);
+    }
   }
 }

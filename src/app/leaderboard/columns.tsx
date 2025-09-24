@@ -5,6 +5,8 @@ import { ArrowUpDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
+import { toLocalString } from "@/lib/toLocalString"
+
 export const columns: ColumnDef<UserRank>[] = [
   {
     accessorKey: "username",
@@ -24,6 +26,12 @@ export const columns: ColumnDef<UserRank>[] = [
         </Button>
       )
     },
+    cell: ({ row, table }: any) => {
+      const meta = table.options.meta;
+      const amount = row.getValue("amount") as number;
+
+      return <span>{toLocalString(amount / 10 ** meta.decimals)} <small>{meta.symbols}</small></span>
+    }
   },
   {
     accessorKey: "friends",
