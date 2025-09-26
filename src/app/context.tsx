@@ -18,14 +18,15 @@ const BACKOFF_FACTOR = 2;      // exponential factor
 const JITTER_PCT = 0.2;    // ±20% jitter
 
 const DataContext = createContext<IClientSnapshot | null>(null);
+
 export function useData() {
   return useContext(DataContext);
 }
 
 type DataProviderProps = {
   children: React.ReactNode;
-  value?: IClientSnapshot | null;              // initial (SSR) snapshot
-  streamUrl?: string;                          // override if needed
+  value: IClientSnapshot | null;  // initial (SSR) snapshot
+  streamUrl?: string; // override if needed
   fetchSnapshot?: () => Promise<IClientSnapshot | null>; // optional hard resync
 };
 

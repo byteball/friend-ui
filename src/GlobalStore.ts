@@ -3,6 +3,7 @@ import "server-only";
 import { LRUCache } from "lru-cache";
 import { EventEmitter } from "stream";
 
+import { appConfig } from "./appConfig";
 import { STORE_EVENTS } from "./constants";
 import { getCeilingPrice, getTotalBalance } from "./lib/calculations/getRewards";
 
@@ -93,6 +94,7 @@ export class GlobalStore extends EventEmitter {
     return {
       state: this.getState(),
       tokens: this.getTokens(),
+      params: this.state.get("variables") as AgentParams ?? appConfig.initialParamsVariables,
     }
   }
 

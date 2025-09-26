@@ -30,6 +30,7 @@ interface IAaState {
 interface IClientSnapshot {
   state: Record<string, any>;
   tokens: Record<string, TokenMeta>;
+  params: AgentParams;
 }
 
 type Balances = Record<string, number>; // asset -> balance

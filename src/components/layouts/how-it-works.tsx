@@ -36,7 +36,7 @@ export const HowItWorksBlock = () => (<div>
 
     <div className="col-span-1 select-none">
       <PuzzleImage
-        src="/tim-may.png?v1"
+        src="/ghosts/tim-may.png"
         rows={2}
         columns={2}
         filledCeils={2}
