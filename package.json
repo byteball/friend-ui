@@ -19,6 +19,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@radix-ui/react-visually-hidden": "^1.2.3",
+    "@t3-oss/env-nextjs": "^0.13.8",
     "@tanstack/react-table": "^8.21.3",
     "bufferutil": "^4.0.9",
     "class-variance-authority": "^0.7.1",
@@ -41,7 +42,8 @@
     "rough-notation": "^0.5.1",
     "server-only": "^0.0.1",
     "tailwind-merge": "^3.3.1",
-    "utf-8-validate": "^5.0.10"
+    "utf-8-validate": "^5.0.10",
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
