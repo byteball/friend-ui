@@ -1,11 +1,11 @@
 "use client";
 
+import { useReactiveSetCookie } from "cookies-next";
 import { useRouter } from 'next/navigation';
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useCallback, useRef } from "react";
 
 import { WALLET_COOKIE_NAME } from "@/constants";
-import { isValidAddress as validateObyteAddress } from "@/lib/isValidAddress";
-import { useReactiveSetCookie } from "cookies-next";
+import { useWalletState } from '@/hooks/use-wallet-state';
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Input } from "../ui/input";
@@ -17,52 +17,43 @@ interface AddWalletModalProps {
 }
 
 export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "", walletAddress, children }) => {
+  const { wallet, isValid, isChecking, changeWallet } = useWalletState(walletAddress ?? null);
+  console.log('state v, valid, checking', wallet, isValid, isChecking);
+
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const [inputValue, setInputValue] = useState(walletAddress || "");
-  const [isValid, setIsValid] = useState<boolean>(false);
 
   const router = useRouter();
   const setCookie = useReactiveSetCookie();
 
-  useEffect(() => {
-    let cancelled = false;
-    const v = inputValue.trim();
-    if (!v) {
-      setIsValid(false);
-      return;
-    }
-    (async () => {
-      const ok = await validateObyteAddress(v);
-      if (!cancelled) setIsValid(ok);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [inputValue]);
-
-  const isChanged = walletAddress !== inputValue;
+  const isChanged = walletAddress !== wallet;
 
   const restoreInputValue = () => {
     setTimeout(() => {
-      setInputValue(walletAddress || "");
+      changeWallet(walletAddress || null);
     }, 500);
   }
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      submitButtonRef?.current?.click();
 
-      if (isValid) closeButtonRef?.current?.click();
+      saveWallet();
     }
   }, [isValid]);
 
-  const saveWallet = (value: string) => {
-    setCookie(WALLET_COOKIE_NAME, value);
+  const saveWallet = () => {
+    if (!wallet || !isValid || isChecking || !isChanged) return;
+
+    setCookie(WALLET_COOKIE_NAME, wallet);
+
     closeButtonRef.current?.click();
     router.refresh();
   }
+
+  const handleWalletChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    changeWallet(e.target.value.length ? e.target.value : null);
+  }, [changeWallet]);
 
   return (<Dialog onOpenChange={(open) => {
     if (!open) restoreInputValue();
@@ -83,13 +74,19 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
 
       <Input
         name="wallet"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value || "")}
+        value={wallet ?? ''}
+        onChange={handleWalletChange}
         onKeyDown={handleKeyDown}
       />
 
       <DialogFooter>
-        <Button onClick={() => saveWallet(inputValue)} disabled={!isChanged || !isValid} ref={submitButtonRef}>Save changes</Button>
+        <Button
+          onClick={saveWallet}
+          disabled={!wallet || !isValid || isChecking || !isChanged}
+          ref={submitButtonRef}
+        >
+          Save changes
+        </Button>
       </DialogFooter>
     </DialogContent>
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { isValidAddress as validateObyteAddress } from "@/lib/isValidAddress";
 import { getCookie } from "cookies-next/client";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 
@@ -12,6 +11,8 @@ import { BOUNCE_FEES, WALLET_COOKIE_NAME } from "@/constants";
 
 import { useData } from "@/app/context";
 import { AddWalletModal } from "@/components/modals/add-wallet";
+
+import { useWalletState } from "@/hooks/use-wallet-state";
 
 import { getRewards } from "@/lib/calculations/getRewards";
 import { generateLink } from "@/lib/generateLink";
@@ -25,8 +26,9 @@ interface ClaimFormProps { }
 export const ClaimForm: FC<ClaimFormProps> = () => {
   const btnRef = useRef<HTMLButtonElement>(null);
   const walletAddress = getCookie(WALLET_COOKIE_NAME);
+  const { wallet: friendWallet, isValid: isValidFriendWallet, isChecking, changeWallet } = useWalletState(walletAddress ?? null);
+
   const data = useData();
-  const [inputFriendWallet, setInputFriendWallet] = useState({ value: '', isValid: false });
   const [error, setError] = useState<string | null>(null);
   const [rewards, setRewards] = useState<IRewards | null>(null);
 
@@ -35,27 +37,11 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
   const frdTokenMeta = data?.tokens?.[frdAsset || ''];
   const frdSmb = frdTokenMeta?.symbol || 'FRD';
 
-  useEffect(() => {
-    let cancelled = false;
-    const v = inputFriendWallet.value.trim();
-    if (!v) {
-      setInputFriendWallet((prev) => ({ ...prev, isValid: false }));
-      return;
-    }
-    (async () => {
-      const ok = await validateObyteAddress(v).catch(() => false);
-      if (!cancelled) setInputFriendWallet((prev) => ({ ...prev, isValid: ok }));
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [inputFriendWallet.value]);
-
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.code === "Enter" && inputFriendWallet.isValid) {
+    if (e.code === "Enter" && isValidFriendWallet) {
       btnRef.current?.click();
     }
-  }, [btnRef, inputFriendWallet.isValid]);
+  }, [btnRef, isValidFriendWallet]);
 
   const url = generateLink({
     aa: appConfig.AA_ADDRESS,
@@ -63,17 +49,17 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
     from_address: walletAddress,
     data: {
       connect: 1,
-      friend: inputFriendWallet.value.trim()
+      friend: friendWallet || undefined
     }
   })
 
   useEffect(() => {
     (async () => {
-      console.log('Calculating rewards...', inputFriendWallet.isValid);
+      console.log('Calculating rewards...', isValidFriendWallet);
 
-      if (inputFriendWallet.isValid) {
+      if (isValidFriendWallet) {
         const userData1: IUserData = walletAddress ? state[`user_${walletAddress}`] : undefined;
-        const userData2: IUserData = inputFriendWallet.isValid ? state[`user_${inputFriendWallet.value.trim()}`] : undefined;
+        const userData2: IUserData = isValidFriendWallet ? state[`user_${friendWallet}`] : undefined;
 
         if (!userData2) {
           setError("Both you and your friend must have deposited before claiming rewards");
@@ -98,7 +84,7 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
       }
 
     })();
-  }, [data?.state, walletAddress, inputFriendWallet.value, inputFriendWallet.isValid]);
+  }, [data?.state, walletAddress, friendWallet, isValidFriendWallet]);
 
   return <div className="grid gap-4">
     <h2 className="text-3xl font-bold">Claim reward</h2>
@@ -114,16 +100,20 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
             <label htmlFor="address" className="text-muted-foreground pb-1">Your friend’s address</label>
             <Input
               id="address"
-              value={inputFriendWallet.value}
-              onChange={(e) => setInputFriendWallet((prev) => ({ ...prev, value: e.target.value || "" }))}
+              value={friendWallet ?? ""}
+              onChange={(e) => changeWallet(e.target.value)}
               onKeyDown={handleKeyDown}
             />
           </div>
 
-          <QRButton href={url} disabled={!inputFriendWallet.isValid || !!error} ref={btnRef}>Claim</QRButton>
+          <QRButton
+            href={url}
+            disabled={!isValidFriendWallet || !!error || isChecking || !friendWallet}
+            ref={btnRef}
+          >Claim</QRButton>
         </div>
 
-        {error && inputFriendWallet.value ? <div className="text-red-700">{error}</div> : null}
+        {error && friendWallet ? <div className="text-red-700">{error}</div> : null}
 
         {rewards ? <DescriptionList>
           <DescriptionGroup>
@@ -134,13 +124,10 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
               <div>
                 {toLocalString((rewards?.user1?.new_user_reward ?? 0) / 10 ** 9)} <small>{frdSmb}</small> (new user reward)
               </div>
-              {/* TODO: implement referral reward */}
-              {/* <div>{toLocalString(rewards.user1.referral_reward / 10 ** 9)} <small>{frdSmb}</small> (referral reward)</div> */}
             </DescriptionDetail>
           </DescriptionGroup>
           <DescriptionGroup horizontal>
             <DescriptionTerm>Total rewards</DescriptionTerm>
-            {/* TODO: add referral reward */}
             <DescriptionDetail>{toLocalString(rewards.user1.locked / 10 ** 9)} <small>{frdSmb}</small></DescriptionDetail>
           </DescriptionGroup>
           <DescriptionGroup horizontal>
