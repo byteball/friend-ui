@@ -1,18 +1,19 @@
-import { appConfig } from "@/appConfig";
-import { YEAR } from "@/constants";
 import { getUnixTime } from "date-fns";
 import httpClient from "../httpClient";
 
-const locked_reward_share = 0.01;
-const liquid_reward_share = 0.001;
+import { YEAR } from "@/constants";
 
-const deposit_asset_reducer = 0.5;
-const bytes_reducer = 0.75;
+import { appConfig } from "@/appConfig";
 
-const new_user_reward = 10e9;
-const referral_reward = 10e9;
-
-const balance_cap = 200e9;
+const
+  { locked_reward_share,
+    liquid_reward_share,
+    deposit_asset_reducer,
+    bytes_reducer,
+    new_user_reward,
+    referral_reward,
+    balance_cap
+  } = appConfig.initialRewardsVariables;
 
 export const getCeilingPrice = (aaConstants: IConstants) => {
   const now = getUnixTime(new Date());
@@ -25,7 +26,6 @@ const getDepositAssetExchangeRate = async (asset: string): Promise<number> => {
   return httpClient.executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rate', [appConfig.AA_ADDRESS, asset])
 }
 
-// 57 str
 export const getTotalBalance = async (balances: Balances, ceilingPrice: number) => {
   const totals = { in_bytes: (balances.base ?? 0) * bytes_reducer };
 
@@ -50,7 +50,6 @@ export const getRewards = async (user1: IUserData, user2: IUserData, constants: 
   const cappedTotalBalance1 = bNewUser ? totalBalance1 : Math.min(totalBalance1, balance_cap);
   const cappedTotalBalance2 = bNewUser ? totalBalance2 : Math.min(totalBalance2, balance_cap);
 
-  console.log('totalBalance1', totalBalance1 / 10 ** 9, 'cappedTotalBalance1', (cappedTotalBalance1 * locked_reward_share) / 10 ** 9);
   const rewards: IRewards = {
     user1: {
       locked: Math.floor(cappedTotalBalance1 * locked_reward_share),

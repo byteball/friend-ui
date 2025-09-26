@@ -108,6 +108,17 @@ export class GlobalStore extends EventEmitter {
     return Object.fromEntries(this.tokens.entries());
   }
 
+  getOwnToken() {
+    const constants = this.state.get('constants') as IConstants | undefined;
+    if (!constants) return {
+      asset: "unknown",
+      symbol: 'FRD',
+      decimals: 9
+    } as TokenMeta;
+
+    return this.tokens.get(constants.asset);
+  }
+
   getLeaderboardData(): UserRank[] {
     return Array.from(this.leaderboardData.values());
   }

@@ -1,11 +1,20 @@
 import { appConfig } from "@/appConfig";
+import { toLocalString } from "@/lib/toLocalString";
 import Link from "next/link";
 import Faq from "./components/Faq";
 
 export const dynamic = 'force-static'
 
 export default async function FaqPage() {
-  const symbol = "FRDT";
+
+  const { min_balance_instead_of_real_name } =
+    __GLOBAL_STORE__?.getState().variables
+    ?? appConfig.initialParamsVariables;
+
+  const token = __GLOBAL_STORE__?.getOwnToken();
+
+  const symbol = token?.symbol ?? "FRD";
+  const decimals = token?.decimals ?? 0;
 
   return (
     <div className="prose prose-2xl">
@@ -216,7 +225,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              If you deposit less than 50 {symbol} (or equivalent in other tokens), you need to be <Link href={appConfig.REAL_NAME_BOT_URL}>real-name attested</Link> too. You don&rsquo;t need to disclose your real name to anyone (except the verification service) but this requirement helps to ensure that the system is not abused by creating multiple accounts belonging to the same person, making them friends with each other, and receiving rewards without bringing any real users in.
+              If you deposit less than {toLocalString(min_balance_instead_of_real_name / 10 ** decimals)} {symbol} (or equivalent in other tokens), you need to be <Link href={appConfig.REAL_NAME_BOT_URL}>real-name attested</Link> too. You don&rsquo;t need to disclose your real name to anyone (except the verification service) but this requirement helps to ensure that the system is not abused by creating multiple accounts belonging to the same person, making them friends with each other, and receiving rewards without bringing any real users in.
             </p>
           </Faq.Content>
         </Faq.Item>
@@ -437,7 +446,7 @@ export default async function FaqPage() {
           </Faq.Title>
           <Faq.Content>
             <p>
-              It is not always required &mdash; it&rsquo;s unnecessary when you deposit 50 {symbol} or more.
+              It is not always required &mdash; it&rsquo;s unnecessary when you deposit {toLocalString(min_balance_instead_of_real_name / 10 ** decimals)} {symbol} or more.
             </p>
 
             <p>

@@ -70,3 +70,12 @@ type UserRank = {
   amount: number;
   friends: number;
 }
+
+type AgentParams = {
+  rewards_aa: string;
+  messaging_attestors: string;
+  real_name_attestors: string;
+  referrer_deposit_reward_share: number;
+  followup_reward_share: number;
+  min_balance_instead_of_real_name: number;
+}

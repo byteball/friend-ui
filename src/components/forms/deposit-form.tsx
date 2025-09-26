@@ -37,6 +37,8 @@ export const DepositForm: FC<DepositFormProps> = () => {
   const referralAddress = getCookie(REF_COOKIE_NAME) as string | undefined;
 
   const state = data?.state ?? {};
+  const agentParams = data?.params ?? appConfig.initialParamsVariables;
+
   const frdAsset = state?.constants?.asset;
   const frdMeta: TokenMeta | undefined = frdAsset ? data?.tokens?.[frdAsset] : undefined;
   const userData = (walletAddress ? state[`user_${walletAddress}`] : undefined) as IUserData | undefined;
@@ -72,7 +74,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
     <div className="grid gap-4 text-muted-foreground">
       <div>Before depositing, you must be attested on <a className="text-blue-700" href={appConfig.TELEGRAM_BOT_URL}>telegram</a> and/or <a className="text-blue-700" href={appConfig.DISCORD_BOT_URL}>discord</a>. This is important to notify you about follow-up rewards in the future.</div>
 
-      <div>If you deposit less than {toLocalString(appConfig.MIN_BALANCE / 10 ** (frdMeta?.decimals ?? 0))} <small>{frdMeta?.symbol}</small> (or equivalent), you must be <a className="text-blue-700" href="#">real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
+      <div>If you deposit less than {toLocalString(agentParams.min_balance_instead_of_real_name / 10 ** (frdMeta?.decimals ?? 0))} <small>{frdMeta?.symbol}</small> (or equivalent), you must be <a className="text-blue-700" href="#">real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
     </div>
 
     <div>

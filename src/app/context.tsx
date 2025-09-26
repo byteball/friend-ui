@@ -1,4 +1,5 @@
 "use client";
+import { appConfig } from "@/appConfig";
 import { STORE_EVENTS } from "@/constants";
 import "client-only";
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
@@ -7,7 +8,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
  * Types you already have in your codebase; keep these placeholders if needed.
  */
 type IAaState = Record<string, any>;
-type IClientSnapshot = { state: IAaState; tokens: Record<string, any> };
+type IClientSnapshot = { state: IAaState; tokens: Record<string, any>, params: AgentParams };
 
 const STREAM_URL = "/api/data/stream";
 const HEARTBEAT_MS = 30_000;   // reconnect if no messages within this window
@@ -30,11 +31,11 @@ type DataProviderProps = {
 
 export function DataProvider({
   children,
-  value = { state: {}, tokens: {} },
+  value = { state: {}, tokens: {}, params: appConfig.initialParamsVariables },
   streamUrl = STREAM_URL,
   fetchSnapshot
 }: DataProviderProps) {
-  const [data, setData] = useState<IClientSnapshot>(value || { state: {}, tokens: {} });
+  const [data, setData] = useState<IClientSnapshot>(value || { state: {}, tokens: {}, params: appConfig.initialParamsVariables });
 
   // ---- Stable refs
   const esRef = useRef<EventSource | null>(null);
@@ -140,11 +141,15 @@ export function DataProvider({
     if (!ev) return;
 
     if (ev === STORE_EVENTS.SNAPSHOT) {
-      setData(incoming.data as IClientSnapshot);
+      setData({
+        ...incoming.data,
+        params: incoming.state?.variables ?? appConfig.initialParamsVariables
+      } as IClientSnapshot);
     } else if (ev === STORE_EVENTS.STATE_UPDATE) {
       setData((prev) => ({
         state: { ...(prev?.state ?? {}), ...(incoming.data as IAaState) },
         tokens: prev?.tokens ?? {},
+        params: incoming.data?.variables ?? prev?.params ?? appConfig.initialParamsVariables
       }));
     }
   };
