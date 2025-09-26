@@ -12,6 +12,7 @@ import { getCeilingPrice, getTotalBalance } from "@/lib/calculations/getRewards"
 import { generateLink } from "@/lib/generateLink";
 import { getProfileUsername } from "@/lib/getProfileUsername.server";
 import { toLocalString } from "@/lib/toLocalString";
+import { ActivityProgress } from "./components/activity-progress";
 
 
 export default async function ProfilePage({ params }: { params: Promise<{ address: string }> }) {
@@ -61,7 +62,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
         </h1>
 
         <DepositedLabel deposited={isActive} />
-
       </div>
 
       <div className="flex items-end flex-col gap-2">
@@ -75,6 +75,8 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
         <a href={`https://city.obyte.org/user/${address}`} target="_blank" rel="noopener noreferrer" className="text-blue-700">Link on CITY profile</a>
       </div>
     </div>
+
+    <ActivityProgress />
 
     <div className="grid grid-cols-3 gap-8 mt-10">
       <Card>

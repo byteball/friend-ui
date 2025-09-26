@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import Navbar from "@/components/layouts/main-navbar";
+import { NoDefineAsset } from "@/components/layouts/no-define-asset";
 
 import { ClientProviders } from "./client-providers";
 import { DataProvider } from "./context";
@@ -30,13 +31,13 @@ export default async function RootLayout({
       <body
         className={`${InterFont.className} antialiased`}
       >
-        <DataProvider value={snapshot ?? null}>
+        {snapshot?.state?.constants ? <DataProvider value={snapshot ?? null}>
           <ClientProviders>
             <Navbar />
 
             <div className="container mx-auto p-5">{children}</div>
           </ClientProviders>
-        </DataProvider>
+        </DataProvider> : <NoDefineAsset />}
       </body>
     </html>
   );
