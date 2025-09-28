@@ -290,6 +290,7 @@ function buildPuzzlePaths(
 export const PuzzleImage: FC<PuzzleImageProps> = ({
   rows = 3,
   columns = 3,
+
   stroke = "#ffffff",
   filledCeils = 5,
   strokeWidth = 1.9,
@@ -416,7 +417,7 @@ export const PuzzleImage: FC<PuzzleImageProps> = ({
   return (
     <div className={className} style={{ position: "relative", display: "inline-block", userSelect: "none" }}>
       {/* Base image */}
-      <Image {...imgProps} draggable={false} style={{ ...(imgProps.style || {}), display: "block" }} />
+      <Image {...imgProps} className="w-full h-full" draggable={false} style={{ ...(imgProps.style || {}), display: "block" }} />
 
       {/* SVG overlay */}
       <svg

@@ -76,8 +76,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
       </div>
     </div>
 
-    <ActivityProgress />
-
     <div className="grid grid-cols-3 gap-8 mt-10">
       <Card>
         <CardContent>
@@ -120,7 +118,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
         </CardContent>
       </Card>
 
-      <Card>
+      {/* <Card>
         <CardContent>
           <CardTitle>Total streak</CardTitle>
           <div className="text-3xl mt-2">{toLocalString(userData?.total_streak ?? 0)}</div>
@@ -132,9 +130,11 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
           <CardTitle>Current streak</CardTitle>
           <div className="text-3xl mt-2">{toLocalString(userData?.current_streak ?? 0)}</div>
         </CardContent>
-      </Card>
-
+      </Card> */}
+      <ActivityProgress user={userData} />
     </div>
+
+
 
     {friends.length ? <div>
       <h2 className="text-2xl font-semibold mt-10 mb-4 first-letter:uppercase">{username}&apos;s friends</h2>
