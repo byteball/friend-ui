@@ -32,6 +32,7 @@ interface NavbarProps {
 const menu: NavbarLink[] = [
   { text: "Home", href: "/" },
   { text: "Leaderboard", href: "/leaderboard" },
+  { text: "Governance", href: "/governance" },
   { text: "F.A.Q.", href: "/faq" },
 ];
 

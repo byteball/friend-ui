@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["obyte"],
+    reactCompiler: {
+      compilationMode: "all"
+    }
   },
   output: "standalone",
   eslint: {
