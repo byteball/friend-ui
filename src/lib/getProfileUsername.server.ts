@@ -28,7 +28,7 @@ export const getProfileUsername = async (address: string): Promise<string | null
     const attestations = await client.api.getAttestations({ address }).catch(() => null);
     if (!attestations) return address.slice(0, 6) + "..." + address.slice(-4);
 
-    // @ts-expect-error
+    // @ts-expect-error not error
     const telegramName = attestations.find(att => att.attestor_address === appConfig.NEXT_PUBLIC_TELEGRAM_ATTESTOR)?.profile?.username as string | undefined;
 
     if (telegramName) {
@@ -41,7 +41,7 @@ export const getProfileUsername = async (address: string): Promise<string | null
       return store.discordAttestations.get(address) || null;
     }
 
-    // @ts-expect-error
+    // @ts-expect-error not error
     const discordName = attestations.find(att => att.attestor_address === appConfig.NEXT_PUBLIC_DISCORD_ATTESTOR)?.profile?.username as string | undefined;
 
 

@@ -37,7 +37,7 @@ export async function register() {
 
         chunkData = (await client.api.getAaStateVars({
           address: appConfig.AA_ADDRESS,
-          // @ts-expect-error
+          // @ts-expect-error no error
           var_prefix_from: lastKey,
         })) as object;
 
@@ -59,8 +59,17 @@ export async function register() {
 
     const constants = initState.constants ? initState.constants : undefined;
 
+    if (constants?.governance_aa) {
+      await client.justsaying("light/new_aa_to_watch", {
+        aa: appConfig.AA_ADDRESS
+      });
+
+      console.log('log(bootstrap): watching governance AA', constants.governance_aa);
+    }
+
     const initTokens: Record<string, TokenMeta> = { base: { asset: 'base', symbol: 'GBYTE', decimals: 9 } };
     const assets: string[] = [];
+
 
     Object.keys(initState).forEach(key => {
       if (key.startsWith('deposit_asset_')) {
@@ -201,7 +210,7 @@ const getObyteClient = async () => {
       }
     }, HEARTBEAT_INTERVAL);
 
-    // @ts-ignore
+    // @ts-expect-error no error
     globalThis.__OBYTE_CLIENT__.client.ws.addEventListener("close", () => {
       clearInterval(globalThis.__OBYTE_HEARTBEAT__);
     });
