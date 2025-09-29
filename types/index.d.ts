@@ -1,11 +1,11 @@
-module globalThis {
+namespace globalThis {
   // eslint-disable-next-line no-var
   var __OBYTE_CLIENT__: Obyte.Client | undefined;
   // eslint-disable-next-line no-var
   var __OBYTE_HEARTBEAT__: ReturnType<typeof setInterval> | undefined;
   // eslint-disable-next-line no-var 
   var __OBYTE_CONNECTS_TOTAL__: number | undefined;
-
+  // eslint-disable-next-line no-var 
   var __GLOBAL_STORE__: import('@/GlobalStore').GlobalStore | undefined;
 }
 

@@ -1,15 +1,14 @@
 import { appConfig } from "@/appConfig";
 import { toLocalString } from "@/lib/toLocalString";
 import Link from "next/link";
+import "server-only";
 import Faq from "./components/Faq";
 
-export const dynamic = 'force-static'
+export const dynamic = "force-dynamic";
 
 export default async function FaqPage() {
 
-  const { min_balance_instead_of_real_name } =
-    __GLOBAL_STORE__?.getState().variables
-    ?? appConfig.initialParamsVariables;
+  const { min_balance_instead_of_real_name } = __GLOBAL_STORE__?.getState()?.variables ?? appConfig.initialParamsVariables;
 
   const token = __GLOBAL_STORE__?.getOwnToken();
 
