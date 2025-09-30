@@ -5,8 +5,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 
 import { descriptions } from "../descriptions";
 
-import { getNameByKey } from "../utils/getNameByKey";
-import { transformValue } from "../utils/transformValue";
+import { getNameByKey } from "../utils/get-name-by-key";
+import { transformValue } from "../utils/transform-value";
 
 
 export type GovernanceItemHeaderProps<K extends keyof AgentParams = keyof AgentParams> = {

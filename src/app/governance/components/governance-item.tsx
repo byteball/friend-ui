@@ -2,6 +2,7 @@
 
 import { getGovernanceDataByKey } from "../utils/get-governance-data-by-key.server";
 import { GovernanceItemContent } from "./governance-item-content";
+import { GovernanceItemFooter } from "./governance-item-footer";
 import { GovernableItemHeader } from "./governance-item-header";
 import { GovernanceItemWrapper } from "./governance-item-wrapper";
 
@@ -39,7 +40,7 @@ export function GovernanceItem<K extends keyof AgentParams>({ name }: Governance
         governanceAa={governance_aa}
       />
 
-      {/* <GovernanceItemFooter /> */}
+      <GovernanceItemFooter />
     </GovernanceItemWrapper>
   );
 }
