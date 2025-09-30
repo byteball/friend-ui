@@ -18,7 +18,6 @@ interface AddWalletModalProps {
 
 export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "", walletAddress, children }) => {
   const { wallet, isValid, isChecking, changeWallet } = useWalletState(walletAddress ?? null);
-  console.log('state v, valid, checking', wallet, isValid, isChecking);
 
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
