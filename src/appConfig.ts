@@ -4,6 +4,7 @@ export const appConfig = {
   TESTNET: env.NEXT_PUBLIC_TESTNET,
   AA_ADDRESS: env.NEXT_PUBLIC_AA_ADDRESS,
   MIN_LOCKED_TERM_DAYS: env.NEXT_PUBLIC_TESTNET ? 1 : 365,
+  CHALLENGING_PERIOD: env.NEXT_PUBLIC_TESTNET ? 86400 : 3 * 86400, // in seconds
   DISCORD_BOT_URL: "obyte:Ama48/uKO+/Tjv28zFKwElBO4SEQNuWAM1VPJkl4DTZO@obyte.org/bb#0000",
   TELEGRAM_BOT_URL: "obyte:A1KwcOAZSWwBnXwa1BKfmhEP2yow1kaUuoi5A6HLOzJZ@obyte.org/bb#0000",
   REAL_NAME_BOT_URL: "obyte:___________@obyte.org/bb#0000",
