@@ -14,12 +14,14 @@ interface IInitialSymbols {
 interface GlobalStoreOptions {
   initState: IAaState;
   initTokens: IInitialSymbols;
+  initGovernanceState: Record<string, any>;
 }
 
 const ATTESTATION_TTL = 1000 * 60 * 60; // 1 hour
 
 export class GlobalStore extends EventEmitter {
   state: LRUCache<string, any>;
+  governanceState: LRUCache<string, any>;
   tokens: LRUCache<string, TokenMeta>;
   leaderboardData: LRUCache<string, UserRank>;
 
@@ -29,12 +31,17 @@ export class GlobalStore extends EventEmitter {
   ready: boolean = false;
   stateUpdateId: number;
 
-  constructor({ initState, initTokens }: GlobalStoreOptions = { initState: {}, initTokens: {} }) {
+  constructor({ initState, initTokens, initGovernanceState }: GlobalStoreOptions = { initState: {}, initTokens: {}, initGovernanceState: {} }) {
     super();
 
     this.setMaxListeners(1000); // avoid memory leak warnings — we control listeners
 
     this.state = new LRUCache<string, any>({
+      max: 10000,
+      ttl: 0,
+    });
+
+    this.governanceState = new LRUCache<string, any>({
       max: 10000,
       ttl: 0,
     });
@@ -60,6 +67,7 @@ export class GlobalStore extends EventEmitter {
     });
 
     this.initializeState(initState);
+    this.initializeGovernanceState(initGovernanceState);
     this.initializeTokens(initTokens);
 
     this.ready = true;
@@ -75,6 +83,14 @@ export class GlobalStore extends EventEmitter {
 
     this.stateUpdateId += 1;
     this.revalidateLeaderboardData();
+  }
+
+  initializeGovernanceState(initState: object) {
+    if (!this.governanceState) throw new Error("Governance state storage is not initialized");
+
+    for (const [k, v] of Object.entries(initState)) {
+      this.governanceState.set(k, v);
+    }
   }
 
   initializeTokens(initTokens: IInitialSymbols) {
@@ -93,6 +109,7 @@ export class GlobalStore extends EventEmitter {
   getSnapshot(): IClientSnapshot {
     return {
       state: this.getState(),
+      governanceState: this.getGovernanceState(),
       tokens: this.getTokens(),
       params: this.state.get("variables") as AgentParams ?? appConfig.initialParamsVariables,
     }
@@ -106,12 +123,17 @@ export class GlobalStore extends EventEmitter {
     return Object.fromEntries(this.state.entries());
   }
 
+  getGovernanceState(): IAaState {
+    return Object.fromEntries(this.governanceState.entries());
+  }
+
   getTokens(): Record<string, TokenMeta> {
     return Object.fromEntries(this.tokens.entries());
   }
 
   getOwnToken() {
     const constants = this.state.get('constants') as IConstants | undefined;
+
     if (!constants) return {
       asset: "unknown",
       symbol: 'FRD',
@@ -135,8 +157,20 @@ export class GlobalStore extends EventEmitter {
     this.stateUpdateId += 1;
   }
 
+  updateGovernanceState(newStateVars: Record<string, any>) {
+    for (const [k, v] of Object.entries(newStateVars)) {
+      this.governanceState.set(k, v);
+    }
+
+    this.sendGovernanceStateUpdate(newStateVars);
+  }
+
   sendStateUpdate(update: IAaState) {
     this.send(STORE_EVENTS.STATE_UPDATE, update);
+  }
+
+  sendGovernanceStateUpdate(update: Record<string, any>) {
+    this.send(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, update);
   }
 
   async revalidateLeaderboardData() {

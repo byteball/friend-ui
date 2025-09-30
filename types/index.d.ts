@@ -29,6 +29,7 @@ interface IAaState {
 
 interface IClientSnapshot {
   state: Record<string, any>;
+  governanceState: Record<string, any>;
   tokens: Record<string, TokenMeta>;
   params: AgentParams;
 }

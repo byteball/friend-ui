@@ -8,7 +8,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
  * Types you already have in your codebase; keep these placeholders if needed.
  */
 type IAaState = Record<string, any>;
-type IClientSnapshot = { state: IAaState; tokens: Record<string, any>, params: AgentParams };
+type IClientSnapshot = { state: IAaState; tokens: Record<string, any>, governanceState: Record<string, any>, params: AgentParams };
 
 const STREAM_URL = "/api/data/stream";
 const HEARTBEAT_MS = 30_000;   // reconnect if no messages within this window
@@ -20,7 +20,10 @@ const JITTER_PCT = 0.2;    // ±20% jitter
 const DataContext = createContext<IClientSnapshot | null>(null);
 
 export function useData() {
-  return useContext(DataContext);
+  const data = useContext(DataContext);
+  if (!data) throw new Error("useData must be used within a DataProvider");
+
+  return data;
 }
 
 type DataProviderProps = {
@@ -32,11 +35,11 @@ type DataProviderProps = {
 
 export function DataProvider({
   children,
-  value = { state: {}, tokens: {}, params: appConfig.initialParamsVariables },
+  value = { state: {}, governanceState: {}, tokens: {}, params: appConfig.initialParamsVariables },
   streamUrl = STREAM_URL,
   fetchSnapshot
 }: DataProviderProps) {
-  const [data, setData] = useState<IClientSnapshot>(value || { state: {}, tokens: {}, params: appConfig.initialParamsVariables });
+  const [data, setData] = useState<IClientSnapshot>(value || { state: {}, tokens: {}, governanceState: {}, params: appConfig.initialParamsVariables });
 
   // ---- Stable refs
   const esRef = useRef<EventSource | null>(null);
@@ -149,8 +152,14 @@ export function DataProvider({
     } else if (ev === STORE_EVENTS.STATE_UPDATE) {
       setData((prev) => ({
         state: { ...(prev?.state ?? {}), ...(incoming.data as IAaState) },
+        governanceState: prev?.governanceState ?? {},
         tokens: prev?.tokens ?? {},
         params: incoming.data?.variables ?? prev?.params ?? appConfig.initialParamsVariables
+      }));
+    } else if (ev === STORE_EVENTS.GOVERNANCE_STATE_UPDATE) {
+      setData((prev) => ({
+        ...prev,
+        governanceState: { ...(prev?.governanceState ?? {}), ...(incoming.data) },
       }));
     }
   };
