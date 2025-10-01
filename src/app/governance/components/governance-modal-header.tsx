@@ -8,12 +8,10 @@ interface GovernanceModalHeaderProps {
   name: keyof AgentParams;
 }
 
-export const GovernanceModalHeader: FC<GovernanceModalHeaderProps> = ({ name }) => {
-  return <DialogHeader>
-    <DialogTitle>Change {getNameByKey(name)}</DialogTitle>
+export const GovernanceModalHeader: FC<GovernanceModalHeaderProps> = ({ name }) => (<DialogHeader>
+  <DialogTitle>Change {getNameByKey(name).toLowerCase()}</DialogTitle>
 
-    {name in descriptions ? <DialogDescription>
-      {descriptions[name]}
-    </DialogDescription> : null}
-  </DialogHeader>
-}
+  {name in descriptions ? <DialogDescription>
+    {descriptions[name]}
+  </DialogDescription> : null}
+</DialogHeader>)

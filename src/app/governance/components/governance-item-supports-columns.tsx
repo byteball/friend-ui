@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toLocalString } from "@/lib/toLocalString";
 import { transformValue } from "../utils/transform-value";
 import { SupportedValuesData } from "./governance-item-supports-table";
+import { GovernanceModal } from "./governance-modal";
 
 interface TableMeta {
   frdToken: TokenMeta;
@@ -27,22 +28,27 @@ export const governanceItemSupportsColumns: ColumnDef<SupportedValuesData>[] = [
   },
   {
     accessorKey: "amount",
-    header: () => "Amount",
+    header: () => "Support",
     cell: ({ row, table }) => {
-      const meta = table.options.meta as TableMeta;
-      const { frdToken } = meta;
+      // const meta = table.options.meta as TableMeta;
+      // const { frdToken } = meta;
       const amount = parseFloat(row.getValue("amount"))
 
-      return <div>{toLocalString(amount)} {frdToken?.symbol}</div>
+      return <div>{toLocalString(amount)}</div>
     },
   },
   {
-    id: "select",
+    id: "action",
     header: "",
-    cell: () => (
-      <div>
-        <Button variant="link" className="p-0 m-0">vote for this value</Button>
+    cell: ({ row, table }) => {
+      const { name } = table.options.meta as TableMeta;
+      const value = row.getValue("value") as string | number | undefined;
+
+      return <div>
+        <GovernanceModal isNew={false} name={name} defaultValue={value}>
+          <Button variant="link" className="p-0 m-0">vote for this value</Button>
+        </GovernanceModal>
       </div>
-    ),
+    },
   }
 ]
