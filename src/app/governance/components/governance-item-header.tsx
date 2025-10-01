@@ -32,7 +32,7 @@ export const GovernableItemHeader = <K extends keyof AgentParams>({ name, curren
             <TooltipTrigger>
               <Info className="size-5" />
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent className="max-w-xs">
               <p>{descriptions[name] ?? ""}</p>
             </TooltipContent>
           </Tooltip>
