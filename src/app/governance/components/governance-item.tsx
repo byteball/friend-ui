@@ -40,7 +40,10 @@ export function GovernanceItem<K extends keyof AgentParams>({ name }: Governance
         governanceAa={governance_aa}
       />
 
-      <GovernanceItemFooter />
+      <GovernanceItemFooter
+        name={name}
+        frdToken={frdToken}
+      />
     </GovernanceItemWrapper>
   );
 }
