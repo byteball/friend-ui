@@ -18,7 +18,7 @@ export const GovernanceProfile: FC<GovernanceProfileProps> = ({ walletAddress })
   const ceilingBalance = getCeilingPrice(data.state.constants);
 
   const userBaseBalance = data.state[`user_${walletAddress}`]?.balances;
-  const votingPower = Math.sqrt((userBaseBalance.frd ?? 0) + ((userBaseBalance.base ?? 0) / ceilingBalance));
+  const votingPower = Math.sqrt((userBaseBalance?.frd ?? 0) + ((userBaseBalance?.base ?? 0) / ceilingBalance));
 
   if (!walletAddress) {
     return <div className="font-medium">
