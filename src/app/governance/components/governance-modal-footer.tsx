@@ -1,10 +1,14 @@
-import { DialogClose, DialogFooter } from "@/components/ui/dialog"
-import { QRButton } from "@/components/ui/qr-button"
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
+import { FC } from "react";
 
-export const GovernanceModalFooter = () => {
+interface GovernanceModalFooterProps {
+  children: React.ReactNode;
+}
+
+export const GovernanceModalFooter: FC<GovernanceModalFooterProps> = ({ children }) => {
   return <DialogFooter>
     <DialogClose asChild>
-      <QRButton href="#">Change</QRButton>
+      {children}
     </DialogClose>
   </DialogFooter>
 }

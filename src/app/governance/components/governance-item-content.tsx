@@ -1,3 +1,6 @@
+"use client";
+
+import "client-only";
 import { FC } from "react";
 import Countdown from 'react-countdown';
 
@@ -38,7 +41,7 @@ export const GovernanceItemContent: FC<GovernanceItemContentProps> = ({ name, le
   });
 
   return <CardContent>
-    {leaderValue ? <div className="flex justify-between items-center">
+    {leaderValue ? <div suppressHydrationWarning className="flex justify-between items-center">
       <div>Leader: {transformValue(name, leaderValue, frdToken)}</div>
       {timeEndChallengingPeriod && currentValue !== leaderValue
         ? <Countdown
