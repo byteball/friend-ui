@@ -26,7 +26,7 @@ interface ClaimFormProps { }
 export const ClaimForm: FC<ClaimFormProps> = () => {
   const btnRef = useRef<HTMLButtonElement>(null);
   const walletAddress = getCookie(WALLET_COOKIE_NAME);
-  const { wallet: friendWallet, isValid: isValidFriendWallet, isChecking, changeWallet } = useWalletState(walletAddress ?? null);
+  const { wallet: friendWallet, isValid: isValidFriendWallet, changeWallet } = useWalletState(walletAddress ?? null);
 
   const data = useData();
   const [error, setError] = useState<string | null>(null);
@@ -108,7 +108,7 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
 
           <QRButton
             href={url}
-            disabled={!isValidFriendWallet || !!error || isChecking || !friendWallet}
+            disabled={!isValidFriendWallet || !!error || !friendWallet}
             ref={btnRef}
           >Claim</QRButton>
         </div>

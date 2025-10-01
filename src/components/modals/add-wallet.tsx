@@ -2,7 +2,7 @@
 
 import { useReactiveSetCookie } from "cookies-next";
 import { useRouter } from 'next/navigation';
-import { FC, useCallback, useRef } from "react";
+import { FC, useRef } from "react";
 
 import { WALLET_COOKIE_NAME } from "@/constants";
 import { useWalletState } from '@/hooks/use-wallet-state';
@@ -17,7 +17,7 @@ interface AddWalletModalProps {
 }
 
 export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "", walletAddress, children }) => {
-  const { wallet, isValid, isChecking, changeWallet } = useWalletState(walletAddress ?? null);
+  const { wallet, isValid, changeWallet } = useWalletState(walletAddress ?? null);
 
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -33,16 +33,16 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
     }, 500);
   }
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
 
       saveWallet();
     }
-  }, [isValid]);
+  }
 
   const saveWallet = () => {
-    if (!wallet || !isValid || isChecking || !isChanged) return;
+    if (!wallet || !isValid || !isChanged) return;
 
     setCookie(WALLET_COOKIE_NAME, wallet);
 
@@ -50,9 +50,9 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
     router.refresh();
   }
 
-  const handleWalletChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleWalletChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     changeWallet(e.target.value.length ? e.target.value : null);
-  }, [changeWallet]);
+  }
 
   return (<Dialog onOpenChange={(open) => {
     if (!open) restoreInputValue();
@@ -81,7 +81,7 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
       <DialogFooter>
         <Button
           onClick={saveWallet}
-          disabled={!wallet || !isValid || isChecking || !isChanged}
+          disabled={!wallet || !isValid || !isChanged}
           ref={submitButtonRef}
         >
           Save changes

@@ -10,13 +10,13 @@ const truncateAddress = (value: string) => value.split(":").map(part => `${part.
 const toPercentage = (value: number) => `${toLocalString(value * 100)}%`;
 const toTokenAmount = (value: number, frdToken: TokenMeta) => `${toLocalString(value / 10 ** frdToken.decimals)} ${frdToken.symbol}`;
 
-const ADDRESS_PARAMS: (keyof AgentParams)[] = [
+export const ADDRESS_PARAMS: (keyof AgentParams)[] = [
   'messaging_attestors',
   'real_name_attestors',
   'rewards_aa'
 ];
 
-const PERCENTAGE_PARAMS: (keyof AgentParams)[] = [
+export const PERCENTAGE_PARAMS: (keyof AgentParams)[] = [
   'referrer_deposit_reward_share',
   'followup_reward_share'
 ];
@@ -40,17 +40,19 @@ export const transformValue = <K extends keyof AgentParams>(key: K, value: Agent
   if (ADDRESS_PARAMS.includes(key)) {
     const formattedValue = (value as string).split(":");
 
-    return formattedValue.map((item, index) => (
-      <a
-        href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${item}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        key={index}
-        className="whitespace-nowrap mt-2 text-blue-700 font-normal block"
-      >
-        {transformer(item as AgentParams[K], frdToken)}
-      </a>
-    ));
+    return <div className="flex gap-y-1 gap-x-3 flex-wrap">
+      {formattedValue.map((item, index) => (
+        <a
+          href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${item}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          key={index}
+          className="whitespace-nowrap mt-2 text-blue-700 font-normal inline-block"
+        >
+          {transformer(item as AgentParams[K], frdToken)}
+        </a>
+      ))}
+    </div>;
   } else {
     return transformer(value as AgentParams[K], frdToken);
   }
