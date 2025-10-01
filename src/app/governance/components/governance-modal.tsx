@@ -6,6 +6,7 @@ import { isValidAddress } from "@/lib/isValidAddress";
 import { useRef, useState } from "react";
 import { ADDRESS_PARAMS, PERCENTAGE_PARAMS } from "../utils/transform-value";
 import { GovernanceModalContentAddresses } from "./governance-modal-content-addresses";
+import { GovernanceModalContentAmount } from "./governance-modal-content-amount";
 import { GovernanceModalContentPercent } from "./governance-modal-content-percent";
 import { GovernanceModalFooter } from "./governance-modal-footer";
 import { GovernanceModalHeader } from "./governance-modal-header";
@@ -45,6 +46,12 @@ export const GovernanceModal = <K extends keyof AgentParams>({ children, name, d
     } else {
       isValid = false;
     }
+  } else if (name === "min_balance_instead_of_real_name") {
+    if (typeof state === 'number') {
+      isValid = state >= 0;
+    } else {
+      isValid = false;
+    }
   }
 
   return (
@@ -70,6 +77,15 @@ export const GovernanceModal = <K extends keyof AgentParams>({ children, name, d
           ? <GovernanceModalContentPercent
             defaultValue={defaultValue ? Number(defaultValue) * 100 : undefined}
             onChange={(value) => setState(+(Number(value) / 100).toFixed(4) as AgentParams[K])}
+            actionBtnRef={btnRef}
+            isNew={isNew}
+          />
+          : null}
+
+        {name === "min_balance_instead_of_real_name"
+          ? <GovernanceModalContentAmount
+            defaultValue={defaultValue ? Number(defaultValue) : undefined}
+            onChange={(value) => setState((value) as AgentParams[K])}
             actionBtnRef={btnRef}
             isNew={isNew}
           />
