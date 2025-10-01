@@ -1,5 +1,7 @@
 import { GovernanceList } from "./components/governance-list";
 
+export const dynamic = 'force-dynamic';
+
 export default function GovernancePage() {
   return <div>
     <h1 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-6xl">Governance</h1>

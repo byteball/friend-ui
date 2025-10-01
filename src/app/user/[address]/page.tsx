@@ -14,6 +14,7 @@ import { getProfileUsername } from "@/lib/getProfileUsername.server";
 import { toLocalString } from "@/lib/toLocalString";
 import { ActivityProgress } from "./components/activity-progress";
 
+export const dynamic = 'force-dynamic';
 
 export default async function ProfilePage({ params }: { params: Promise<{ address: string }> }) {
   const { address } = await params;
