@@ -39,7 +39,7 @@ export const GovernanceModalContentAmount: FC<GovernanceModalContentAmountProps<
         allowLeadingZeros={false}
         onKeyDown={handleKeyDown}
         // pass custom input
-        customInput={Input}
+        customInput={(props) => <Input suffix="GB" {...props} />}
         // returns parsed values; values.value is numeric string like "0.5"
         onValueChange={(values: NumberFormatValues) => {
           let value = values.value ?? '';
