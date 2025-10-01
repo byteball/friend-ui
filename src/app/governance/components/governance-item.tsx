@@ -13,21 +13,16 @@ export type GovernanceItemProps<K extends keyof AgentParams = keyof AgentParams>
 };
 
 export function GovernanceItem<K extends keyof AgentParams>({ name }: GovernanceItemProps<K>) {
-  const data = useData();
+  const { governanceState, params } = useData();
+  const governanceStateData = getGovernanceDataByKey<K>(name, governanceState);
 
-  const { asset, governance_aa } = data.state.constants;
-  const frdToken = data.tokens?.[asset];
-  const currentValue = data.params?.[name];
-
-  const governanceStateData = getGovernanceDataByKey<K>(name, data.governanceState);
+  const currentValue = params?.[name];
 
   return (
     <GovernanceItemWrapper>
-
       <GovernableItemHeader
         name={name}
         currentValue={currentValue}
-        frdToken={frdToken}
       />
 
       <GovernanceItemContent
@@ -35,14 +30,11 @@ export function GovernanceItem<K extends keyof AgentParams>({ name }: Governance
         leaderValue={governanceStateData.leader}
         supportsValues={governanceStateData.supports}
         challengingPeriodStartTs={governanceStateData.challenging_period_start_ts}
-        frdToken={frdToken}
         currentValue={currentValue}
-        governanceAa={governance_aa}
       />
 
       <GovernanceItemFooter
         name={name}
-        frdToken={frdToken}
       />
     </GovernanceItemWrapper>
   );

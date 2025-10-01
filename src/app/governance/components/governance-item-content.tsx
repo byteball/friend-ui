@@ -9,6 +9,7 @@ import { generateLink } from "@/lib/generateLink";
 import { challengingCountdownRenderer } from "../utils/countdown-renderer";
 import { transformValue } from "../utils/transform-value";
 
+import { useData } from "@/app/context";
 import { appConfig } from "@/appConfig";
 
 export type GovernanceItemContentProps<K extends keyof AgentParams = keyof AgentParams> = {
@@ -17,11 +18,13 @@ export type GovernanceItemContentProps<K extends keyof AgentParams = keyof Agent
   currentValue: AgentParams[K];
   supportsValues?: Record<string, number>;
   challengingPeriodStartTs?: number;
-  frdToken: TokenMeta;
-  governanceAa: string;
 };
 
-export const GovernanceItemContent: FC<GovernanceItemContentProps> = ({ name, leaderValue, frdToken, supportsValues, governanceAa, currentValue, challengingPeriodStartTs = 0 }) => {
+export const GovernanceItemContent: FC<GovernanceItemContentProps> = ({ name, leaderValue, supportsValues, currentValue, challengingPeriodStartTs = 0 }) => {
+  const { getFrdToken, getGovernanceAA } = useData();
+
+  const frdToken = getFrdToken();
+  const governanceAa = getGovernanceAA();
 
   const timeEndChallengingPeriod = challengingPeriodStartTs + appConfig.CHALLENGING_PERIOD;
 

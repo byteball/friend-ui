@@ -23,7 +23,16 @@ export function useData() {
   const data = useContext(DataContext);
   if (!data) throw new Error("useData must be used within a DataProvider");
 
-  return data;
+  return {
+    ...data,
+    getFrdToken: (): TokenMeta => {
+      const asset = data.state?.constants?.asset;
+      return data.tokens?.[asset];
+    },
+    getGovernanceAA: (): string => {
+      return data.state?.constants?.governance_aa;
+    }
+  };
 }
 
 type DataProviderProps = {
