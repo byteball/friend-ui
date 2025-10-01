@@ -1,5 +1,3 @@
-"use client";
-
 import { GovernanceList } from "./components/governance-list";
 
 export default function GovernancePage() {
