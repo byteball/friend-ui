@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { CardFooter } from "@/components/ui/card";
-import { GovernanceModal } from "./governance-modal";
+import { GovernanceModal } from "../governance-modal";
 
 interface GovernanceItemFooterProps<K extends keyof AgentParams> {
   name: K;

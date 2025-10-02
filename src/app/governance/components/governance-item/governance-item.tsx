@@ -1,6 +1,6 @@
 "use client";
 
-import { getGovernanceDataByKey } from "../utils/get-governance-data-by-key.server";
+import { getGovernanceDataByKey } from "../../utils";
 import { GovernanceItemContent } from "./governance-item-content";
 import { GovernanceItemFooter } from "./governance-item-footer";
 import { GovernableItemHeader } from "./governance-item-header";
