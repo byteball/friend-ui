@@ -5,7 +5,7 @@ import cn from "classnames";
 import { PlusCircleIcon, XIcon } from "lucide-react";
 import { nanoid } from 'nanoid';
 import { FC, RefObject, useEffect, useReducer } from "react";
-import { addressesReducer } from "../governance-modal-addresses-reducer";
+import { addressesReducer } from "../../governance-modal-addresses-reducer";
 
 interface GovernanceModalContentAddressesProps {
   defaultValue?: string;

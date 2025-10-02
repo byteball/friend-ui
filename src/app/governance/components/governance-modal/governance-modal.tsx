@@ -1,15 +1,20 @@
-import { useData } from "@/app/context";
+import { useRef, useState } from "react";
+
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { QRButton } from "@/components/ui/qr-button";
-import { generateLink } from "@/lib/generateLink";
-import { isValidAddress } from "@/lib/isValidAddress";
-import { useRef, useState } from "react";
-import { ADDRESS_PARAMS, PERCENTAGE_PARAMS } from "../utils/transform-value";
+
 import { GovernanceModalContentAddresses } from "./governance-modal-content-addresses";
 import { GovernanceModalContentAmount } from "./governance-modal-content-amount";
 import { GovernanceModalContentPercent } from "./governance-modal-content-percent";
 import { GovernanceModalFooter } from "./governance-modal-footer";
 import { GovernanceModalHeader } from "./governance-modal-header";
+
+import { useData } from "@/app/context";
+
+import { ADDRESS_PARAMS, PERCENTAGE_PARAMS } from "../../utils";
+
+import { generateLink } from "@/lib/generateLink";
+import { isValidAddress } from "@/lib/isValidAddress";
 
 interface GovernanceModalProps<K extends keyof AgentParams> {
   children?: React.ReactNode;

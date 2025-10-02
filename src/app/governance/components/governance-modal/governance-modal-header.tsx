@@ -1,8 +1,8 @@
 import { FC } from "react";
 
 import { DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { descriptions } from "../descriptions";
-import { getNameByKey } from "../utils/get-name-by-key";
+import { descriptions } from "../../descriptions";
+import { getNameByKey } from "../../utils";
 
 interface GovernanceModalHeaderProps {
   name: keyof AgentParams;
