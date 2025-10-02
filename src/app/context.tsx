@@ -231,18 +231,6 @@ export function DataProvider({
     cancelledRef.current = false;
     open();
 
-    const onVisibility = () => {
-      if (document.visibilityState === "hidden") {
-        closedByUsRef.current = true;
-        safeClose("tab-hidden");
-        // Do not schedule reconnect now; waiter will re-open on visible+online
-      } else {
-        closedByUsRef.current = false;
-        resetBackoff();
-        if (isOnline()) open(); else waitForOnlineAndVisible();
-      }
-    };
-
     const onOnline = () => {
       log("window online");
       closedByUsRef.current = false;

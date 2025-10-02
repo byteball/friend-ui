@@ -28,7 +28,7 @@ class Client {
       } catch { }
 
       if (errorObject && ("error" in errorObject)) {
-        // @ts-expect-error
+        // @ts-expect-error has error property
         throw new Error(errorObject.error);
       } else {
         throw new Error("unknown error");
@@ -103,7 +103,7 @@ class Client {
   }
 
   async getAaResponses(aaOrAas: string | string[]) {
-    let params: {
+    const params: {
       aa?: string;
       aas?: string[];
     } = {};
@@ -118,7 +118,7 @@ class Client {
   }
 
   async getAasByBaseAas(aaOrAas: string | string[]) {
-    let params: {
+    const params: {
       base_aa?: string;
       base_aas?: string[];
     } = {};

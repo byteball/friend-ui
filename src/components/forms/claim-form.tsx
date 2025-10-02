@@ -58,8 +58,8 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
       console.log('Calculating rewards...', isValidFriendWallet);
 
       if (isValidFriendWallet) {
-        const userData1: IUserData = walletAddress ? state[`user_${walletAddress}`] : undefined;
-        const userData2: IUserData = isValidFriendWallet ? state[`user_${friendWallet}`] : undefined;
+        const userData1: IUserData = walletAddress ? data.state[`user_${walletAddress}`] : undefined;
+        const userData2: IUserData = isValidFriendWallet ? data.state[`user_${friendWallet}`] : undefined;
 
         if (!userData2) {
           setError("Both you and your friend must have deposited before claiming rewards");
@@ -75,7 +75,7 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
           }
         }
 
-        const rewards = await getRewards(userData1, userData2, state.constants);
+        const rewards = await getRewards(userData1, userData2, data.state.constants);
         setRewards(walletAddress ? rewards : null);
         setError(null);
       } else {
@@ -84,7 +84,7 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
       }
 
     })();
-  }, [data?.state, walletAddress, friendWallet, isValidFriendWallet]);
+  }, [data, walletAddress, friendWallet, isValidFriendWallet]);
 
   return <div className="grid gap-4">
     <h2 className="text-3xl font-bold">Claim reward</h2>

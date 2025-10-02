@@ -341,7 +341,7 @@ export default async function FaqPage() {
           <Faq.Title>Is {symbol} inflationary?</Faq.Title>
           <Faq.Content>
             <p>
-              Yes, its supply grows, due to rewards paid for making friends. However, most of the new emissions go to locked balances and don't immediately affect the market, and the emissions of liquid {symbol} are designed to be counteracted by demand for {symbol} from new users (see the previous answer).
+              Yes, its supply grows, due to rewards paid for making friends. However, most of the new emissions go to locked balances and don&apos;t immediately affect the market, and the emissions of liquid {symbol} are designed to be counteracted by demand for {symbol} from new users (see the previous answer).
             </p>
 
             <p>

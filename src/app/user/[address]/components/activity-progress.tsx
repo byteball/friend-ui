@@ -14,8 +14,9 @@ interface IActivityProgressProps {
 export const ActivityProgress: FC<IActivityProgressProps> = ({
   user
 }) => {
+  const [ghost, setGhost] = useState<null | string>(appConfig.ghosts[0]?.key ?? null);
+
   if (!user) return null;
-  const [ghost, setGhost] = useState<string | null>(appConfig.ghosts[0]?.key ?? null);
 
   const { current_ghost_num, current_streak = 0 } = user;
 

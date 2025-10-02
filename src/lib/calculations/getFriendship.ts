@@ -17,9 +17,9 @@ export const getFriendship = (state: IAaState, address: string) => {
       return Object.entries(value as any).filter(([k]) => (k === "initial" || k.startsWith("followup_")) && k !== "followup_reward_share").map(([index, value]) => {
         return ({
           index,
-          // @ts-ignore
+          // @ts-expect-error not error
           accept_ts: value?.accept_ts,
-          // @ts-ignore
+          // @ts-expect-error not error
           ...(value?.rewards?.[isA ? 'a' : 'b'] ?? {})
         }) as IFriendship;
       });

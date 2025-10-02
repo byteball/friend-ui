@@ -10,7 +10,6 @@ import React, {
 } from "react";
 
 export function AnimatedListItem({ children }: { children: React.ReactNode }) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const animations: any = {
     initial: { scale: 0, opacity: 0 },
     animate: { scale: 1, opacity: 1, originY: 0 },

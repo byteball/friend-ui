@@ -311,7 +311,8 @@ export const PuzzleImage: FC<PuzzleImageProps> = ({
 
   ...imgProps
 }) => {
-  const { d, viewBox, width, height, cellW, cellH, horizCenters, vertCenters, horizDirs, vertDirs } = useMemo(
+  // width, height,
+  const { d, viewBox, cellW, cellH, horizCenters, vertCenters, horizDirs, vertDirs } = useMemo(
     () => {
       // derive a deterministic seed when not provided to avoid SSR/CSR mismatch
       const derivedSeed =
@@ -412,12 +413,12 @@ export const PuzzleImage: FC<PuzzleImageProps> = ({
       paths.push(path);
     }
     return paths;
-  }, [rows, columns, cellW, cellH, horizCenters, vertCenters, knobScale, bulgeFactor]);
+  }, [rows, columns, cellW, cellH, horizCenters, vertCenters, knobScale, bulgeFactor, filledCeils, knobWidthScale, knobCurveTension, horizDirs, vertDirs]);
 
   return (
     <div className={className} style={{ position: "relative", display: "inline-block", userSelect: "none" }}>
       {/* Base image */}
-      <Image {...imgProps} className="w-full h-full" draggable={false} style={{ ...(imgProps.style || {}), display: "block" }} />
+      <Image {...imgProps} alt="ghost" className="w-full h-full" draggable={false} style={{ ...(imgProps.style || {}), display: "block" }} />
 
       {/* SVG overlay */}
       <svg

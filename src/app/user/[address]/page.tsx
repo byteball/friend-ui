@@ -59,7 +59,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
     <div className="flex items-center justify-between">
       <div className="flex space-x-4">
         <h1 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-6xl first-letter:uppercase">
-          {username}'s profile
+          {username}&apos;s profile
         </h1>
 
         <DepositedLabel deposited={isActive} />
