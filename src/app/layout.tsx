@@ -18,7 +18,6 @@ export const metadata: Metadata = {
   description: "Become friends with someone and get rewards, or claim follow-up rewards",
 };
 
-
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -35,7 +34,7 @@ export default async function RootLayout({
           <ClientProviders>
             <Navbar />
 
-            <div className="container mx-auto p-5">{children}</div>
+            <div className="container p-5 mx-auto">{children}</div>
           </ClientProviders>
         </DataProvider> : <NoDefineAsset />}
       </body>

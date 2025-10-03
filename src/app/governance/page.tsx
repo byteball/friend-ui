@@ -1,6 +1,7 @@
-import { WALLET_COOKIE_NAME } from "@/constants";
 import { getCookie } from "cookies-next";
 import { cookies } from "next/headers";
+
+import { WALLET_COOKIE_NAME } from "@/constants";
 
 import { GovernanceList, GovernanceProfile } from "@/features/governance";
 
