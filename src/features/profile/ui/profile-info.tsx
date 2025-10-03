@@ -4,23 +4,22 @@ import { DepositedLabel } from "@/components/layouts/deposited-label";
 import { QRButton } from "@/components/ui/qr-button";
 import { BOUNCE_FEES } from "@/constants";
 import { generateLink } from "@/lib/generateLink";
-
+import "server-only";
 
 import { appConfig } from "@/appConfig";
+import { getProfileUsername } from "@/lib/getProfileUsername.server";
 import { isActiveUser } from "@/lib/is-active-user";
 
 interface ProfileInfoProps {
-  username: string | null;
   address: string;
   userData?: IUserData;
 }
 
-export const ProfileInfo: FC<ProfileInfoProps> = ({
-  username: rawUsername,
+export const ProfileInfo: FC<ProfileInfoProps> = async ({
   userData,
   address
 }) => {
-  const username = rawUsername ?? address.slice(0, 6) + "..." + address.slice(-4);
+  const username = await getProfileUsername(address) ?? address.slice(0, 6) + "..." + address.slice(-4);
   const isActive = isActiveUser(userData);
 
   const connectUrl = generateLink({
