@@ -2,10 +2,10 @@
 
 import { useReactiveSetCookie } from "cookies-next";
 import { useRouter } from 'next/navigation';
-import { FC, useRef } from "react";
+import { FC, useRef, useState } from "react";
 
 import { WALLET_COOKIE_NAME } from "@/constants";
-import { useWalletState } from '@/hooks/use-wallet-state';
+import { isValidAddress } from "@/lib/isValidAddress";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Input } from "../ui/input";
@@ -17,14 +17,14 @@ interface AddWalletModalProps {
 }
 
 export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "", walletAddress, children }) => {
-  const { wallet, isValid, changeWallet } = useWalletState(walletAddress ?? null);
-
+  const [wallet, changeWallet] = useState(walletAddress || null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const router = useRouter();
   const setCookie = useReactiveSetCookie();
 
+  const isValid = isValidAddress(wallet);
   const isChanged = walletAddress !== wallet;
 
   const restoreInputValue = () => {
