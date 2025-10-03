@@ -7,7 +7,7 @@ import { generateLink } from "@/lib/generateLink";
 
 
 import { appConfig } from "@/appConfig";
-import { addDays, isAfter, parseISO } from "date-fns";
+import { isActiveUser } from "@/lib/is-active-user";
 
 interface ProfileInfoProps {
   username: string | null;
@@ -21,10 +21,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = ({
   address
 }) => {
   const username = rawUsername ?? address.slice(0, 6) + "..." + address.slice(-4);
-
-  const unlockDate = userData ? parseISO(userData.unlock_date) : null;
-  const minLockedDate = unlockDate ? addDays(new Date(), appConfig.MIN_LOCKED_TERM_DAYS) : null;
-  const isActive = minLockedDate && unlockDate ? isAfter(unlockDate, minLockedDate) : false;
+  const isActive = isActiveUser(userData);
 
   const connectUrl = generateLink({
     aa: appConfig.AA_ADDRESS,

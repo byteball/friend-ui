@@ -10,7 +10,6 @@ import { getCeilingPrice, getTotalBalance } from "@/lib/calculations/getRewards"
 import { getProfileUsername } from "@/lib/getProfileUsername.server";
 import { isValidAddress } from "@/lib/isValidAddress";
 import { toLocalString } from "@/lib/toLocalString";
-import { ActivityProgress } from "./components/activity-progress";
 
 export const dynamic = 'force-dynamic';
 
@@ -95,8 +94,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
             : null}
         </CardContent>
       </Card>
-
-      <ActivityProgress user={userData} />
     </div>
 
 
