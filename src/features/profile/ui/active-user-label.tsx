@@ -1,8 +1,14 @@
 import { VerifiedIcon } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { FC } from "react";
 
-export const DepositedLabel = ({ deposited }: { deposited: boolean }) => {
-  if (!deposited) return null;
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+interface ActiveUserLabelProps {
+  isActive: boolean;
+}
+
+export const ActiveUserLabel: FC<ActiveUserLabelProps> = ({ isActive }: { isActive: boolean }) => {
+  if (!isActive) return null;
 
   return <TooltipProvider>
     <Tooltip>

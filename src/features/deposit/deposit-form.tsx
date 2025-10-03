@@ -14,10 +14,10 @@ import { generateLink } from "@/lib/generateLink";
 import { useData } from "@/app/context";
 import { toLocalString } from "@/lib/toLocalString";
 
-import { Input } from "../ui/input";
-import { QRButton } from "../ui/qr-button";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
-import { Slider } from "../ui/slider";
+import { Input } from "@/components/ui/input";
+import { QRButton } from "@/components/ui/qr-button";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 
 const MAX_LOCKED_TERM_DAYS = 365 * 4;
 const now = new Date();
@@ -79,9 +79,9 @@ export const DepositForm: FC<DepositFormProps> = () => {
 
     <div>
       <div className="flex flex-col gap-4">
-        <div className="flex gap-4 items-end">
+        <div className="flex items-end gap-4">
           <div className="w-full">
-            <label htmlFor="amount" className="text-muted-foreground pb-1">Amount</label>
+            <label htmlFor="amount" className="pb-1 text-muted-foreground">Amount</label>
 
             <NumericFormat
               value={amount}
@@ -121,7 +121,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
           </Select>
         </div>
 
-        <div className="flex w-full flex-col gap-4">
+        <div className="flex flex-col w-full gap-4">
           <div>
             <label htmlFor="term" className="text-muted-foreground">Locked term</label>
 
@@ -145,6 +145,5 @@ export const DepositForm: FC<DepositFormProps> = () => {
         </QRButton>
       </div>
     </div>
-
   </div>
 }

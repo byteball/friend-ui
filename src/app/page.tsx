@@ -1,8 +1,8 @@
 import { Claim } from "@/components/layouts/claim";
-import { Deposit } from "@/components/layouts/deposit";
 import { HeroBlock } from "@/components/layouts/hero-block";
 import { HowItWorksBlock } from "@/components/layouts/how-it-works";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DepositWidget } from "@/features/deposit";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -30,7 +30,7 @@ export default function Home() {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="deposit">
-        <Deposit />
+        <DepositWidget />
       </TabsContent>
       <TabsContent value="claim">
         <Claim />

@@ -1,15 +1,16 @@
 import { FC } from "react";
+import "server-only";
 
-import { DepositedLabel } from "@/components/layouts/deposited-label";
 import { QRButton } from "@/components/ui/qr-button";
 import { BOUNCE_FEES } from "@/constants";
 import { generateLink } from "@/lib/generateLink";
-import "server-only";
 
-import { appConfig } from "@/appConfig";
+import { ActiveUserLabel } from "./active-user-label";
+
 import { getProfileUsername } from "@/lib/getProfileUsername.server";
 import { isActiveUser } from "@/lib/is-active-user";
 
+import { appConfig } from "@/appConfig";
 interface ProfileInfoProps {
   address: string;
   userData?: IUserData;
@@ -37,7 +38,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
         {username}&apos;s profile
       </h1>
 
-      <DepositedLabel deposited={isActive} />
+      <ActiveUserLabel isActive={isActive} />
     </div>
 
     <div className="flex flex-col items-end gap-2">
