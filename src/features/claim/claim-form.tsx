@@ -3,9 +3,9 @@
 import { useGetCookie } from "cookies-next/client";
 import { FC, useCallback, useRef } from "react";
 
-import { DescriptionDetail, DescriptionGroup, DescriptionList, DescriptionTerm } from "../ui/description-list";
-import { Input } from "../ui/input";
-import { QRButton } from "../ui/qr-button";
+import { DescriptionDetail, DescriptionGroup, DescriptionList, DescriptionTerm } from "@/components/ui/description-list";
+import { Input } from "@/components/ui/input";
+import { QRButton } from "@/components/ui/qr-button";
 
 import { BOUNCE_FEES, WALLET_COOKIE_NAME } from "@/constants";
 
