@@ -1,8 +1,10 @@
-import { appConfig } from "@/appConfig";
-import { toLocalString } from "@/lib/toLocalString";
 import Link from "next/link";
 import "server-only";
-import Faq from "./components/Faq";
+
+import Faq from "@/features/faq";
+import { toLocalString } from "@/lib/toLocalString";
+
+import { appConfig } from "@/appConfig";
 
 export const dynamic = "force-dynamic";
 
@@ -530,7 +532,7 @@ export default async function FaqPage() {
       </Faq.Container>
 
       <div className="mt-20">
-        <p className="mt-4 text-pretty text-lg text-gray-700">Can&rsquo;t find the answer you&rsquo;re looking for? Reach out to our <a href="https://discord.obyte.org" target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-700 hover:text-blue-500">discord</a>.</p>
+        <p className="mt-4 text-lg text-gray-700 text-pretty">Can&rsquo;t find the answer you&rsquo;re looking for? Reach out to our <a href="https://discord.obyte.org" target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-700 hover:text-blue-500">discord</a>.</p>
       </div>
     </div>
   )
