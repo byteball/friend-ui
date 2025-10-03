@@ -1,21 +1,23 @@
 "use client"
 
-import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
-import { appConfig } from "@/appConfig"
-import { toLocalString } from "@/lib/toLocalString"
-import Link from "next/link"
+import { toLocalString } from "@/lib/toLocalString";
+import { ILeaderboardTableMeta } from "./domain/types";
+
+import { appConfig } from "@/appConfig";
 
 export const columns: ColumnDef<UserRank>[] = [
   {
-    accessorKey: "username",
+    accessorKey: "address",
     header: "User",
     cell: ({ row, table }: any) => {
-      const meta = table.options.meta;
-      const address = row.getValue("username") as string;
+      const meta = table.options.meta as ILeaderboardTableMeta;
+      const address = row.getValue("address") as string;
 
       const username = meta?.usernames?.find((u: any) => u.address === address)?.username;
 
@@ -35,15 +37,15 @@ export const columns: ColumnDef<UserRank>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Amount
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="w-4 h-4 ml-2" />
         </Button>
       )
     },
     cell: ({ row, table }: any) => {
-      const meta = table.options.meta;
+      const meta = table.options.meta as ILeaderboardTableMeta;
       const amount = row.getValue("amount") as number;
 
-      return <span>{toLocalString(amount / 10 ** meta.decimals)} <small>{meta.symbols}</small></span>
+      return <span>{toLocalString(amount / 10 ** meta.frdDecimals)} <small>{meta.frdSymbol}</small></span>
     }
   },
   {
@@ -56,7 +58,7 @@ export const columns: ColumnDef<UserRank>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Friends
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="w-4 h-4 ml-2" />
         </Button>
       )
     },

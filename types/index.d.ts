@@ -68,7 +68,7 @@ interface IRewards {
 }
 
 type UserRank = {
-  username: string;
+  address: string;
   amount: number;
   friends: number;
 }

@@ -199,7 +199,7 @@ export class GlobalStore extends EventEmitter {
       newEntries.push([
         addr,
         {
-          username: addr,
+          address: addr,
           amount: totalBalance,
           friends: userFriends.length,
         },

@@ -1,13 +1,12 @@
 "use client"
 
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
-  useReactTable,
+  useReactTable
 } from "@tanstack/react-table";
 
 import {
@@ -20,34 +19,32 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  decimals: number;
-  symbols: string;
-  usernames: { address: string; username: string | null }[];
-}
+import { useData } from "@/app/context";
+import { DataTableProps, ILeaderboardTableMeta } from "./domain/types";
+import { columns } from "./leaderboard-columns";
 
-export function LeaderboardTable<TData, TValue>({
-  columns,
-  data,
-  decimals,
-  symbols,
+export function LeaderboardTable<TData>({
+  leaderboardData,
   usernames
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData>) {
+  const data = useData();
+
+  const { symbol: frdSymbol, decimals: frdDecimals } = data.getFrdToken();
 
   const [sorting, setSorting] = useState<SortingState>([
     { id: "amount", desc: true },
   ]);
 
+  const meta: ILeaderboardTableMeta = {
+    frdDecimals,
+    frdSymbol,
+    usernames
+  }
+
   const table = useReactTable({
-    data,
+    data: leaderboardData as UserRank[],
     columns,
-    meta: {
-      decimals,
-      symbols,
-      usernames
-    },
+    meta,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
@@ -58,7 +55,7 @@ export function LeaderboardTable<TData, TValue>({
   })
 
   return (
-    <div className="overflow-hidden rounded-md border">
+    <div className="overflow-hidden border rounded-md">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
