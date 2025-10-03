@@ -1,6 +1,6 @@
+import { columns } from "@/features/leaderboard/leaderboard-columns";
+import { LeaderboardTable } from "@/features/leaderboard/leaderboard-table";
 import { getProfileUsername } from "@/lib/getProfileUsername.server";
-import { columns } from "./columns";
-import { LeaderboardTable } from "./leaderboard-table";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -12,7 +12,6 @@ export default async function Leaderboard() {
   const constants = globalThis.__GLOBAL_STORE__?.getState().constants as IConstants;
   const asset = constants?.asset || 'base';
   const frdToken = tokens[asset];
-
 
   const usernameGetters = data?.map((d) => getProfileUsername(d.username)
     .then((username) => ({ address: d.username, username })));
