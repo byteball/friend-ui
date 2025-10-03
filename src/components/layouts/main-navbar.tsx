@@ -13,6 +13,7 @@ import {
   NavbarLeft,
   NavbarRight,
 } from "../ui/navbar";
+import { NavbarLinkItem, NavigationLink } from "./navbar-link-item";
 
 import { WALLET_COOKIE_NAME } from "@/constants";
 import { AddWalletModal } from "../modals/add-wallet";
@@ -20,16 +21,11 @@ import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "../ui
 
 const name = "Obyte Friends"
 
-interface NavbarLink {
-  text: string;
-  href: string;
-}
-
 interface NavbarProps {
   className?: string;
 }
 
-const menu: NavbarLink[] = [
+const menu: NavigationLink[] = [
   { text: "Home", href: "/" },
   { text: "Leaderboard", href: "/leaderboard" },
   { text: "Governance", href: "/governance" },
@@ -41,8 +37,8 @@ export default async function MainNavbar({ className }: NavbarProps) {
 
   return (
     <header className={cn("relative top-0 z-50 mb-10 px-8 pb-4 font-semibold", className)}>
-      <div className="fade-bottom bg-background/15 absolute left-0 h-24 w-full"></div>
-      <div className="max-w-container relative mx-auto">
+      <div className="absolute left-0 w-full h-24 fade-bottom bg-background/15"></div>
+      <div className="relative mx-auto max-w-container">
         <NavbarComponent>
           <NavbarLeft>
             <Link
@@ -54,15 +50,13 @@ export default async function MainNavbar({ className }: NavbarProps) {
               {name}
             </Link>
 
-            {menu.map((link, index) => (
-              <Link
-                key={index}
+            {menu.map((link) => (
+              <NavbarLinkItem
+                key={link.href}
+                link={link}
+                className="hidden text-sm text-muted-foreground hover:text-foreground md:block"
                 prefetch={false}
-                href={link.href}
-                className="text-muted-foreground hover:text-foreground hidden text-sm md:block"
-              >
-                {link.text}
-              </Link>
+              />
             ))}
 
           </NavbarLeft>
@@ -75,13 +69,13 @@ export default async function MainNavbar({ className }: NavbarProps) {
               Download wallet
             </Link> */}
 
-            {walletAddress ? <Link
-              href={`/user/${walletAddress}`}
-              prefetch={false}
-              className="hidden text-sm md:block"
-            >
-              Profile
-            </Link> : null}
+            {walletAddress ? (
+              <NavbarLinkItem
+                link={{ text: "Profile", href: `/user/${walletAddress}` }}
+                className="hidden text-sm text-muted-foreground hover:text-foreground md:block"
+                prefetch={false}
+              />
+            ) : null}
 
             <AddWalletModal
               walletAddress={walletAddress}
@@ -93,7 +87,7 @@ export default async function MainNavbar({ className }: NavbarProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="shrink-0 md:hidden ml-4"
+                  className="ml-4 shrink-0 md:hidden"
                 >
                   <Menu className="size-5" />
                   <span className="sr-only">Toggle navigation menu</span>
@@ -112,15 +106,13 @@ export default async function MainNavbar({ className }: NavbarProps) {
                     <Image src="/logo.svg" alt="Logo" width={32} height={32} /> <span>{name}</span>
                   </Link>
 
-                  {menu.map((link, index) => (
-                    <SheetClose key={index} asChild>
-                      <Link
-                        href={link.href}
+                  {menu.map((link) => (
+                    <SheetClose key={link.href} asChild>
+                      <NavbarLinkItem
+                        link={link}
                         className="text-muted-foreground hover:text-foreground"
                         prefetch={false}
-                      >
-                        {link.text}
-                      </Link>
+                      />
                     </SheetClose>
                   ))}
                 </nav>
