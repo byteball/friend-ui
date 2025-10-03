@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef, useState } from "react";
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -11,10 +13,9 @@ import { GovernanceModalHeader } from "./governance-modal-header";
 
 import { useData } from "@/app/context";
 
-import { ADDRESS_PARAMS, PERCENTAGE_PARAMS } from "../../utils";
-
 import { generateLink } from "@/lib/generateLink";
 import { isValidAddress } from "@/lib/isValidAddress";
+import { ADDRESS_PARAMS, PERCENTAGE_PARAMS } from "../../domain/transform-value";
 
 interface GovernanceModalProps<K extends keyof AgentParams> {
   children?: React.ReactNode;

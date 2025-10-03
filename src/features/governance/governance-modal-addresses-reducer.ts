@@ -1,15 +1,6 @@
 import { nanoid } from "nanoid";
 
-export interface AddressValue {
-  value: string;
-  isValid: boolean;
-  id: string;
-}
-
-export type AddressAction =
-  | { type: "REMOVE_ADDRESS"; payload: string }
-  | { type: "ADD_ADDRESS"; payload: string }
-  | { type: "UPDATE_ADDRESS"; payload: { id: string; value: string } };
+import type { AddressAction, AddressValue } from "./domain/types";
 
 export function addressesReducer(state: AddressValue[], action: AddressAction): AddressValue[] {
   switch (action.type) {

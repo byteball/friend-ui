@@ -1,5 +1,4 @@
-// Re-export types from the reducer for easier imports
-export type { AddressAction, AddressValue } from './governance-modal-addresses-reducer';
+
 
 // Additional governance related types can be added here
 export interface GovernanceItem {
@@ -16,3 +15,14 @@ export interface GovernanceModalProps {
   item?: GovernanceItem;
   isNew?: boolean;
 }
+
+export interface AddressValue {
+  value: string;
+  isValid: boolean;
+  id: string;
+}
+
+export type AddressAction =
+  | { type: "REMOVE_ADDRESS"; payload: string }
+  | { type: "ADD_ADDRESS"; payload: string }
+  | { type: "UPDATE_ADDRESS"; payload: { id: string; value: string } };

@@ -2,8 +2,7 @@ import { WALLET_COOKIE_NAME } from "@/constants";
 import { getCookie } from "cookies-next";
 import { cookies } from "next/headers";
 
-import { GovernanceList } from "./components/governance-list";
-import { GovernanceProfile } from "./components/governance-profile";
+import { GovernanceList, GovernanceProfile } from "@/features/governance";
 
 export const dynamic = 'force-dynamic';
 
@@ -17,7 +16,7 @@ export default async function GovernancePage() {
       <GovernanceProfile walletAddress={walletAddress} />
     </div>
 
-    <div className="mt-10 max-w-4xl">
+    <div className="max-w-4xl mt-10">
       <GovernanceList />
     </div>
   </div>

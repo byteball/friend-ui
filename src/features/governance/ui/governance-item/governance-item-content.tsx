@@ -9,10 +9,10 @@ import { GovernanceItemSupportsTable } from "./governance-item-supports-table";
 
 import { generateLink } from "@/lib/generateLink";
 
-import { challengingCountdownRenderer, transformValue } from "../../utils";
-
 import { useData } from "@/app/context";
 import { appConfig } from "@/appConfig";
+import { challengingCountdownRenderer } from "../../domain/countdown-renderer";
+import { transformValue } from "../../domain/transform-value";
 
 export type GovernanceItemContentProps<K extends keyof AgentParams = keyof AgentParams> = {
   name: K;
@@ -40,7 +40,7 @@ export const GovernanceItemContent: FC<GovernanceItemContentProps> = ({ name, le
   });
 
   return <CardContent>
-    {leaderValue ? <div suppressHydrationWarning className="flex justify-between items-center">
+    {leaderValue ? <div suppressHydrationWarning className="flex items-center justify-between">
       <div>Leader: {transformValue(name, leaderValue, frdToken)}</div>
       {timeEndChallengingPeriod && currentValue !== leaderValue
         ? <Countdown

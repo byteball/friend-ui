@@ -3,10 +3,11 @@ import { Info } from "lucide-react";
 import { CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-import { descriptions } from "../../descriptions";
-
 import { useData } from "@/app/context";
-import { getNameByKey, transformValue } from "../../utils";
+
+import { descriptions } from "../../domain/descriptions";
+import { getNameByKey } from "../../domain/get-name-by-key";
+import { transformValue } from "../../domain/transform-value";
 
 export type GovernanceItemHeaderProps<K extends keyof AgentParams = keyof AgentParams> = {
   name: K;
@@ -24,7 +25,7 @@ export const GovernableItemHeader = <K extends keyof AgentParams>({ name, curren
 
   return (
     <CardHeader className="text-lg">
-      <CardTitle className="flex flex-col md:flex-row justify-between items-center">
+      <CardTitle className="flex flex-col items-center justify-between md:flex-row">
         <div className="flex gap-x-2 shrink-0">{getNameByKey(name)}
           <Tooltip>
             <TooltipTrigger>
@@ -35,7 +36,7 @@ export const GovernableItemHeader = <K extends keyof AgentParams>({ name, curren
             </TooltipContent>
           </Tooltip>
         </div>
-        <div className="grow-0 max-w-xs">
+        <div className="max-w-xs grow-0">
           Current value: <span>{transformValue(name, currentValue, frdToken)}</span>
         </div>
       </CardTitle>

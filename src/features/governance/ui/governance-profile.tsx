@@ -23,7 +23,6 @@ export const GovernanceProfile: FC<GovernanceProfileProps> = ({ walletAddress })
   if (!walletAddress) {
     return <div className="font-medium">
       Please{" "}
-      {/* <AddWalletModal */}
       <AddWalletModal>
         <button className="underline">add your wallet address</button>
       </AddWalletModal>

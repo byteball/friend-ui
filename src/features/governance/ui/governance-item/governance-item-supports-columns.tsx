@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 
 import { toLocalString } from "@/lib/toLocalString";
-import { transformValue } from "../../utils";
+import { transformValue } from "../../domain/transform-value";
 import { GovernanceModal } from "../governance-modal";
 import { SupportedValuesData } from "./governance-item-supports-table";
 
