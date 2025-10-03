@@ -101,7 +101,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
 
 
     <FriendsList
-      username={username}
       address={address}
     />
 

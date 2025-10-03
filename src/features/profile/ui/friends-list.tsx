@@ -2,15 +2,16 @@ import { getFriendList } from "@/lib/calculations/getFriendList";
 import { FC } from "react";
 import "server-only";
 
+import { getProfileUsername } from "@/lib/getProfileUsername.server";
 import { FriendsListItem } from "./friends-list-item";
 
 interface IFriendsListProps {
-  username: string | null;
   address: string;
 }
 
-export const FriendsList: FC<IFriendsListProps> = ({ username, address }) => {
+export const FriendsList: FC<IFriendsListProps> = async ({ address }) => {
   const state = globalThis.__GLOBAL_STORE__?.getState() ?? {};
+  const username = await getProfileUsername(address) ?? address.slice(0, 6) + "..." + address.slice(-4);
 
   const friends = getFriendList(state, address);
 
