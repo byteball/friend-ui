@@ -27,7 +27,7 @@ export function useData() {
     ...data,
     getFrdToken: (): TokenMeta => {
       const asset = data.state?.constants?.asset;
-      return data.tokens?.[asset];
+      return data.tokens?.[asset] ?? {};
     },
     getGovernanceAA: (): string => {
       return data.state?.constants?.governance_aa;

@@ -201,7 +201,7 @@ function sha256(bytes: Uint8Array): Uint8Array {
 
 /* ----------------------------- Public API ----------------------------- */
 
-export function isValidAddress(address: string): boolean {
+export function isValidAddress(address: string | null): boolean {
   // Fully synchronous validator
   if (typeof address !== "string") return false;
   if (address !== address.toUpperCase()) return false;

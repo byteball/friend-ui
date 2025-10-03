@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
   if (url.searchParams.has("refAddr")) {
 
     const ref = url.searchParams.get("refAddr");
-    const valid = ref ? isValidAddress(ref) : false;
+    const valid = isValidAddress(ref);
 
     if (!request.cookies.has(REF_COOKIE_NAME) && ref && valid) {
       // set cookie
