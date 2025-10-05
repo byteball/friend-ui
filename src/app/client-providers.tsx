@@ -2,6 +2,7 @@
 
 import { ProgressProvider } from '@bprogress/next/app';
 import { CookiesNextProvider } from "cookies-next";
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { ReactNode, useCallback } from "react";
 
 interface ProvidersProps {
@@ -27,7 +28,9 @@ export function ClientProviders({ children }: ProvidersProps) {
     targetPreprocessor={normalizeProgressTarget}
   >
     <CookiesNextProvider pollingOptions={{ enabled: true, intervalMs: 1000 }}>
-      {children}
+      <NuqsAdapter>
+        {children}
+      </NuqsAdapter>
     </CookiesNextProvider>
   </ProgressProvider>;
 }

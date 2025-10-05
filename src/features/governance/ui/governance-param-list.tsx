@@ -4,7 +4,7 @@ import { GovernanceItem } from "./governance-item";
 
 import { appConfig } from "@/appConfig";
 
-export const GovernanceList: FC = () => (<div className="grid gap-8">
+export const GovernanceParamList: FC = () => (<div className="grid gap-8">
   {Object.keys(appConfig.initialParamsVariables).map((key) => (
     <GovernanceItem
       key={key}

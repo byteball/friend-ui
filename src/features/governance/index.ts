@@ -1,4 +1,5 @@
 export { GovernanceItem } from "./ui/governance-item";
-export { GovernanceList } from "./ui/governance-list";
 export { GovernanceModal } from "./ui/governance-modal";
+export { GovernanceParamList } from "./ui/governance-param-list";
 export { GovernanceProfile } from "./ui/governance-profile";
+export { GovernanceTabs } from "./ui/governance-tabs";
