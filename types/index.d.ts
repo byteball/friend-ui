@@ -77,7 +77,9 @@ type AgentParams = {
   rewards_aa: string;
   messaging_attestors: string;
   real_name_attestors: string;
-  referrer_deposit_reward_share: number;
+  referrer_frd_deposit_reward_share: number;
+  referrer_bytes_deposit_reward_share: number;
+  referrer_deposit_asset_deposit_reward_share: number;
   followup_reward_share: number;
   min_balance_instead_of_real_name: number;
 }
