@@ -3,7 +3,7 @@
 import { parseAsStringEnum, useQueryState } from 'nuqs';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { GovernanceParamList } from "@/features/governance";
+import { GovernanceDepositAssetList, GovernanceParamList } from "@/features/governance";
 
 // Enums (string-based only)
 enum Tab {
@@ -34,7 +34,7 @@ export const GovernanceTabs = () => {
     </TabsContent>
 
     <TabsContent value={Tab.deposit_assets} className="max-w-4xl mt-4">
-      Deposit assets coming soon...
+      <GovernanceDepositAssetList />
     </TabsContent>
   </Tabs>)
 }
