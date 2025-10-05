@@ -24,7 +24,7 @@ const getAllStateVars = async (client: Client, address: string) => {
 
       const keys = Object.keys(chunkData);
 
-      if (keys.length > 1) {
+      if (keys.length > 1 || iteration === 1 && keys.length > 0) {
         allStateVars = { ...allStateVars, ...chunkData };
         lastKey = keys[keys.length - 1];
       } else {
