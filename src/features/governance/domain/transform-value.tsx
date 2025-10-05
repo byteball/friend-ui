@@ -17,7 +17,9 @@ export const ADDRESS_PARAMS: (keyof AgentParams)[] = [
 ];
 
 export const PERCENTAGE_PARAMS: (keyof AgentParams)[] = [
-  'referrer_deposit_reward_share',
+  'referrer_frd_deposit_reward_share',
+  'referrer_bytes_deposit_reward_share',
+  'referrer_deposit_asset_deposit_reward_share',
   'followup_reward_share'
 ];
 

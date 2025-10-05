@@ -8,7 +8,7 @@ export const env = createEnv({
   },
   client: {
     NEXT_PUBLIC_TESTNET: z.boolean().default(false),
-    NEXT_PUBLIC_AA_ADDRESS: z.string().min(4).default("FQQLTDJGGTXKCOHYOR4RZYHN2VE3QZ72"),
+    NEXT_PUBLIC_AA_ADDRESS: z.string().min(4).default("CURJWJ2TQ36NBHVYVPIXEKKN4QNI43BT"),
   },
   runtimeEnv: {
     NEXT_PUBLIC_TESTNET: Boolean(process.env.NEXT_PUBLIC_TESTNET),
