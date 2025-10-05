@@ -196,12 +196,15 @@ export class GlobalStore extends EventEmitter {
     const newEntries: Array<[string, UserRank]> = [];
     for (const [addr, totalBalance] of totalBalances.entries()) {
       const userFriends = friends[addr] || [];
+      const newUsersCount = this.state.get(`user_${addr}`)?.new_users ?? 0;
+
       newEntries.push([
         addr,
         {
           address: addr,
           amount: totalBalance,
           friends: userFriends.length,
+          new_users: newUsersCount
         },
       ]);
     }

@@ -62,5 +62,20 @@ export const columns: ColumnDef<UserRank>[] = [
         </Button>
       )
     },
+  },
+  {
+    accessorKey: "new_users",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          New users
+          <ArrowUpDown className="w-4 h-4 ml-2" />
+        </Button>
+      )
+    },
   }
 ]

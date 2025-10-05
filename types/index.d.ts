@@ -71,6 +71,7 @@ type UserRank = {
   address: string;
   amount: number;
   friends: number;
+  new_users: number;
 }
 
 type AgentParams = {
