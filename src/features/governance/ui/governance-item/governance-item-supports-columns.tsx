@@ -29,10 +29,11 @@ export const governanceItemSupportsColumns: ColumnDef<SupportedValuesData>[] = [
   {
     accessorKey: "amount",
     header: () => "Support",
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
       const amount = parseFloat(row.getValue("amount"))
+      const meta = table.options.meta as TableMeta;
 
-      return <div>{toLocalString(amount)}</div>
+      return <div>{toLocalString(amount)} <small>{meta.frdToken.symbol}</small></div>
     },
   },
   {

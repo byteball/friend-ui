@@ -25,7 +25,7 @@ const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
                   {...props}
                   tabIndex={-1}
                   disabled={disabled}
-                  className={cn("px-3 rounded-tr-none rounded-br-none", props.variant === "link" ? "px-1" : "px-3")}
+                  className={cn("rounded-tr-none rounded-br-none", props.variant === "link" ? "px-0" : "px-3")}
                 >
                   <QrCode className="w-4 h-4" />
                 </Button>
@@ -80,9 +80,10 @@ const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
               disabled
               asChild
               ref={ref}
-              className={cn("pl-2 rounded-tl-none rounded-bl-none cursor-pointer", {
-                "pointer-events-none opacity-50 select-none": disabled,
-              })}
+              className={cn("rounded-tl-none rounded-bl-none cursor-pointer",
+                { "pointer-events-none opacity-50 select-none": disabled },
+                props.variant === "link" ? "pl-0" : "pl-2",
+              )}
             >
               <a href={href} tabIndex={-1}>
                 {children}
