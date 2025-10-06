@@ -38,7 +38,7 @@ export const GovernanceProfile: FC<GovernanceProfileProps> = ({ walletAddress })
     </span>
 
     <div>
-      Your voting power: <span suppressHydrationWarning>{toLocalString(votingPower)}</span> <small>{frdToken.symbol}</small>
+      Your voting power: <span suppressHydrationWarning>{toLocalString(votingPower / 10 ** frdToken.decimals)}</span>
     </div>
   </div>;
 }
