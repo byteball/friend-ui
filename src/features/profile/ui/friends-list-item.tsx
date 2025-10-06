@@ -4,12 +4,11 @@ import { FC } from "react";
 import "server-only";
 
 interface IFriendsListItemProps {
-  address: string;
   friendAddress: string;
   date: number;
 }
 
-export const FriendsListItem: FC<IFriendsListItemProps> = async ({ address, friendAddress, date }) => {
+export const FriendsListItem: FC<IFriendsListItemProps> = async ({ friendAddress, date }) => {
   const username = await getProfileUsername(friendAddress) ?? friendAddress.slice(0, 6) + "..." + friendAddress.slice(-4);
 
   return <div className="flex flex-col gap-2">

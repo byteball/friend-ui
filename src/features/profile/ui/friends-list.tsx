@@ -23,7 +23,6 @@ export const FriendsList: FC<IFriendsListProps> = async ({ address }) => {
     <div className="flex flex-col gap-6">
       {friends.map((friend) => <FriendsListItem
         key={friend.address}
-        address={address}
         friendAddress={friend.address}
         date={friend.date}
       />)}
