@@ -19,7 +19,7 @@ export const GovernanceDepositAssetItemHeader = ({ symbol, currentValue, loading
         ?
         <Skeleton className="w-[350px] h-[1.1em]" />
         : <div className="flex gap-x-2 shrink-0">
-          Deposit asset {symbol} price AA
+          Deposit asset {symbol}
           <Tooltip>
             <TooltipTrigger>
               <Info className="size-5" />

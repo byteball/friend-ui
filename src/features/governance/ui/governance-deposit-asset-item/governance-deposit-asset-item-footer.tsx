@@ -40,6 +40,6 @@ export const GovernanceDepositAssetItemFooter: FC<GovernanceItemFooterProps> = (
     variant="link"
     className="p-0 m-0"
   >
-    against this asset
+    vote against this asset
   </QRButton>
 </CardFooter>)

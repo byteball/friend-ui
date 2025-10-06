@@ -21,7 +21,7 @@ interface TableMeta {
 export const governanceDepositAssetItemSupportsColumns: ColumnDef<IAggregatedData>[] = [
   {
     accessorKey: "address",
-    header: "Price AA address",
+    header: "Price AA",
     cell: ({ row }) => {
       const address = row.getValue("address") as string;
 

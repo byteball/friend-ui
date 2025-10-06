@@ -65,9 +65,9 @@ export const AddNewDepositAssetModal: FC<AddNewDepositAssetModalProps> = ({ chil
           </Field>
 
           <Field>
-            <FieldLabel>Price AA address</FieldLabel>
+            <FieldLabel>Price AA (Oswap AA to determine the asset&apos;s price in GBYTE)</FieldLabel>
             <Input
-              placeholder="Price AA address"
+              placeholder="Price AA"
               value={address}
               disabled={poolLoading || loading}
               onChange={(e) => setAddress(e.target.value.trim().toUpperCase())}
