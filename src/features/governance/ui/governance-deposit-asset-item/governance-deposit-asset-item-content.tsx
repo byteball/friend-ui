@@ -55,7 +55,7 @@ export const GovernanceDepositAssetItemContent: FC<GovernanceDepositAssetItemCon
       {timeEndChallengingPeriod
         ? <Countdown
           date={timeEndChallengingPeriod * 1000}
-          renderer={(props) => challengingCountdownRenderer(props, commitUrl)}
+          renderer={(props) => challengingCountdownRenderer(props, asset !== 'no' ? commitUrl : undefined)}
         /> : null}
     </div> : null}
 
