@@ -16,7 +16,7 @@ export const GovernanceDepositAssetList: FC = () => {
 
   return <div>
     <div className="flex mb-4 justify-end">
-      <AddNewDepositAssetModal>
+      <AddNewDepositAssetModal governanceAa={data.getGovernanceAA()}>
         <Button>
           <Plus /> Add new deposit asset
         </Button>

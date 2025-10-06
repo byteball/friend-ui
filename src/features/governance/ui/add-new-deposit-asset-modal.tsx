@@ -10,18 +10,29 @@ import { QRButton } from "@/components/ui/qr-button";
 
 import { useCheckPoolAddress } from "@/hooks/use-check-pool-address";
 import { useSymbol } from "@/hooks/use-symbol";
-
+import { generateLink } from "@/lib/generateLink";
 
 interface AddNewDepositAssetModalProps {
   children: React.ReactNode;
+  governanceAa: string;
 }
 
-export const AddNewDepositAssetModal: FC<AddNewDepositAssetModalProps> = ({ children }) => {
+export const AddNewDepositAssetModal: FC<AddNewDepositAssetModalProps> = ({ children, governanceAa }) => {
   const [asset, setAsset] = useState<string>("");
   const [address, setAddress] = useState<string>("");
 
   const { symbol, loading, error } = useSymbol(asset, { allowNull: true });
   const { loading: poolLoading, error: poolError, isValid } = useCheckPoolAddress(address, asset);
+
+  const url = generateLink({
+    amount: 10000,
+    aa: governanceAa,
+    data: {
+      deposit_asset: asset,
+      name: "deposit_asset",
+      value: address
+    }
+  });
 
   return <Dialog>
     <DialogTrigger asChild>
@@ -66,7 +77,10 @@ export const AddNewDepositAssetModal: FC<AddNewDepositAssetModalProps> = ({ chil
             {address ? (poolLoading ? <FieldError>Checking...</FieldError> : poolError ? <FieldError>{poolError}</FieldError> : null) : null}
           </Field>
           {/* Add {symbol} */}
-          <QRButton disabled={!address || !asset || loading || poolLoading || asset === "base" || !isValid} href="#">
+          <QRButton
+            disabled={!address || !asset || loading || poolLoading || asset === "base" || !isValid}
+            href={url}
+          >
             {loading || poolLoading ? <><Loader className="animate-spin" /> checking...</> : `Add ${symbol ?? 'asset'}`}
           </QRButton>
         </FieldSet>
