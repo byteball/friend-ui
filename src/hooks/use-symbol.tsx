@@ -10,6 +10,10 @@ type CacheEntry = { value: string; expiresAt: number };
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 const cache = new Map<string, CacheEntry>();
 
+interface Options {
+  allowNull?: boolean;
+}
+
 /** Read cache safely */
 function readCache(asset: string): string | null {
   const entry = cache.get(asset);
@@ -26,10 +30,11 @@ function writeCache(asset: string, value: string) {
   cache.set(asset, { value, expiresAt: Date.now() + CACHE_TTL_MS });
 }
 
-export const useSymbol = (asset: string) => {
+
+export const useSymbol = (asset: string, options?: Options) => {
   const [loading, setLoading] = useState(true);
-  const [symbol, setSymbol] = useState(`${asset.slice(0, 6)}...`);
-  const [error, setError] = useState(null);
+  const [symbol, setSymbol] = useState(options?.allowNull ? null : `${asset.slice(0, 6)}...`);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchSymbol = useCallback(async (asset: string) => {
     const existingCache = readCache(asset)
@@ -43,6 +48,12 @@ export const useSymbol = (asset: string) => {
 
       setSymbol(smb);
       setLoading(false);
+      setError(null);
+      return;
+    } else if (asset.length !== 44) {
+      setSymbol(options?.allowNull ? null : `${asset.slice(0, 6)}...`);
+      setLoading(false);
+      setError("Invalid asset");
       return;
     }
 
@@ -64,7 +75,7 @@ export const useSymbol = (asset: string) => {
     } finally {
       setLoading(false);
     }
-  }, [setLoading, setSymbol, setError]);
+  }, [setLoading, setSymbol, setError, options]);
 
   useEffect(() => {
     fetchSymbol(asset);
