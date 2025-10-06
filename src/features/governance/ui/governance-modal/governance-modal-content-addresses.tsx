@@ -67,7 +67,7 @@ export const GovernanceModalContentAddresses: FC<GovernanceModalContentAddresses
 
     {multi && isNew ? <Button
       variant="link"
-      disabled={addresses.length >= 3 || !isNew}
+      disabled={addresses.length >= 5 || !isNew}
       className="p-0 m-0 mt-2"
       onClick={() => addAddress("")}
     >

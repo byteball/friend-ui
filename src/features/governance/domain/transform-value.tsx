@@ -6,7 +6,7 @@ type ValueTransformerMap = {
   [K in keyof AgentParams]: (value: AgentParams[K], frdToken: TokenMeta) => ReactNode;
 };
 
-const truncateAddress = (value: string) => value.split(":").map(part => `${part.slice(0, 4)}...${part.slice(-4)}`);
+export const truncateAddress = (value: string) => value.split(":").map(part => `${part.slice(0, 4)}...${part.slice(-4)}`);
 const toPercentage = (value: number) => `${toLocalString(value * 100)}%`;
 const toTokenAmount = (value: number, frdToken: TokenMeta) => `${toLocalString(value / 10 ** frdToken.decimals)} ${frdToken.symbol}`;
 

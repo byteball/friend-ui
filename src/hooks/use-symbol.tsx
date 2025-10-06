@@ -38,7 +38,7 @@ export const useSymbol = (asset: string, options?: Options) => {
 
   const fetchSymbol = useCallback(async (asset: string) => {
     const existingCache = readCache(asset)
-    console.log('existingCache', existingCache)
+
     if (asset === 'base') {
       setSymbol('GBYTE');
       setLoading(false);
