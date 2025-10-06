@@ -5,6 +5,7 @@ import { FC } from "react";
 
 import { useData } from "@/app/context";
 import { AddWalletModal } from "@/components/modals/add-wallet";
+import { Button } from "@/components/ui/button";
 import { getCeilingPrice } from "@/lib/calculations/getRewards";
 import { toLocalString } from "@/lib/toLocalString";
 
@@ -24,7 +25,7 @@ export const GovernanceProfile: FC<GovernanceProfileProps> = ({ walletAddress })
     return <div className="font-medium">
       Please{" "}
       <AddWalletModal>
-        <button className="underline">add your wallet address</button>
+        <Button variant="link" className="p-0 m-0 text-blue-700 text-md">add your wallet address</Button>
       </AddWalletModal>
       {" "}to see voting balance
     </div>
