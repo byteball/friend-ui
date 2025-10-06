@@ -25,7 +25,6 @@ export type SupportedValuesData = {
 }
 
 export const GovernanceItemSupportsTable: FC<GovernanceItemSupportsTableProps> = ({ supportsValues, name, frdToken }) => {
-
   const table = useReactTable({
     data: supportsValues ? Object.entries(supportsValues).map(([value, amount]) => ({
       id: value,
