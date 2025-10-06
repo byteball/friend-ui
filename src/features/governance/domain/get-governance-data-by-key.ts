@@ -41,8 +41,10 @@ export const getGovernanceDataByKey = <K extends keyof AgentParams>(key: K, gove
     Object.entries(data.supports).forEach(([hashKey, value]) => {
       const realValue = hashToValue[hashKey] as string;
 
+      // @ts-expect-error IDN
       data.supports[realValue] = value as AgentParams[K];
 
+      // @ts-expect-error IDN
       delete data.supports[hashKey];
     });
   }
