@@ -33,7 +33,7 @@ export const governanceItemSupportsColumns: ColumnDef<SupportedValuesData>[] = [
       const amount = parseFloat(row.getValue("amount"))
       const meta = table.options.meta as TableMeta;
 
-      return <div>{toLocalString(amount)} <small>{meta.frdToken.symbol}</small></div>
+      return <div>{toLocalString(amount / 10 ** meta.frdToken.decimals)}</div>
     },
   },
   {

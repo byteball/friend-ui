@@ -30,11 +30,12 @@ export const GovernanceItemSupportsTable: FC<GovernanceItemSupportsTableProps> =
     data: supportsValues ? Object.entries(supportsValues).map(([value, amount]) => ({
       id: value,
       value: value,
-      amount: (amount ** 2) / 10 ** frdToken.decimals,
+      amount: amount
     })) : [],
     columns: governanceItemSupportsColumns,
     meta: {
-      name, frdToken
+      name,
+      frdToken
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),

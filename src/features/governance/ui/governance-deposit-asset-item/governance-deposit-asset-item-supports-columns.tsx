@@ -41,7 +41,7 @@ export const governanceDepositAssetItemSupportsColumns: ColumnDef<IAggregatedDat
       return <Dialog>
         <DialogTrigger asChild>
           <Button variant="link" className="p-0 m-0">
-            {toLocalString(amount)} {meta.frdToken.symbol}
+            {toLocalString(amount / 10 ** meta.frdToken.decimals)}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
