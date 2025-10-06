@@ -39,7 +39,7 @@ const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
 
         <DialogContent className="sm:max-w-[360px]">
           <DialogHeader className="w-full mb-4 text-center">
-            <DialogTitle className="mx-auto leading-snug text-center max-w-[200px]">
+            <DialogTitle className="mx-auto leading-snug text-center max-w-[280px]">
               Scan this QR code <br /> with your mobile phone
             </DialogTitle>
           </DialogHeader>
@@ -52,7 +52,7 @@ const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
           <div className="text-xs text-foreground max-w-[220px] mx-auto text-center">
             Install Obyte wallet for{" "}
             <a
-              className="text-link"
+              className="text-blue-700"
               rel="noopener"
               target="_blank"
               href="https://itunes.apple.com/us/app/byteball/id1147137332?ls=1&mt=8"
@@ -61,7 +61,7 @@ const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
             </a>{" "}
             or{" "}
             <a
-              className="text-link"
+              className="text-blue-700"
               rel="noopener"
               target="_blank"
               href="https://play.google.com/store/apps/details?id=org.byteball.wallet"
