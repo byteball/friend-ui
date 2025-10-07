@@ -1,5 +1,5 @@
 export const descriptions: Record<keyof AgentParams, string> = {
-  rewards_aa: "The AA that determines the rules for rewards or making friends for making friends",
+  rewards_aa: "The AA that determines the rules for rewards or making friends",
   messaging_attestors: 'Addresses of the attestors who verify user telegram and discord accounts and link them to their Obyte addresses. These links are used to notify users about their rewards',
   real_name_attestors: 'Addresses of the attestors who verify user real names (without disclosing them publicly) to ensure one-man-one-account rule',
   referrer_frd_deposit_reward_share: "Percentage paid as referrer reward when a referred user deposits FRD",
