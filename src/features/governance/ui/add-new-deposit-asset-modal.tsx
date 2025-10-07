@@ -8,9 +8,11 @@ import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldSet }
 import { Input } from "@/components/ui/input";
 import { QRButton } from "@/components/ui/qr-button";
 
+import { appConfig } from "@/appConfig";
 import { useCheckPoolAddress } from "@/hooks/use-check-pool-address";
-import { useSymbol } from "@/hooks/use-symbol";
+import { useToken } from "@/hooks/use-token";
 import { generateLink } from "@/lib/generateLink";
+import { getExplorerUrl } from "@/lib/getExplorerUrl";
 
 interface AddNewDepositAssetModalProps {
   children: React.ReactNode;
@@ -18,13 +20,14 @@ interface AddNewDepositAssetModalProps {
 }
 
 export const AddNewDepositAssetModal: FC<AddNewDepositAssetModalProps> = ({ children, governanceAa }) => {
-  const [asset, setAsset] = useState<string>("");
+  const [input, setInput] = useState<string>("");
   const [address, setAddress] = useState<string>("");
 
-  const { symbol, loading, error } = useSymbol(asset, { allowNull: true });
+  const { symbol, asset, loading, error } = useToken(input.length === 44 ? { asset: input } : { symbol: input });
+
   const { loading: poolLoading, error: poolError, isValid } = useCheckPoolAddress(address, asset);
 
-  const url = generateLink({
+  const url = asset && !error ? generateLink({
     amount: 10000,
     aa: governanceAa,
     data: {
@@ -32,7 +35,11 @@ export const AddNewDepositAssetModal: FC<AddNewDepositAssetModalProps> = ({ chil
       name: "deposit_asset",
       value: address
     }
-  });
+  }) : "";
+
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value.trim());
+  }
 
   return <Dialog>
     <DialogTrigger asChild>
@@ -48,16 +55,19 @@ export const AddNewDepositAssetModal: FC<AddNewDepositAssetModalProps> = ({ chil
       <FieldGroup>
         <FieldSet>
           <Field>
-            <FieldLabel>Asset</FieldLabel>
+            <FieldLabel>Token</FieldLabel>
 
             <Input
-              disabled={loading || poolLoading}
-              value={asset}
-              onChange={(e) => setAsset(e.target.value.trim())}
-              placeholder="Token address"
+              disabled={poolLoading}
+              value={input}
+              onChange={handleChangeInput}
+              placeholder="Token asset or symbol"
             />
 
-            {!error && symbol ? <FieldDescription>Symbol: {symbol}</FieldDescription> : null}
+            {!error && symbol && asset ? <FieldDescription>
+              Symbol: <a target="_blank" className="text-blue-700" href={`https://${appConfig.TESTNET ? "testnet." : ""}tokens.ooo/${symbol}`}>{symbol}</a><br />
+              Asset: <a target="_blank" className="text-blue-700" href={getExplorerUrl(asset, "asset")}>{asset}</a>
+            </FieldDescription> : null}
 
             {!symbol && asset ? <FieldError className="text-yellow-600">
               {loading ? 'Loading...' : error ? error : 'This asset is not registered in the token registry'}
@@ -81,7 +91,7 @@ export const AddNewDepositAssetModal: FC<AddNewDepositAssetModalProps> = ({ chil
             disabled={!address || !asset || loading || poolLoading || asset === "base" || !isValid}
             href={url}
           >
-            {loading || poolLoading ? <><Loader className="animate-spin" /> checking...</> : `Add ${symbol ?? 'asset'}`}
+            {loading || poolLoading ? <><Loader className="animate-spin" /> checking...</> : `Add ${symbol && !error ? symbol : 'asset'}`}
           </QRButton>
         </FieldSet>
       </FieldGroup>

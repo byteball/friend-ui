@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import httpClient from "@/lib/httpClient";
 import { isValidAddress } from "@/lib/isValidAddress";
 
-export const useCheckPoolAddress = (address: string, asset: string) => {
+export const useCheckPoolAddress = (address: string, asset: string | null) => {
   const [isValid, setIsValid] = useState<boolean | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<null | string>(null);
@@ -25,12 +25,20 @@ export const useCheckPoolAddress = (address: string, asset: string) => {
 
   useEffect(() => {
     if (isValidAddress(address)) {
+
+      if (!asset) {
+        setIsValid(false);
+        setLoading(false);
+        setError("Asset is required to check the pool");
+        return;
+      }
+
       checkPool(address, asset).then(valid => {
         setIsValid(valid);
-        setError(valid ? null : "This address is not a valid pool");
+        setError(valid ? null : "This address is not a valid Oswap AA");
       }).catch(err => {
         setIsValid(false);
-        setError(err.message || "Error checking pool address");
+        setError(err.message || "Error checking Oswap AA");
       }).finally(() => {
         setLoading(false);
       });

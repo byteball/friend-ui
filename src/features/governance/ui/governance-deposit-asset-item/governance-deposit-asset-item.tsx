@@ -8,7 +8,7 @@ import { GovernanceDepositAssetItemFooter } from "./governance-deposit-asset-ite
 import { GovernanceDepositAssetItemHeader } from "./governance-deposit-asset-item-header";
 import { GovernanceDepositAssetItemWrapper } from "./governance-deposit-asset-item-wrapper";
 
-import { useSymbol } from "@/hooks/use-symbol";
+import { useToken } from "@/hooks/use-token";
 
 import { useData } from "@/app/context";
 
@@ -26,7 +26,7 @@ export const GovernanceDepositAssetItem: FC<GovernanceItemProps> = ({
   asset
 }) => {
   const { state, getGovernanceAA } = useData();
-  const { symbol, loading } = useSymbol(asset);
+  const { symbol, loading } = useToken({ asset });
   const governanceAa = getGovernanceAA();
 
   return (
