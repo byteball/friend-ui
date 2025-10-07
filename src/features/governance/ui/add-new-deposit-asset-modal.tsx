@@ -1,5 +1,6 @@
 "use client";
 
+import cn from "classnames";
 import { Loader } from "lucide-react";
 import { FC, useState } from "react";
 
@@ -69,8 +70,8 @@ export const AddNewDepositAssetModal: FC<AddNewDepositAssetModalProps> = ({ chil
               Asset: <a target="_blank" className="text-blue-700" href={getExplorerUrl(asset, "asset")}>{asset}</a>
             </FieldDescription> : null}
 
-            {!symbol && asset ? <FieldError className="text-yellow-600">
-              {loading ? 'Loading...' : error ? error : 'This asset is not registered in the token registry'}
+            {input ? <FieldError className={cn({ "text-muted-foreground": loading })}>
+              {loading ? 'Loading...' : error ? error : null}
             </FieldError> : null}
           </Field>
 
