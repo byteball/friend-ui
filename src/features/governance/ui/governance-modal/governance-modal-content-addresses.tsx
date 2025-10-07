@@ -71,7 +71,7 @@ export const GovernanceModalContentAddresses: FC<GovernanceModalContentAddresses
       className="p-0 m-0 mt-2"
       onClick={() => addAddress("")}
     >
-      <PlusCircleIcon /> Add new field
+      <PlusCircleIcon /> Add new address
     </Button>
       : null}
   </div>;
