@@ -136,7 +136,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
             />
           </div>
 
-          <div>Locking term: {formatDays(term)} — until {formatInTimeZone(until, "UTC", "MMMM do, yyyy")} UTC
+          <div suppressHydrationWarning>Locking term: {formatDays(term)} — until {formatInTimeZone(until, "UTC", "MMMM do, yyyy")} UTC
           </div>
         </div>
 

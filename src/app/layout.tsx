@@ -37,6 +37,11 @@ export default async function RootLayout({
             <div className="container p-5 mx-auto">{children}</div>
           </ClientProviders>
         </DataProvider> : <NoDefineAsset />}
+
+        <footer className="p-4 text-center">
+          &copy; <a href="https://obyte.org" target="_blank" rel="noopener noreferrer">Built on Obyte</a>
+        </footer>
+
       </body>
     </html>
   );
