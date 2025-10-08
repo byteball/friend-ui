@@ -33,6 +33,7 @@ export function GovernanceItem<K extends keyof AgentParams>({ name }: Governance
         supportsValues={governanceStateData.supports}
         challengingPeriodStartTs={governanceStateData.challenging_period_start_ts}
         currentValue={currentValue}
+        choices={governanceStateData.choices}
       />
 
       <GovernanceItemFooter

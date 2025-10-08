@@ -20,9 +20,10 @@ export type GovernanceItemContentProps<K extends keyof AgentParams = keyof Agent
   currentValue: AgentParams[K];
   supportsValues?: Record<string, number>;
   challengingPeriodStartTs?: number;
+  choices: Record<string, AgentParams[K]>;
 };
 
-export const GovernanceItemContent: FC<GovernanceItemContentProps> = ({ name, leaderValue, supportsValues, currentValue, challengingPeriodStartTs = 0 }) => {
+export const GovernanceItemContent: FC<GovernanceItemContentProps> = ({ name, leaderValue, supportsValues, currentValue, choices, challengingPeriodStartTs = 0 }) => {
   const { getFrdToken, getGovernanceAA } = useData();
 
   const frdToken = getFrdToken();
@@ -53,6 +54,7 @@ export const GovernanceItemContent: FC<GovernanceItemContentProps> = ({ name, le
       <GovernanceItemSupportsTable
         supportsValues={supportsValues}
         name={name}
+        choices={choices}
         frdToken={frdToken}
       />
     </div>}

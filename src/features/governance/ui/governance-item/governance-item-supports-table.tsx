@@ -16,6 +16,7 @@ interface GovernanceItemSupportsTableProps {
   supportsValues: Record<string, number>; // supporter value -> amount
   name: keyof AgentParams;
   frdToken: TokenMeta;
+  choices: Record<string, AgentParams[keyof AgentParams]>;
 }
 
 export type SupportedValuesData = {
@@ -24,7 +25,7 @@ export type SupportedValuesData = {
   value: any;
 }
 
-export const GovernanceItemSupportsTable: FC<GovernanceItemSupportsTableProps> = ({ supportsValues, name, frdToken }) => {
+export const GovernanceItemSupportsTable: FC<GovernanceItemSupportsTableProps> = ({ choices, supportsValues, name, frdToken }) => {
   const table = useReactTable({
     data: supportsValues ? Object.entries(supportsValues).map(([value, amount]) => ({
       id: value,
@@ -34,7 +35,8 @@ export const GovernanceItemSupportsTable: FC<GovernanceItemSupportsTableProps> =
     columns: governanceItemSupportsColumns,
     meta: {
       name,
-      frdToken
+      frdToken,
+      choices
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
