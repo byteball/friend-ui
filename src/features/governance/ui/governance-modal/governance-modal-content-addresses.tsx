@@ -46,6 +46,8 @@ export const GovernanceModalContentAddresses: FC<GovernanceModalContentAddresses
     }
   }
 
+  const showRemoveBtn = (index: number) => index !== 0 && isNew;
+
   return <div>
     <div className="grid gap-4">
       {addresses.map((address, index) => (
@@ -55,12 +57,17 @@ export const GovernanceModalContentAddresses: FC<GovernanceModalContentAddresses
             defaultValue={address.value}
             onKeyDown={handleKeyDown}
             onChange={(e) => handleChange(e.target.value, address.id)}
-            className={cn({ "border-red-700": isValidAddress(address.value) === false && address.value.length > 0 })}
+            className={cn({
+              "border-red-700": isValidAddress(address.value) === false && address.value.length > 0,
+              "mr-[32px]": !showRemoveBtn(index) && isNew
+            })}
           />
 
-          {index !== 0 && isNew ? <Button asChild variant="link" className="p-0 m-0" onClick={() => removeAddress(address.id)}>
-            <XIcon className="text-red-700" />
-          </Button> : null}
+          {showRemoveBtn(index)
+            ? <Button asChild variant="link" className="grow-0 shrink-0 p-0 w-[24px] m-0 self-start" onClick={() => removeAddress(address.id)}>
+              <XIcon className="text-red-700" />
+            </Button>
+            : null}
         </div>
       ))}
     </div>
