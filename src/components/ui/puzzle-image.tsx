@@ -197,10 +197,6 @@ function buildPuzzlePaths(
   const height = rows * cellH;
   const knobR = Math.min(cellW, cellH) * Math.max(0, Math.min(knobScale, 0.5));
   const rng = makeRng(seed || 1);
-  const amp = Math.min(Math.min(cellW, cellH) * Math.max(0, Math.min(cornerJitter, 0.25)), Math.min(width, height) * 0.07);
-  // distance from corner along each edge we begin/end the corner curve
-  const t = Math.min(amp * 2, Math.min(width, height) * 0.1);
-
   // clamp helper
   const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(v, hi));
   const cMin = clamp(isFinite(knobCenterMin) ? knobCenterMin : 0.3, 0, 1);
@@ -214,36 +210,19 @@ function buildPuzzlePaths(
   const horizDirs: (1 | -1)[][] = Array.from({ length: Math.max(0, rows - 1) }, () => Array(cols).fill(1));
   const vertDirs: (1 | -1)[][] = Array.from({ length: Math.max(0, cols - 1) }, () => Array(rows).fill(1));
 
-  // Outer border with tiny random curvy corners
+  // Outer border - simple rectangle without rounded corners
   const topLeft = { x: 0, y: 0 };
   const topRight = { x: width, y: 0 };
   const bottomRight = { x: width, y: height };
   const bottomLeft = { x: 0, y: height };
 
-  // helper to get small random offset
-  const j = () => ({ dx: (rng() * 2 - 1) * amp, dy: (rng() * 2 - 1) * amp });
-  const [tr1, tr2, br1, br2, bl1, bl2, tl1, tl2] = [j(), j(), j(), j(), j(), j(), j(), j()];
-
-  // Construct path: start a bit away from TL along top edge
+  // Construct path: simple rectangle
   parts.push(
     [
-      `M ${topLeft.x + t} ${topLeft.y}`,
-      // top edge to before TR
-      `L ${topRight.x - t} ${topRight.y}`,
-      // curve around TR: to (w, t)
-      `C ${topRight.x - t + tr1.dx} ${topRight.y + tr1.dy} ${topRight.x + tr2.dx} ${topRight.y + t + tr2.dy} ${topRight.x} ${topRight.y + t}`,
-      // right edge to before BR
-      `L ${bottomRight.x} ${bottomRight.y - t}`,
-      // curve around BR: to (w - t, h)
-      `C ${bottomRight.x + br1.dx} ${bottomRight.y - t + br1.dy} ${bottomRight.x - t + br2.dx} ${bottomRight.y + br2.dy} ${bottomRight.x - t} ${bottomRight.y}`,
-      // bottom edge to before BL
-      `L ${bottomLeft.x + t} ${bottomLeft.y}`,
-      // curve around BL: to (0, h - t)
-      `C ${bottomLeft.x + t + bl1.dx} ${bottomLeft.y + bl1.dy} ${bottomLeft.x + bl2.dx} ${bottomLeft.y - t + bl2.dy} ${bottomLeft.x} ${bottomLeft.y - t}`,
-      // left edge to before TL
-      `L ${topLeft.x} ${topLeft.y + t}`,
-      // curve around TL: to (t, 0)
-      `C ${topLeft.x + tl1.dx} ${topLeft.y + t + tl1.dy} ${topLeft.x + t + tl2.dx} ${topLeft.y + tl2.dy} ${topLeft.x + t} ${topLeft.y}`,
+      `M ${topLeft.x} ${topLeft.y}`,
+      `L ${topRight.x} ${topRight.y}`,
+      `L ${bottomRight.x} ${bottomRight.y}`,
+      `L ${bottomLeft.x} ${bottomLeft.y}`,
       `Z`,
     ].join(" ")
   );
@@ -433,8 +412,13 @@ export const PuzzleImage: FC<PuzzleImageProps> = ({
         }}
         fill="none"
       >
-        {/* Semi-transparent fill for first N pieces (including knobs) */}
-        <g fill="#ffffff" opacity={0.45}>
+        <defs>
+          <filter id="grayscale-filter">
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+        </defs>
+        {/* Grayscale (black and white) fill for first N pieces (including knobs) */}
+        <g fill="#ffffff" opacity={0.8} style={{ mixBlendMode: "saturation" }}>
           {filledPiecePaths.map((p, idx) => (
             <path key={idx} d={p} />
           ))}
