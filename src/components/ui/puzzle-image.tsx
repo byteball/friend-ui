@@ -418,9 +418,15 @@ export const PuzzleImage: FC<PuzzleImageProps> = ({
           </filter>
         </defs>
         {/* Grayscale (black and white) fill for first N pieces (including knobs) */}
-        <g fill="#ffffff" opacity={0.9} style={{ mixBlendMode: "saturation" }}>
+        <g fill="#ffffff" opacity={1} style={{ mixBlendMode: "saturation" }}>
           {filledPiecePaths.map((p, idx) => (
             <path key={idx} d={p} />
+          ))}
+        </g>
+        {/* White overlay with 30% opacity for filled pieces */}
+        <g fill="#ffffff" opacity={0.3}>
+          {filledPiecePaths.map((p, idx) => (
+            <path key={`white-overlay-${idx}`} d={p} />
           ))}
         </g>
         {/* Optional subtle shadow for contrast */}
