@@ -75,7 +75,7 @@ export const GovernanceModalContentAddresses: FC<GovernanceModalContentAddresses
     {multi && isNew ? <Button
       variant="link"
       disabled={addresses.length >= 6 || !isNew}
-      className="p-0 m-0 mt-2"
+      className="p-0 has-[>svg]:p-0 m-0 mt-2"
       onClick={() => addAddress("")}
     >
       <PlusCircleIcon /> Add new address
