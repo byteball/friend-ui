@@ -1,3 +1,5 @@
+"use no memo";
+
 import Image, { ImageProps } from "next/image";
 import { CSSProperties, FC, useMemo } from "react";
 
