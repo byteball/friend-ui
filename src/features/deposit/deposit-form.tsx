@@ -141,7 +141,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
         </div>
 
         <QRButton ref={btnRef} disabled={!amount || Number(amount) <= 0} href={url}>
-          Send {!Number(amount) ? '' : toLocalString(amount)} <small>{currency?.symbol.toUpperCase()}</small>
+          Send {!Number(amount) ? '' : toLocalString(amount)} {currency?.symbol.toUpperCase()}
         </QRButton>
       </div>
     </div>
