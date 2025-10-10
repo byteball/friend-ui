@@ -39,7 +39,7 @@ export default async function RootLayout({
         </DataProvider> : <NoDefineAsset />}
 
         <footer className="p-4 text-center">
-          &copy; <a href="https://obyte.org" target="_blank" rel="noopener noreferrer">Built on Obyte</a>
+          <a href="https://obyte.org" target="_blank" rel="noopener noreferrer">Built on Obyte</a>
         </footer>
 
       </body>
