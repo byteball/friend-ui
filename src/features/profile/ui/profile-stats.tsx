@@ -28,25 +28,16 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
 
   const friends = getFriendList(state, address);
 
-  return <div className="grid grid-cols-3 gap-8 mt-10">
-    <Card>
+  return <div className="grid grid-cols-6 gap-8 mt-10">
+    <Card className="col-span-2">
       <CardContent>
         <CardTitle>Total balance</CardTitle>
         <div className="mt-2 text-3xl">{toLocalString(Number(totalBalance / 10 ** frdDecimals).toPrecision(frdDecimals))} <small>{frdSymbol}</small></div>
-        <div className="mt-2 text-sm text-muted-foreground">Unlock date: {unlockDate?.toLocaleDateString()}</div>
+        <div className="mt-2 text-sm text-muted-foreground" suppressHydrationWarning>Unlock date: {unlockDate?.toLocaleDateString()}</div>
       </CardContent>
     </Card>
 
-
-    {/* <Card>
-        <CardContent>
-          <CardTitle>Current ghost</CardTitle>
-          <div className="mt-2 text-3xl text-green-700">Tim May <small>(Level {currentGhostNum})</small></div>
-          <div className="mt-2 text-sm"><a href="#">Address: Tim May St, Obyte City </a></div>
-        </CardContent>
-      </Card> */}
-
-    <Card>
+    <Card className="col-span-2">
       <CardContent>
         <CardTitle>Total rewards</CardTitle>
         <div className="mt-2 text-3xl">
@@ -59,7 +50,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       </CardContent>
     </Card>
 
-    <Card>
+    <Card className="col-span-2">
       <CardContent>
         <CardTitle>Total friends</CardTitle>
         <div className="mt-2 text-3xl">{toLocalString(friends.length)}</div>
@@ -67,6 +58,18 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
           ? <div className="mt-2 text-sm text-muted-foreground">
             Last friend activity: {userData?.last_date}</div>
           : null}
+      </CardContent>
+    </Card>
+
+    <Card className="col-span-3">
+      <CardContent>
+        <CardTitle>
+          Become friends with the ghost of Tim May
+        </CardTitle>
+
+        {/* <GhostFriends
+          userData={userData}
+        /> */}
       </CardContent>
     </Card>
   </div>
