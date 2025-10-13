@@ -54,7 +54,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
 
       <ProfileShareLinks
         url={`${env.NEXT_PUBLIC_SITE_URL}/user/${address}`}
-        title={`Become friends with ${username} on Obyte friend!`}
+        title={`Become friends with ${username} on Obyte friends!`}
       />
     </>
   )
