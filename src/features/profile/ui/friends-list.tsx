@@ -18,7 +18,7 @@ export const FriendsList: FC<IFriendsListProps> = async ({ address }) => {
   if (friends.length === 0) return null;
 
   return <>
-    <h2 className="mt-10 mb-4 text-2xl font-semibold first-letter:uppercase">{username}&apos;s friends</h2>
+    <h2 className="mt-10 text-2xl font-semibold first-letter:uppercase">{username}&apos;s friends</h2>
 
     <div className="flex flex-col gap-6">
       {friends.map((friend) => <FriendsListItem
