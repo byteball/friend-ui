@@ -25,8 +25,10 @@ export const ghostList = {
   },
   "Wei Dai": {
     name: "Wei Dai",
+    image: "/ghosts/default.png",
   },
   "Satoshi Nakamoto": {
-    name: "Satoshi Nakamoto"
+    name: "Satoshi Nakamoto",
+    image: "/ghosts/default.png",
   },
-}
+} as const;
