@@ -6,6 +6,7 @@ import { getFriendList } from "@/lib/calculations/getFriendList";
 import { toLocalString } from "@/lib/toLocalString";
 import { parseISO } from "date-fns";
 import { FC } from "react";
+import { GhostFriendsCard } from "./ghost-friends-card";
 
 interface ProfileStatsProps {
   address: string;
@@ -61,16 +62,9 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       </CardContent>
     </Card>
 
-    <Card className="col-span-3">
-      <CardContent>
-        <CardTitle>
-          Become friends with the ghost of Tim May
-        </CardTitle>
-
-        {/* <GhostFriends
-          userData={userData}
-        /> */}
-      </CardContent>
-    </Card>
+    <GhostFriendsCard
+      userData={userData}
+      address={address}
+    />
   </div>
 }
