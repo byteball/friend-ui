@@ -40,7 +40,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
       <div className="flex items-center justify-between">
         <div className="flex space-x-4">
           <h1 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-6xl first-letter:uppercase">
-            {username}&apos;
+            {username}
           </h1>
 
           <ActiveUserLabel isActive={isActive} />
