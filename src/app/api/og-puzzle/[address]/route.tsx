@@ -1,13 +1,10 @@
 import { readFileSync } from "fs";
 import { NextRequest } from "next/server";
 import path from "path";
+import sharp from "sharp";
 
-import { PuzzleImageUnoptimized } from "@/components/ui/puzzle-image-unoptimized";
 import { ghostList } from "@/ghost-list";
-import { getFriendList } from "@/lib/calculations/getFriendList";
 import { getProfileUsername } from "@/lib/getProfileUsername.server";
-import { getPage, releasePage } from "@/lib/puppeteer";
-import { renderComponentToHtml } from "@/lib/renderComponentToHtml";
 
 export const runtime = "nodejs"; // Puppeteer requires Node.js runtime
 export const dynamic = "force-dynamic"; // Avoid caching during development
@@ -18,7 +15,6 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ add
   const state = __GLOBAL_STORE__?.getState();
   const userData = state?.[`user_${address}`] as IUserData | undefined;
   const username = await getProfileUsername(address) || "Anonymous";
-  const friends = getFriendList(state ?? {}, address);
 
   const requiredStreak = ((userData?.current_ghost_num ?? 1) + 1) ** 2;
 
@@ -29,215 +25,85 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ add
   const imageBuffer = readFileSync(imageAbsPath);
   const imageBase64 = `data:image/png;base64,${imageBuffer.toString('base64')}`;
 
-  const puzzleHtml = await renderComponentToHtml(
-    <PuzzleImageUnoptimized
-      src={imageBase64}
-      showBorder={false}
-      rows={Math.sqrt(requiredStreak)}
-      columns={Math.sqrt(requiredStreak)}
-      filledCeils={userData?.current_streak ?? 0}
-      width={400}
-      height={400}
-      className="" />,
-    {
-      width: 400,
-      height: 400,
-    }
-  )
-
-  const page = await getPage();
 
   try {
-    const fullHtml = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-          width: 1200px;
-          height: 630px;
-          background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-          font-family: Arial, sans-serif;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .decorative-circle-1 {
-          position: absolute;
-          top: 20px;
-          left: 20px;
-          width: 160px;
-          height: 160px;
-          border-radius: 50%;
-          background: rgba(29, 78, 184, 0.05);
-        }
-
-        .decorative-circle-2 {
-          position: absolute;
-          bottom: 0;
-          right: 0;
-          width: 200px;
-          height: 200px;
-          border-radius: 50%;
-          background: rgba(37, 99, 235, 0.05);
-        }
-
-        .container {
-          position: absolute;
-          top: 115px;
-          left: 120px;
-          display: flex;
-          gap: 60px;
-        }
-
-        .puzzle-container {
-          width: 400px;
-          height: 400px;
-          background: linear-gradient(90deg, #1d4ed8 0%, #2563eb 100%);
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          overflow: hidden;
-        }
-
-        .content {
-          width: 380px;
-        }
-
-        .username {
-          font-size: 42px;
-          font-weight: 700;
-          color: #1f2937;
-          margin-bottom: 40px;
-        }
-
-        .username::first-letter {
-          text-transform: uppercase;
-        }
-
-        .stat-card {
-          width: 380px;
-          height: 120px;
-          background: white;
-          border-radius: 16px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          margin-bottom: 20px;
-          padding: 25px 30px;
-          position: relative;
-        }
-
-        .stat-icon {
-          position: absolute;
-          left: 30px;
-          top: 35px;
-        }
-
-        .stat-label {
-          font-size: 16px;
-          font-weight: 400;
-          color: #6b7280;
-          margin-left: 60px;
-          margin-bottom: 8px;
-        }
-
-        .stat-value {
-          font-size: 36px;
-          font-weight: 700;
-          color: #1d4ed8;
-          margin-left: 60px;
-          display: inline-block;
-        }
-
-        .stat-unit {
-          font-size: 18px;
-          font-weight: 500;
-          color: #9ca3af;
-          margin-left: 10px;
-        }
-
-        .flame-icon {
-          width: 50px;
-          height: 50px;
-        }
-
-        .friends-icon {
-          width: 50px;
-          height: 50px;
-        }
-
-        .footer {
-          position: absolute;
-          bottom: 20px;
-          left: 50%;
-          transform: translateX(-50%);
-          font-size: 20px;
-          font-weight: 300;
-          color: #d2d4d8;
-          letter-spacing: 0.5px;
-        }
-      </style>
-    </head>
-
-    <body>
-      <div class="decorative-circle-1"></div>
-      <div class="decorative-circle-2"></div>
-      
-      <div class="container">
-        <div class="puzzle-container">
-          ${puzzleHtml}
-        </div>
+    const SVG = `
+    <svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#f8f9fa;stop-opacity:1" />
+        </linearGradient>
         
-        <div class="content">
-          <div class="username">${username}</div>
-          
-          <div class="stat-card">
-            <div class="stat-icon">
-              <svg class="flame-icon" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 45 C20 45, 15 30, 15 22 C15 15, 20 10, 25 15 C25 10, 30 5, 35 12 C40 18, 40 32, 35 38 C30 45, 25 45, 20 45 Z" 
-                      fill="#f59e0b" opacity="0.9"/>
-              </svg>
-            </div>
-            <div class="stat-label">Current streak</div>
-            <div>
-              <span class="stat-value">${userData?.current_streak ?? 0}</span>
-              <span class="stat-unit">days</span>
-            </div>
-          </div>
-          
-          <div class="stat-card">
-            <div class="stat-icon">
-              <svg class="friends-icon" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="15" cy="15" r="10" fill="#1d4ed8" opacity="0.7"/>
-                <circle cx="35" cy="15" r="10" fill="#1d4ed8"/>
-                <path d="M5 45 Q15 30, 25 45" stroke="#1d4ed8" stroke-width="3" fill="none" opacity="0.7"/>
-                <path d="M25 45 Q35 30, 45 45" stroke="#1d4ed8" stroke-width="3" fill="none"/>
-              </svg>
-            </div>
-            <div class="stat-label">Total friends</div>
-            <span class="stat-value">${friends.length}</span>
-          </div>
-        </div>
-      </div>
-      <div class="footer">friend.obyte.org</div>
-    </body>
-    </html>
+        <linearGradient id="puzzleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#1d4ed8;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
+        </linearGradient>
+        
+        <filter id="cardShadow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+          <feOffset dx="0" dy="4" result="offsetblur"/>
+          <feComponentTransfer>
+            <feFuncA type="linear" slope="0.1"/>
+          </feComponentTransfer>
+          <feMerge>
+            <feMergeNode/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      
+      <!-- Background -->
+      <rect width="1200" height="630" fill="url(#bgGradient)"/>
+      
+      <!-- Decorative circles -->
+      <circle cx="100" cy="100" r="80" fill="rgba(29, 78, 184, 0.05)"/>
+      <circle cx="1100" cy="530" r="100" fill="rgba(37, 99, 235, 0.05)"/>
+      
+      <!-- Puzzle container with background -->
+      <rect x="120" y="115" width="400" height="400" fill="url(#puzzleGradient)" filter="url(#cardShadow)"/>
+      
+      <!-- Puzzle image -->
+      <image href="${imageBase64}" x="120" y="115" width="400" height="400" preserveAspectRatio="xMidYMid slice"/>
+      
+      <!-- Username -->
+      <text x="580" y="180" font-family="Arial, sans-serif" font-size="48" font-weight="700" fill="#1f2937">${username}</text>
+      
+      <!-- Stat card background -->
+      <rect x="580" y="220" width="500" height="150" rx="16" fill="white" filter="url(#cardShadow)"/>
+      
+      <!-- Flame icon -->
+      <g transform="translate(605, 245)">
+        <path d="M20 45 C20 45, 15 30, 15 22 C15 15, 20 10, 25 15 C25 10, 30 5, 35 12 C40 18, 40 32, 35 38 C30 45, 25 45, 20 45 Z" 
+              fill="#f59e0b" opacity="0.9" transform="scale(1.3)"/>
+      </g>
+      
+      <!-- Stat label -->
+      <text x="685" y="265" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#6b7280">Current streak</text>
+      
+      <!-- Stat value -->
+      <text x="685" y="305" font-family="Arial, sans-serif" font-size="36" font-weight="700" fill="#1d4ed8">${userData?.current_streak ?? 0} out of ${requiredStreak}</text>
+      
+      <!-- Stat unit -->
+      <text x="685" y="335" font-family="Arial, sans-serif" font-size="20" font-weight="300" fill="#9ca3af">days to become friends with Tim May</text>
+      
+      <!-- Footer -->
+      <text x="600" y="610" font-family="Arial, sans-serif" font-size="24" font-weight="300" fill="#d2d4d8" text-anchor="middle">friend.obyte.org</text>
+    </svg>
     `;
 
-    await page.setViewport({ width: 1200, height: 630, deviceScaleFactor: 2 });
+    const svgBuffer = Buffer.from(SVG);
+    const buffer = await sharp(svgBuffer).resize(1200, 630).png().toBuffer();
 
-    await page.goto(`data:text/html;charset=utf-8,${encodeURIComponent(fullHtml)}`, {
-      waitUntil: "domcontentloaded",
-    });
-
-    const buffer = await page.screenshot({ type: "png", fullPage: false });
-
-    return new Response(buffer, {
+    return new Response(new Uint8Array(buffer), {
       status: 200,
       headers: {
         "Content-Type": "image/png",
         "Cache-Control": "public, max-age=0, s-maxage=0",
       },
     });
-  } finally {
-    await releasePage(page);
+  } catch (error) {
+    console.error("Error generating OG image:", error);
+    return new Response("Internal Server Error", { status: 500 });
   }
 }

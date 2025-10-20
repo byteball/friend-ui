@@ -1,9 +1,11 @@
 # syntax=docker.io/docker/dockerfile:1
 
-FROM node:18-bookworm-slim AS base
+FROM node:18-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -42,31 +44,21 @@ ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED=1
 
-# Install Chromium dependencies for Debian
-RUN apt-get update && apt-get install -y \
-    fonts-liberation \
-    gconf-service \
-    libappindicator1 \
-    libasound2 \
-    libatk-bridge2.0-0 \
-    libatk1.0-0 \
-    libcups2 \
-    libdbus-1-3 \
-    libgdk-pixbuf2.0-0 \
-    libnspr4 \
-    libnss3 \
-    libx11-xcb1 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxrandr2 \
-    xdg-utils \
-    libgbm1 \
-    libxshmfence1 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Install Chromium dependencies for Alpine
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
 
-RUN groupadd --system --gid 1001 nodejs
-RUN useradd --system --uid 1001 nextjs
+# Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
 
