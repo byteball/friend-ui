@@ -5,7 +5,6 @@ import { appConfig } from "@/appConfig";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { QRButton } from "@/components/ui/qr-button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { generateLink } from "@/lib/generateLink";
 import Image from 'rc-image';
@@ -74,14 +73,13 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
             </div>
 
           </div>
-          <div>
+          <div className="w-[250px] h-[250px] relative bg-accent rounded-md overflow-hidden animate-pulse [&:has(img)]:animate-none">
             <Image
-              wrapperClassName="w-[250px] h-[250px]"
+              wrapperClassName="w-full h-full"
+              className="w-full h-full object-cover"
               src={`/api/puzzle/${address}`}
               fallback="/ghosts/default.png"
-              loading="lazy"
-              preview={true}
-              placeholder={<Skeleton className="w-[250px] h-[250px]" />}
+              loading="eager"
               alt="Ghost puzzle"
             />
           </div>

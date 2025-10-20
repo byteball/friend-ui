@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import path from "path";
 import sharp from "sharp";
 
+import { generatePuzzleSvg } from "@/components/ui/puzzle-image-unoptimized";
 import { ghostList } from "@/ghost-list";
 import { getProfileUsername } from "@/lib/getProfileUsername.server";
 
@@ -20,11 +21,20 @@ export async function GET(
 
   const requiredStreak = ((userData?.current_ghost_num ?? 1) + 1) ** 2;
 
-  const image = ghostList["Tim May"].image; // select image based on user data
-  const imageAbsPath = path.join(process.cwd(), "public", image);
+  const ghostImageUrl = ghostList["Tim May"].image; // select image based on user data
+  const ghostImageAbsPath = path.join(process.cwd(), "public", ghostImageUrl);
 
-  const imageBuffer = readFileSync(imageAbsPath);
-  const imageBase64 = `data:image/png;base64,${imageBuffer.toString("base64")}`;
+  const imageBuffer = readFileSync(ghostImageAbsPath);
+  const ghostImageBase64 = `data:image/png;base64,${imageBuffer.toString("base64")}`;
+
+  const ghost = generatePuzzleSvg({
+    src: ghostImageBase64,
+    width: 400,
+    height: 400,
+    rows: Math.sqrt(requiredStreak),
+    columns: Math.sqrt(requiredStreak),
+    filledCeils: userData?.current_streak ?? 0,
+  });
 
   try {
     const SVG = `
@@ -60,25 +70,9 @@ export async function GET(
         <circle cx="100" cy="100" r="80" fill="rgba(29, 78, 184, 0.05)" />
         <circle cx="1100" cy="530" r="100" fill="rgba(37, 99, 235, 0.05)" />
 
-        <!-- Puzzle container -->
-        <rect
-          x="120"
-          y="115"
-          width="400"
-          height="400"
-          fill="url(#puzzleGradient)"
-          filter="url(#cardShadow)"
-        />
-
-        <!-- Puzzle image -->
-        <image
-          href="${imageBase64}"
-          x="120"
-          y="115"
-          width="400"
-          height="400"
-          preserveAspectRatio="xMidYMid slice"
-        />
+        <g transform="translate(120, 115)">
+          ${ghost}
+        </g>
 
         <!-- Username -->
         <text
@@ -97,7 +91,7 @@ export async function GET(
           x="580"
           y="260"
           font-family="Arial, sans-serif"
-          font-size="36"
+          font-size="56"
           font-weight="400"
           fill="#6b7280"
         >
@@ -109,24 +103,24 @@ export async function GET(
           x="580"
           y="360"
           font-family="Arial, sans-serif"
-          font-size="80"
+          font-size="56"
           font-weight="700"
           fill="#1d4ed8"
         >
           ${userData?.current_streak ?? 0} out of ${requiredStreak}
         </text>
 
-        <!-- Stat unit -->
-        <text
-          x="580"
-          y="410"
-          font-family="Arial, sans-serif"
-          font-size="28"
-          font-weight="300"
-          fill="#9ca3af"
-        >
-          days to become friends with Tim May
-        </text>
+       <text
+        x="580"
+        y="450"
+        font-family="Arial, sans-serif"
+        font-size="56"
+        font-weight="300"
+        fill="#9ca3af"
+      >
+        <tspan x="580" dy="0">days to become friends</tspan>
+        <tspan x="580" dy="70">with Tim May</tspan>
+      </text>
 
         <!-- Footer -->
         <text
