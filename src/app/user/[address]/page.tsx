@@ -1,5 +1,6 @@
 import "server-only";
 
+import { env } from "@/env";
 import { FriendsList, ProfileInfo, ProfileStats } from "@/features/profile";
 import { getCeilingPrice, getTotalBalance } from "@/lib/calculations/getRewards";
 import { getProfileUsername } from "@/lib/getProfileUsername.server";
@@ -22,7 +23,8 @@ export async function generateMetadata(
       images: [
         `/api/og-puzzle/${address}`,
       ]
-    }
+    },
+    metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
   })
 }
 
