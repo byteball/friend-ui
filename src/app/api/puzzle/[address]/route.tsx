@@ -1,10 +1,9 @@
-import { PuzzleImageUnoptimized } from "@/components/ui/puzzle-image-unoptimized";
+import { generatePuzzleSvg } from "@/components/ui/puzzle-image-unoptimized";
 import { ghostList } from "@/ghost-list";
-import { getPage, releasePage } from "@/lib/puppeteer";
-import { renderComponentToHtml } from "@/lib/renderComponentToHtml";
 import { readFileSync } from "fs";
 import { NextRequest } from "next/server";
 import path from "path";
+import sharp from "sharp";
 
 
 export const runtime = "nodejs"; // Puppeteer requires Node.js runtime
@@ -25,41 +24,29 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ add
   const imageBuffer = readFileSync(imageAbsPath);
   const imageBase64 = `data:image/png;base64,${imageBuffer.toString('base64')}`;
 
-  const html = await renderComponentToHtml(
-    <PuzzleImageUnoptimized
-      src={imageBase64}
-      showBorder={false}
-      rows={Math.sqrt(requiredStreak)}
-      columns={Math.sqrt(requiredStreak)}
-      filledCeils={2}
-      width={495}
-      height={495}
-      className="mx-auto" />,
-    {
-      width: 500,
-      height: 500,
-    }
-  )
+  const SVG = generatePuzzleSvg({
+    src: imageBase64,
+    width: 500,
+    height: 500,
+    rows: Math.sqrt(requiredStreak),
+    columns: Math.sqrt(requiredStreak),
+    filledCeils: 1
+  });
 
-  const page = await getPage();
+  let buffer: Buffer;
 
   try {
-    await page.setViewport({ width: 510, height: 510, deviceScaleFactor: 1 });
-
-    await page.goto(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`, {
-      waitUntil: "domcontentloaded",
-    });
-
-    const buffer = await page.screenshot({ type: "png", fullPage: false });
-
-    return new Response(buffer, {
-      status: 200,
-      headers: {
-        "Content-Type": "image/png",
-        "Cache-Control": "public, max-age=0, s-maxage=0",
-      },
-    });
-  } finally {
-    await releasePage(page);
+    const svgBuffer = Buffer.from(SVG);
+    buffer = await sharp(svgBuffer).resize(500, 500).png().toBuffer();
+  } catch {
+    return new Response("Internal Server Error", { status: 500 });
   }
+
+  return new Response(new Uint8Array(buffer), {
+    status: 200,
+    headers: {
+      "Content-Type": "image/png",
+      "Cache-Control": "public, max-age=0, s-maxage=0",
+    },
+  });
 }

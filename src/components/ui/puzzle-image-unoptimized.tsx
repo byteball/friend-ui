@@ -1,12 +1,7 @@
-import { CSSProperties } from "react";
-
 type PuzzleImageProps = {
   src: string;
-  alt?: string;
   width?: number;
   height?: number;
-  className?: string;
-  style?: CSSProperties;
   rows?: number;
   columns?: number;
   stroke?: string;
@@ -24,8 +19,6 @@ type PuzzleImageProps = {
   overlayOpacity?: number; // 0..1
   // whether to show the rectangular border as well
   showBorder?: boolean;
-  // pointer-events for overlay, default 'none' to not block interactions
-  overlayPointerEvents?: CSSProperties["pointerEvents"];
   // small randomness near outer rectangle corners (relative to cell size)
   cornerJitter?: number; // 0..0.1 typical (default 0.02)
   // optional seed for deterministic randomness; when omitted, derived from rows/cols/knobScale
@@ -270,22 +263,18 @@ function buildPuzzlePaths(
   return { d: parts.join(" "), viewBox: `0 0 ${width} ${height}`, width, height, cellW, cellH, horizCenters, vertCenters, horizDirs, vertDirs };
 }
 
-export const PuzzleImageUnoptimized = ({
+export const generatePuzzleSvg = ({
   src,
-  alt = "ghost",
   width,
   height,
-  style,
   rows = 3,
   columns = 3,
   stroke = "#ffffff",
   filledCeils = 5,
   strokeWidth = 1.9,
-  className,
   bulgeFactor = 0.45,
   overlayOpacity = 0.9,
   showBorder = true,
-  overlayPointerEvents = "none" as CSSProperties["pointerEvents"],
   cornerJitter = 0.02,
   randomSeed,
   randomizeKnobPosition = true,
@@ -294,7 +283,7 @@ export const PuzzleImageUnoptimized = ({
   knobCurveTension = 0.7,
   knobCenterMin = 0.3,
   knobCenterMax = 0.7,
-}: PuzzleImageProps) => {
+}: PuzzleImageProps): string => {
   // derive a deterministic seed when not provided to avoid SSR/CSR mismatch
   const derivedSeed =
     randomSeed ??
@@ -381,63 +370,62 @@ export const PuzzleImageUnoptimized = ({
 
   const filledPiecePaths = paths;
 
-  return (
-    <div className={className} style={{ position: "relative", display: "inline-block", userSelect: "none" }}>
-      {/* Base image */}
-      <img
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        className="w-full h-full"
-        draggable={false}
-        style={{ ...(style || {}), display: "block" }}
-      />
+  // Build grayscale pieces paths
+  const grayscalePieces = filledPiecePaths.map((p) => `<path d="${p}" />`).join('\n    ');
 
-      {/* SVG overlay */}
-      <svg
-        viewBox={viewBox}
-        xmlns="http://www.w3.org/2000/svg"
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          pointerEvents: overlayPointerEvents,
-        }}
-        fill="none"
-      >
-        <defs>
-          <filter id="grayscale-filter">
-            <feColorMatrix type="saturate" values="0" />
-          </filter>
-        </defs>
-        {/* Grayscale (black and white) fill for first N pieces (including knobs) */}
-        <g fill="#ffffff" opacity={1} style={{ mixBlendMode: "saturation" }}>
-          {filledPiecePaths.map((p, idx) => (
-            <path key={idx} d={p} />
-          ))}
-        </g>
-        {/* White overlay with 30% opacity for filled pieces */}
-        <g fill="#ffffff" opacity={0.3}>
-          {filledPiecePaths.map((p, idx) => (
-            <path key={`white-overlay-${idx}`} d={p} />
-          ))}
-        </g>
-        {/* Optional subtle shadow for contrast */}
-        <path
-          d={d}
-          stroke="#000000"
-          strokeOpacity={0.35}
-          strokeWidth={strokeWidth + 1}
-        />
-        <path
-          d={showBorder ? d : d}
-          stroke={stroke}
-          strokeOpacity={overlayOpacity}
-          strokeWidth={strokeWidth}
-        />
-      </svg>
-    </div>
-  );
+  // Build white overlay pieces paths
+  const whiteOverlayPieces = filledPiecePaths.map((p) => `<path d="${p}" />`).join('\n    ');
+
+  const svgWidth = width || viewBox.split(" ")[2];
+  const svgHeight = height || viewBox.split(" ")[3];
+
+  return `<svg
+  viewBox="${viewBox}"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="${svgWidth}"
+  height="${svgHeight}"
+  style="display: inline-block; user-select: none;"
+  fill="none"
+>
+  <defs>
+    <filter id="grayscale-filter">
+      <feColorMatrix type="saturate" values="0" />
+    </filter>
+  </defs>
+
+  <!-- Base image embedded in SVG -->
+  <image
+    href="${src}"
+    x="0"
+    y="0"
+    width="${viewBox.split(" ")[2]}"
+    height="${viewBox.split(" ")[3]}"
+    preserveAspectRatio="none"
+  />
+
+  <!-- Grayscale (black and white) fill for first N pieces (including knobs) -->
+  <g fill="#ffffff" opacity="1" style="mix-blend-mode: saturation;">
+    ${grayscalePieces}
+  </g>
+
+  <!-- White overlay with 30% opacity for filled pieces -->
+  <g fill="#ffffff" opacity="0.3">
+    ${whiteOverlayPieces}
+  </g>
+
+  <!-- Optional subtle shadow for contrast -->
+  <path
+    d="${d}"
+    stroke="#000000"
+    stroke-opacity="0.35"
+    stroke-width="${strokeWidth + 1}"
+  />
+  <path
+    d="${showBorder ? d : d}"
+    stroke="${stroke}"
+    stroke-opacity="${overlayOpacity}"
+    stroke-width="${strokeWidth}"
+  />
+</svg>`;
 };
