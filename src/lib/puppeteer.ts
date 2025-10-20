@@ -20,9 +20,11 @@ export async function getBrowser() {
     const chromium = (await import("@sparticuz/chromium")).default;
     const puppeteer = await import("puppeteer-core");
 
+    const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || await chromium.executablePath();
+
     _cached = await puppeteer.launch({
-      args: chromium.args,
-      executablePath: await chromium.executablePath(),
+      args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
+      executablePath,
       headless: true,
     });
   }
