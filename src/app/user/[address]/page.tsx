@@ -10,9 +10,9 @@ export const dynamic = 'force-dynamic';
 
 
 export async function generateMetadata(
-  { params, searchParams }: { params: { address: string }; searchParams: Record<string, string | string[]> }
+  { params, searchParams }: { params: Promise<{ address: string }>; searchParams: Promise<Record<string, string | string[]>> }
 ): Promise<Metadata> {
-  const { address } = params;
+  const { address } = await params;
   const username = await getProfileUsername(address) || "Anonymous";
 
   return ({
