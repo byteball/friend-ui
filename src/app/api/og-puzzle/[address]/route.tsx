@@ -95,7 +95,7 @@ export async function GET(
           font-weight="400"
           fill="#6b7280"
         >
-          Current streak
+          Current streak:
         </text>
 
         <!-- Stat value -->
