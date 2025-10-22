@@ -3,7 +3,7 @@ import "server-only";
 
 const MAX_STATE_VARS_LOAD_ITERATIONS = 100 as const; // Safety limit
 
-// TODO: WARNING: You should have more than 1 state vars
+// WARNING: You should have more than 1 state vars
 
 const getAllStateVars = async (client: Client, address: string) => {
   let allStateVars = {};
