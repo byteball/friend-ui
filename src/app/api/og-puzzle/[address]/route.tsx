@@ -70,70 +70,73 @@ export async function GET(
         <circle cx="100" cy="100" r="80" fill="rgba(29, 78, 184, 0.05)" />
         <circle cx="1100" cy="530" r="100" fill="rgba(37, 99, 235, 0.05)" />
 
-        <g transform="translate(120, 115)">
-          ${ghost}
-        </g>
-
-        <!-- Username -->
         <text
-          x="580"
-          y="160"
+          x="50%"
+          y="70px"
           font-family="Arial, sans-serif"
-          font-size="64"
+          font-size="72"
           font-weight="700"
           fill="#1f2937"
-        >
-          ${username}
-        </text>
-
-        <!-- Stat label -->
-        <text
-          x="580"
-          y="260"
-          font-family="Arial, sans-serif"
-          font-size="56"
-          font-weight="400"
-          fill="#6b7280"
-        >
-          Current streak:
-        </text>
-
-        <!-- Stat value -->
-        <text
-          x="580"
-          y="360"
-          font-family="Arial, sans-serif"
-          font-size="56"
-          font-weight="700"
-          fill="#1d4ed8"
-        >
-          ${userData?.current_streak ?? 0} out of ${requiredStreak}
-        </text>
-
-       <text
-        x="580"
-        y="450"
-        font-family="Arial, sans-serif"
-        font-size="56"
-        font-weight="300"
-        fill="#9ca3af"
-      >
-        <tspan x="580" dy="0">days to become friends</tspan>
-        <tspan x="580" dy="70">with Tim May</tspan>
-      </text>
-
-        <!-- Footer -->
-        <text
-          x="600"
-          y="610"
-          font-family="Arial, sans-serif"
-          font-size="24"
-          font-weight="300"
-          fill="#d2d4d8"
+          width="100%"
           text-anchor="middle"
+          dominant-baseline="middle"
         >
-          friend.obyte.org
+          Obyte Friends
         </text>
+
+        <g transform="translate(0, 50)">
+          <g transform="translate(120, 115)">
+            ${ghost}
+          </g>
+
+          <!-- Username -->
+          <text
+            x="580"
+            y="160"
+            font-family="Arial, sans-serif"
+            font-size="64"
+            font-weight="700"
+            fill="#1f2937"
+          >
+            ${username}
+          </text>
+
+          <!-- Stat label -->
+          <text
+            x="580"
+            y="260"
+            font-family="Arial, sans-serif"
+            font-size="48"
+            font-weight="400"
+            fill="#6b7280"
+          >
+            Current streak:
+          </text>
+
+          <!-- Stat value -->
+          <text
+            x="580"
+            y="360"
+            font-family="Arial, sans-serif"
+            font-size="48"
+            font-weight="700"
+            fill="#1d4ed8"
+          >
+            ${userData?.current_streak ?? 0} out of ${requiredStreak}
+          </text>
+
+        <text
+          x="580"
+          y="450"
+          font-family="Arial, sans-serif"
+          font-size="48"
+          font-weight="300"
+          fill="#9ca3af"
+        >
+          <tspan x="580" dy="0">days to become friends</tspan>
+          <tspan x="580" dy="60">with Tim May</tspan>
+        </text>
+        </g>
       </svg>
     `;
 
