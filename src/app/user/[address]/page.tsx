@@ -17,7 +17,7 @@ export async function generateMetadata(
   const username = await getProfileUsername(address) || "Anonymous";
 
   return ({
-    title: `${username}' profile`,
+    title: `${username} profile`,
     description: `View the profile and stats of user ${address} on Obyte Friend.`,
     openGraph: {
       images: [
