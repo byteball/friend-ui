@@ -32,7 +32,7 @@ export const HeroBlock = () => {
         <div>
 
           <h1 className="text-center w-full text-pretty text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">
-            1Obyte Friends
+            2Obyte Friends
           </h1>
 
           <p className="text-center mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
