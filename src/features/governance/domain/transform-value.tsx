@@ -1,5 +1,5 @@
 import { appConfig } from "@/appConfig";
-import { toLocalString } from "@/lib/toLocalString";
+import { toLocalString } from "@/lib/to-local-string";
 import { ReactNode } from "react";
 
 type ValueTransformerMap = {

@@ -7,7 +7,7 @@ import { useData } from "@/app/context";
 import { AddWalletModal } from "@/components/modals/add-wallet";
 import { Button } from "@/components/ui/button";
 import { getCeilingPrice } from "@/lib/calculations/getRewards";
-import { toLocalString } from "@/lib/toLocalString";
+import { toLocalString } from "@/lib/to-local-string";
 
 interface GovernanceProfileProps {
   walletAddress?: string;

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { toLocalString } from "@/lib/toLocalString";
+import { toLocalString } from "@/lib/to-local-string";
 
 import { transformValue } from "../../domain/transform-value";
 import { GovernanceModal } from "../governance-modal";

@@ -3,7 +3,7 @@
 import { useData } from "@/app/context";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { getFriendList } from "@/lib/calculations/getFriendList";
-import { toLocalString } from "@/lib/toLocalString";
+import { toLocalString } from "@/lib/to-local-string";
 import { parseISO } from "date-fns";
 import { FC } from "react";
 import { GhostFriendsCard } from "./ghost-friends-card";

@@ -12,7 +12,7 @@ import { formatDays } from "@/lib/format-days";
 import { generateLink } from "@/lib/generate-link";
 
 import { useData } from "@/app/context";
-import { toLocalString } from "@/lib/toLocalString";
+import { toLocalString } from "@/lib/to-local-string";
 
 import { Input } from "@/components/ui/input";
 import { QRButton } from "@/components/ui/qr-button";

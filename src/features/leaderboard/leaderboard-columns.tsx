@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
-import { toLocalString } from "@/lib/toLocalString";
+import { toLocalString } from "@/lib/to-local-string";
 import { ILeaderboardTableMeta } from "./domain/types";
 
 import { appConfig } from "@/appConfig";

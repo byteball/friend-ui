@@ -2,7 +2,7 @@ import Link from "next/link";
 import "server-only";
 
 import Faq from "@/features/faq";
-import { toLocalString } from "@/lib/toLocalString";
+import { toLocalString } from "@/lib/to-local-string";
 
 import { appConfig } from "@/appConfig";
 

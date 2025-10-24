@@ -14,7 +14,7 @@ import { AddWalletModal } from "@/components/modals/add-wallet";
 
 
 import { generateLink } from "@/lib/generate-link";
-import { toLocalString } from "@/lib/toLocalString";
+import { toLocalString } from "@/lib/to-local-string";
 
 import { appConfig } from "@/appConfig";
 import { useRewards } from "./domain/use-rewards";
