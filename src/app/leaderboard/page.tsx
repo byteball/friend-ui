@@ -1,5 +1,5 @@
 import { LeaderboardTable } from "@/features/leaderboard/leaderboard-table";
-import { getProfileUsernames } from "@/lib/getProfileUsernames.server";
+import { getProfileUsernames } from "@/lib/get-profile-usernames.server";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
