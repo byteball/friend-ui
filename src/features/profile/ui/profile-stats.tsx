@@ -2,7 +2,7 @@
 
 import { useData } from "@/app/context";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { getFriendList } from "@/lib/calculations/getFriendList";
+import { getFriendList } from "@/lib/calculations/get-friend-list";
 import { toLocalString } from "@/lib/to-local-string";
 import { parseISO } from "date-fns";
 import { FC } from "react";

@@ -1,4 +1,4 @@
-import { getFriendList } from "@/lib/calculations/getFriendList";
+import { getFriendList } from "@/lib/calculations/get-friend-list";
 import { FC } from "react";
 import "server-only";
 
