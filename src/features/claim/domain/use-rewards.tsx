@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 import { useData } from "@/app/context";
 
-import { getRewards } from "@/lib/calculations/getRewards";
+import { getRewards } from "@/lib/calculations/get-rewards";
 import { isSameDayUTC } from "@/lib/is-same-day-UTC";
 import { isValidAddress } from "@/lib/is-valid-address";
 

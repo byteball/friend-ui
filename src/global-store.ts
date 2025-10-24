@@ -5,7 +5,7 @@ import { EventEmitter } from "stream";
 
 import { appConfig } from "./app-config";
 import { STORE_EVENTS } from "./constants";
-import { getCeilingPrice, getTotalBalance } from "./lib/calculations/getRewards";
+import { getCeilingPrice, getTotalBalance } from "./lib/calculations/get-rewards";
 
 interface IInitialSymbols {
   [key: string]: TokenMeta;

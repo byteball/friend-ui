@@ -2,7 +2,7 @@ import "server-only";
 
 import { env } from "@/env";
 import { FriendsList, ProfileInfo, ProfileStats } from "@/features/profile";
-import { getCeilingPrice, getTotalBalance } from "@/lib/calculations/getRewards";
+import { getCeilingPrice, getTotalBalance } from "@/lib/calculations/get-rewards";
 import { getProfileUsername } from "@/lib/getProfileUsername.server";
 import { isValidAddress } from "@/lib/is-valid-address";
 import { Metadata } from "next";
