@@ -16,7 +16,7 @@ import { useData } from "@/app/context";
 import { generateLink } from "@/lib/generate-link";
 import { getExplorerUrl } from "@/lib/get-explorer-url";
 
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 
 export interface GovernanceDepositAssetItemContent {
   leaderValue?: string;

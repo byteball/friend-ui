@@ -1,4 +1,4 @@
-import { appConfig } from '@/appConfig';
+import { appConfig } from '@/app-config';
 
 const AUTO_RECONNECT = true;
 const HEARTBEAT_INTERVAL = 10 * 1000;

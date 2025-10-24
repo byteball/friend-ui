@@ -16,7 +16,7 @@ import { AddWalletModal } from "@/components/modals/add-wallet";
 import { generateLink } from "@/lib/generate-link";
 import { toLocalString } from "@/lib/to-local-string";
 
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 import { useRewards } from "./domain/use-rewards";
 
 interface ClaimFormProps { }

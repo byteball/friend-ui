@@ -1,5 +1,5 @@
 "use client";
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 import { STORE_EVENTS } from "@/constants";
 import "client-only";
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";

@@ -1,4 +1,4 @@
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 import { addDays, isAfter, parseISO } from "date-fns";
 
 export const isActiveUser = (userData?: IUserData | undefined): boolean => {

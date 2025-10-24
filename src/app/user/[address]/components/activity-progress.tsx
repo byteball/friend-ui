@@ -1,6 +1,6 @@
 "use client";
 
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PuzzleImage } from "@/components/ui/puzzle-image";

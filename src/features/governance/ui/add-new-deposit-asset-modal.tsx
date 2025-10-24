@@ -9,7 +9,7 @@ import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldSet }
 import { Input } from "@/components/ui/input";
 import { QRButton } from "@/components/ui/qr-button";
 
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 import { useCheckPoolAddress } from "@/hooks/use-check-pool-address";
 import { useToken } from "@/hooks/use-token";
 import { generateLink } from "@/lib/generate-link";

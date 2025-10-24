@@ -1,4 +1,4 @@
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 import { toLocalString } from "@/lib/to-local-string";
 import { ReactNode } from "react";
 

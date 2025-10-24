@@ -9,8 +9,8 @@ import { GovernanceItemSupportsTable } from "./governance-item-supports-table";
 
 import { generateLink } from "@/lib/generate-link";
 
+import { appConfig } from "@/app-config";
 import { useData } from "@/app/context";
-import { appConfig } from "@/appConfig";
 import { challengingCountdownRenderer } from "../../domain/countdown-renderer";
 import { transformValue } from "../../domain/transform-value";
 

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { toLocalString } from "@/lib/to-local-string";
 import { ILeaderboardTableMeta } from "./domain/types";
 
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 
 export const columns: ColumnDef<UserRank>[] = [
   {

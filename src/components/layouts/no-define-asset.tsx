@@ -2,7 +2,7 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 import { generateLink } from "@/lib/generate-link";
 
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 import { CircleX } from "lucide-react";
 
 export const NoDefineAsset = () => {

@@ -6,7 +6,7 @@ import { formatInTimeZone } from 'date-fns-tz';
 import { FC, useCallback, useRef, useState } from "react";
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 import { GBYTE_TOKEN_META, REF_COOKIE_NAME, WALLET_COOKIE_NAME } from "@/constants";
 import { formatDays } from "@/lib/format-days";
 import { generateLink } from "@/lib/generate-link";

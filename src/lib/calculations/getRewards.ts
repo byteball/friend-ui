@@ -3,7 +3,7 @@ import httpClient from "../http-client";
 
 import { YEAR } from "@/constants";
 
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 
 const
   { locked_reward_share,

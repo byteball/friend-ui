@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import { GovernanceItem } from "./governance-item";
 
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 
 export const GovernanceParamList: FC = () => (<div className="grid gap-8">
   {Object.keys(appConfig.initialParamsVariables).map((key) => (

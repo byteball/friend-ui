@@ -1,6 +1,6 @@
 import "server-only";
 
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 
 export const getProfileUsername = async (address: string): Promise<string | null> => {
   const client = globalThis.__OBYTE_CLIENT__;

@@ -11,7 +11,7 @@ import { ProfileShareLinks } from "./profile-share-links";
 import { getProfileUsername } from "@/lib/getProfileUsername.server";
 import { isActiveUser } from "@/lib/is-active-user";
 
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 import { env } from "@/env";
 
 interface ProfileInfoProps {

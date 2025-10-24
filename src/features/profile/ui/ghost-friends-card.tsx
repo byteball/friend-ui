@@ -1,7 +1,7 @@
 "use client"
 
+import { appConfig } from "@/app-config";
 import { useData } from "@/app/context";
-import { appConfig } from "@/appConfig";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { QRButton } from "@/components/ui/qr-button";

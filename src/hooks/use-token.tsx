@@ -1,7 +1,7 @@
 "use client";
 "use no memo";
 
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 import httpClient from "@/lib/http-client";
 import { useEffect, useState } from "react";
 

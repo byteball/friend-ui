@@ -4,7 +4,7 @@ import "server-only";
 import Faq from "@/features/faq";
 import { toLocalString } from "@/lib/to-local-string";
 
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 
 export const dynamic = "force-dynamic";
 

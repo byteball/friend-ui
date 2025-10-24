@@ -8,7 +8,7 @@ import { GovernanceItemWrapper } from "./governance-item-wrapper";
 
 import { useData } from "@/app/context";
 
-import { appConfig } from "@/appConfig";
+import { appConfig } from "@/app-config";
 
 export type GovernanceItemProps<K extends keyof AgentParams = keyof AgentParams> = {
   name: K;

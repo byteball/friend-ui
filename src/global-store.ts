@@ -3,7 +3,7 @@ import "server-only";
 import { LRUCache } from "lru-cache";
 import { EventEmitter } from "stream";
 
-import { appConfig } from "./appConfig";
+import { appConfig } from "./app-config";
 import { STORE_EVENTS } from "./constants";
 import { getCeilingPrice, getTotalBalance } from "./lib/calculations/getRewards";
 
