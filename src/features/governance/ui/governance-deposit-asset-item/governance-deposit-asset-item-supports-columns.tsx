@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 import { DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { getExplorerUrl } from "@/lib/getExplorerUrl";
+import { getExplorerUrl } from "@/lib/get-explorer-url";
 import { toLocalString } from "@/lib/toLocalString";
 
 import { QRButton } from "@/components/ui/qr-button";

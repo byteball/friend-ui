@@ -13,7 +13,7 @@ import { appConfig } from "@/appConfig";
 import { useCheckPoolAddress } from "@/hooks/use-check-pool-address";
 import { useToken } from "@/hooks/use-token";
 import { generateLink } from "@/lib/generate-link";
-import { getExplorerUrl } from "@/lib/getExplorerUrl";
+import { getExplorerUrl } from "@/lib/get-explorer-url";
 
 interface AddNewDepositAssetModalProps {
   children: React.ReactNode;

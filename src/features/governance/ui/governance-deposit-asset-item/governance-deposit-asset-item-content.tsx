@@ -14,7 +14,7 @@ import { GovernanceDepositAssetItemSupportsTable } from "./governance-deposit-as
 import { useData } from "@/app/context";
 
 import { generateLink } from "@/lib/generate-link";
-import { getExplorerUrl } from "@/lib/getExplorerUrl";
+import { getExplorerUrl } from "@/lib/get-explorer-url";
 
 import { appConfig } from "@/appConfig";
 

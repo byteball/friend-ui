@@ -3,7 +3,7 @@ import { Info } from "lucide-react";
 import { CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { getExplorerUrl } from "@/lib/getExplorerUrl";
+import { getExplorerUrl } from "@/lib/get-explorer-url";
 import { truncateAddress } from "../../domain/transform-value";
 
 interface GovernanceDepositAssetItemHeaderProps {
