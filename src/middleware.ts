@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { isValidAddress } from "./lib/isValidAddress";
+import { isValidAddress } from "./lib/is-valid-address";
 
 import { REF_COOKIE_EXPIRES, REF_COOKIE_NAME } from "@/constants";
 

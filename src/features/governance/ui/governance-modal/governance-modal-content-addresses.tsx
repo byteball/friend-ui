@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { isValidAddress } from "@/lib/isValidAddress";
+import { isValidAddress } from "@/lib/is-valid-address";
 import cn from "classnames";
 import { PlusCircleIcon, XIcon } from "lucide-react";
 import { nanoid } from 'nanoid';

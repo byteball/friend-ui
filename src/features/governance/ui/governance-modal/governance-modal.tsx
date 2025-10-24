@@ -14,7 +14,7 @@ import { GovernanceModalHeader } from "./governance-modal-header";
 import { useData } from "@/app/context";
 
 import { generateLink } from "@/lib/generate-link";
-import { isValidAddress } from "@/lib/isValidAddress";
+import { isValidAddress } from "@/lib/is-valid-address";
 import { ADDRESS_PARAMS, PERCENTAGE_PARAMS } from "../../domain/transform-value";
 
 interface GovernanceModalProps<K extends keyof AgentParams> {

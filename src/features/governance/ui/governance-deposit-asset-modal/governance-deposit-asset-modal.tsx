@@ -10,7 +10,7 @@ import { GovernanceDepositAssetModalFooter } from "./governance-deposit-asset-mo
 import { useData } from "@/app/context";
 
 import { generateLink } from "@/lib/generate-link";
-import { isValidAddress } from "@/lib/isValidAddress";
+import { isValidAddress } from "@/lib/is-valid-address";
 import { GovernanceDepositAssetModalContent } from "./governance-deposit-asset-modal-content";
 import { GovernanceDepositAssetModalHeader } from "./governance-deposit-asset-modal-header";
 

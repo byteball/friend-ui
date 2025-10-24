@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import httpClient from "@/lib/http-client";
-import { isValidAddress } from "@/lib/isValidAddress";
+import { isValidAddress } from "@/lib/is-valid-address";
 
 export const useCheckPoolAddress = (address: string, asset: string | null) => {
   const [isValid, setIsValid] = useState<boolean | null>(null);

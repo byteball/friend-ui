@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { FC, useRef, useState } from "react";
 
 import { WALLET_COOKIE_NAME } from "@/constants";
-import { isValidAddress } from "@/lib/isValidAddress";
+import { isValidAddress } from "@/lib/is-valid-address";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Input } from "../ui/input";
