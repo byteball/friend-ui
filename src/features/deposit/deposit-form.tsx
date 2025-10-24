@@ -8,7 +8,7 @@ import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
 import { appConfig } from "@/appConfig";
 import { GBYTE_TOKEN_META, REF_COOKIE_NAME, WALLET_COOKIE_NAME } from "@/constants";
-import { formatDays } from "@/lib/formatDays";
+import { formatDays } from "@/lib/format-days";
 import { generateLink } from "@/lib/generate-link";
 
 import { useData } from "@/app/context";
