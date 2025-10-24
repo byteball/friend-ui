@@ -1,5 +1,5 @@
 import { appConfig } from "@/appConfig";
-import { encodeData } from "./encodeData";
+import { encodeData } from "./encode-data";
 
 
 const suffixes = {
