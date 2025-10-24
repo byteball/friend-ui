@@ -23,10 +23,6 @@ export const ghostList = {
     name: "David Friedman",
     image: "/ghosts/david-friedman.png",
   },
-  "Wei Dai": {
-    name: "Wei Dai",
-    image: "/ghosts/default.png",
-  },
   "Satoshi Nakamoto": {
     name: "Satoshi Nakamoto",
     image: "/ghosts/default.png",
