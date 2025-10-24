@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import httpClient from "@/lib/httpClient";
+import httpClient from "@/lib/http-client";
 import { isValidAddress } from "@/lib/isValidAddress";
 
 export const useCheckPoolAddress = (address: string, asset: string | null) => {

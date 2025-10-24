@@ -2,7 +2,7 @@
 "use no memo";
 
 import { appConfig } from "@/appConfig";
-import httpClient from "@/lib/httpClient";
+import httpClient from "@/lib/http-client";
 import { useEffect, useState } from "react";
 
 /** In-memory cache with TTL */

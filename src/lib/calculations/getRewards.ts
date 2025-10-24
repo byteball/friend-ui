@@ -1,5 +1,5 @@
 import { getUnixTime } from "date-fns";
-import httpClient from "../httpClient";
+import httpClient from "../http-client";
 
 import { YEAR } from "@/constants";
 
