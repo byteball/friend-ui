@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useData } from "@/app/context";
 
 import { getRewards } from "@/lib/calculations/getRewards";
-import { isSameDayUTC } from "@/lib/isSameDayUTC";
+import { isSameDayUTC } from "@/lib/is-same-day-UTC";
 import { isValidAddress } from "@/lib/isValidAddress";
 
 import { WALLET_COOKIE_NAME } from "@/constants";
