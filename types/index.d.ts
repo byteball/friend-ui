@@ -6,7 +6,7 @@ namespace globalThis {
   // eslint-disable-next-line no-var 
   var __OBYTE_CONNECTS_TOTAL__: number | undefined;
   // eslint-disable-next-line no-var 
-  var __GLOBAL_STORE__: import('@/GlobalStore').GlobalStore | undefined;
+  var __GLOBAL_STORE__: import('@/global-store').GlobalStore | undefined;
 }
 
 type TokenMeta = {

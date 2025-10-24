@@ -86,7 +86,7 @@ export async function register() {
 
     // init store emitter once
     if (!globalThis.__GLOBAL_STORE__) {
-      const globalStoreImport = await import('./GlobalStore');
+      const globalStoreImport = await import('./global-store');
 
       globalThis.__GLOBAL_STORE__ = new globalStoreImport.GlobalStore({
         initState,
