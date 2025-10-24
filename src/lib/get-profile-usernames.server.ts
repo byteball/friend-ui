@@ -1,5 +1,5 @@
 import "server-only";
-import { getProfileUsername } from "./getProfileUsername.server";
+import { getProfileUsername } from "./get-profile-username.server";
 
 export const getProfileUsernames = async (addresses: string[]) => {
 

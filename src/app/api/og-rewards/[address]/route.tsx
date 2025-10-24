@@ -5,7 +5,7 @@ import sharp from "sharp";
 
 import { generatePuzzleSvg } from "@/components/ui/puzzle-image-unoptimized";
 import { ghostList } from "@/ghost-list";
-import { getProfileUsername } from "@/lib/getProfileUsername.server";
+import { getProfileUsername } from "@/lib/get-profile-username.server";
 
 export const dynamic = "force-dynamic"; // Avoid caching during development
 

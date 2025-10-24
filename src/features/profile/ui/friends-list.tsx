@@ -2,7 +2,7 @@ import { getFriendList } from "@/lib/calculations/get-friend-list";
 import { FC } from "react";
 import "server-only";
 
-import { getProfileUsername } from "@/lib/getProfileUsername.server";
+import { getProfileUsername } from "@/lib/get-profile-username.server";
 import { FriendsListItem } from "./friends-list-item";
 
 interface IFriendsListProps {

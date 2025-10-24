@@ -8,7 +8,7 @@ import { generateLink } from "@/lib/generate-link";
 import { ActiveUserLabel } from "./active-user-label";
 import { ProfileShareLinks } from "./profile-share-links";
 
-import { getProfileUsername } from "@/lib/getProfileUsername.server";
+import { getProfileUsername } from "@/lib/get-profile-username.server";
 import { isActiveUser } from "@/lib/is-active-user";
 
 import { appConfig } from "@/app-config";

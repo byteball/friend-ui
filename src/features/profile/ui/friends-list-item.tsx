@@ -1,4 +1,4 @@
-import { getProfileUsername } from "@/lib/getProfileUsername.server";
+import { getProfileUsername } from "@/lib/get-profile-username.server";
 import { fromUnixTime } from "date-fns";
 import { FC } from "react";
 import "server-only";
