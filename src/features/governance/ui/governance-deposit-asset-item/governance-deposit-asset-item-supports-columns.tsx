@@ -9,7 +9,7 @@ import { getExplorerUrl } from "@/lib/getExplorerUrl";
 import { toLocalString } from "@/lib/toLocalString";
 
 import { QRButton } from "@/components/ui/qr-button";
-import { generateLink } from "@/lib/generateLink";
+import { generateLink } from "@/lib/generate-link";
 import { IAggregatedData } from "../../domain/get-aggregated-votes";
 
 interface TableMeta {

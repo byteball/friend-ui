@@ -13,7 +13,7 @@ import { GovernanceModalHeader } from "./governance-modal-header";
 
 import { useData } from "@/app/context";
 
-import { generateLink } from "@/lib/generateLink";
+import { generateLink } from "@/lib/generate-link";
 import { isValidAddress } from "@/lib/isValidAddress";
 import { ADDRESS_PARAMS, PERCENTAGE_PARAMS } from "../../domain/transform-value";
 

@@ -9,7 +9,7 @@ import { NumberFormatValues, NumericFormat } from 'react-number-format';
 import { appConfig } from "@/appConfig";
 import { GBYTE_TOKEN_META, REF_COOKIE_NAME, WALLET_COOKIE_NAME } from "@/constants";
 import { formatDays } from "@/lib/formatDays";
-import { generateLink } from "@/lib/generateLink";
+import { generateLink } from "@/lib/generate-link";
 
 import { useData } from "@/app/context";
 import { toLocalString } from "@/lib/toLocalString";

@@ -13,7 +13,7 @@ import { useData } from "@/app/context";
 import { AddWalletModal } from "@/components/modals/add-wallet";
 
 
-import { generateLink } from "@/lib/generateLink";
+import { generateLink } from "@/lib/generate-link";
 import { toLocalString } from "@/lib/toLocalString";
 
 import { appConfig } from "@/appConfig";

@@ -1,6 +1,6 @@
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
-import { generateLink } from "@/lib/generateLink";
+import { generateLink } from "@/lib/generate-link";
 
 import { appConfig } from "@/appConfig";
 import { CircleX } from "lucide-react";

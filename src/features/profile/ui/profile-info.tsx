@@ -3,7 +3,7 @@ import "server-only";
 
 import { QRButton } from "@/components/ui/qr-button";
 import { BOUNCE_FEES } from "@/constants";
-import { generateLink } from "@/lib/generateLink";
+import { generateLink } from "@/lib/generate-link";
 
 import { ActiveUserLabel } from "./active-user-label";
 import { ProfileShareLinks } from "./profile-share-links";

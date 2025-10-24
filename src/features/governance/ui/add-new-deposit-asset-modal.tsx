@@ -12,7 +12,7 @@ import { QRButton } from "@/components/ui/qr-button";
 import { appConfig } from "@/appConfig";
 import { useCheckPoolAddress } from "@/hooks/use-check-pool-address";
 import { useToken } from "@/hooks/use-token";
-import { generateLink } from "@/lib/generateLink";
+import { generateLink } from "@/lib/generate-link";
 import { getExplorerUrl } from "@/lib/getExplorerUrl";
 
 interface AddNewDepositAssetModalProps {

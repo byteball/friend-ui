@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { QRButton } from "@/components/ui/qr-button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { generateLink } from "@/lib/generateLink";
+import { generateLink } from "@/lib/generate-link";
 import Image from 'rc-image';
 import { FC } from "react";
 import { getGhostsFromVars } from "../domain/get-ghosts-from-vars";

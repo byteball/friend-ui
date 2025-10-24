@@ -7,7 +7,7 @@ import Countdown from 'react-countdown';
 import { CardContent } from "@/components/ui/card";
 import { GovernanceItemSupportsTable } from "./governance-item-supports-table";
 
-import { generateLink } from "@/lib/generateLink";
+import { generateLink } from "@/lib/generate-link";
 
 import { useData } from "@/app/context";
 import { appConfig } from "@/appConfig";

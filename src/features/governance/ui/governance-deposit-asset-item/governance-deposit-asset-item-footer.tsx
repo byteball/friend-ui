@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { CardFooter } from "@/components/ui/card";
 import { QRButton } from "@/components/ui/qr-button";
 
-import { generateLink } from "@/lib/generateLink";
+import { generateLink } from "@/lib/generate-link";
 
 import { GovernanceDepositAssetModal } from "../governance-deposit-asset-modal";
 
