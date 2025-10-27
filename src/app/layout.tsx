@@ -34,7 +34,7 @@ export default async function RootLayout({
           <ClientProviders>
             <Navbar />
 
-            <div className="container p-5 mx-auto">{children}</div>
+            <div className="container p-5 mx-auto min-h-[calc(100vh-11rem)]">{children}</div>
           </ClientProviders>
         </DataProvider> : <NoDefineAsset />}
 
