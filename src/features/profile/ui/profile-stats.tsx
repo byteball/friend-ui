@@ -3,8 +3,9 @@
 import { useData } from "@/app/context";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { getFriendList } from "@/lib/calculations/get-friend-list";
+import { formatDateAsUTC } from "@/lib/format-date-as-utc";
+import { parseDateFromAA } from "@/lib/parse-date-from-aa";
 import { toLocalString } from "@/lib/to-local-string";
-import { parseISO } from "date-fns";
 import { FC } from "react";
 import { GhostFriendsCard } from "./ghost-friends-card";
 
@@ -20,7 +21,6 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
 
   const { decimals: frdDecimals, symbol: frdSymbol } = getFrdToken();
 
-  const unlockDate = userData ? parseISO(userData.unlock_date) : null;
 
   const liquidRewards = userData?.liquid_rewards ?? 0;
   const lockedRewards = userData?.locked_rewards ?? 0;
@@ -34,7 +34,10 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       <CardContent>
         <CardTitle>Total balance</CardTitle>
         <div className="mt-2 text-3xl">{toLocalString(Number(totalBalance / 10 ** frdDecimals).toPrecision(frdDecimals))} <small>{frdSymbol}</small></div>
-        <div className="mt-2 text-sm text-muted-foreground" suppressHydrationWarning>Unlock date: {unlockDate?.toLocaleDateString()}</div>
+
+        {userData?.unlock_date ? <div className="mt-2 text-sm text-muted-foreground">
+          Unlock date: {formatDateAsUTC(parseDateFromAA(userData.unlock_date))}
+        </div> : null}
       </CardContent>
     </Card>
 
@@ -57,7 +60,9 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
         <div className="mt-2 text-3xl">{toLocalString(friends.length)}</div>
         {userData?.last_date
           ? <div className="mt-2 text-sm text-muted-foreground">
-            Last friend activity: {userData?.last_date}</div>
+            Last friend activity: {" "}
+            {formatDateAsUTC(parseDateFromAA(userData.last_date))}
+          </div>
           : null}
       </CardContent>
     </Card>
