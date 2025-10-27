@@ -4,8 +4,12 @@ import path from "path";
 import sharp from "sharp";
 
 import { generatePuzzleSvg } from "@/components/ui/puzzle-image-unoptimized";
-import { ghostList } from "@/ghost-list";
+import { env } from "@/env";
+import { getGhostsFromVars } from "@/features/profile/domain/get-ghosts-from-vars";
+import { getFriendList } from "@/lib/calculations/get-friend-list";
+import { getNumberByAddress } from "@/lib/get-number-by-address";
 import { getProfileUsername } from "@/lib/get-profile-username.server";
+import { isValidAddress } from "@/lib/is-valid-address";
 
 export const dynamic = "force-dynamic"; // Avoid caching during development
 
@@ -13,27 +17,48 @@ export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ address: string }> }
 ) {
-  const { address } = await params;
+  const { address: userAddress } = await params;
 
   const state = __GLOBAL_STORE__?.getState();
-  const userData = state?.[`user_${address}`] as IUserData | undefined;
-  const username = (await getProfileUsername(address)) || "Anonymous";
+  const userData = state?.[`user_${userAddress}`] as IUserData | undefined;
+  const username = (await getProfileUsername(userAddress)) || "Anonymous";
 
   const requiredStreak = ((userData?.current_ghost_num ?? 1) + 1) ** 2;
+  const allGhosts = getGhostsFromVars(state ?? {});
+  const userFriends = getFriendList(state ?? {}, userAddress);
 
-  const ghostImageUrl = ghostList["Tim May"].image; // select image based on user data
-  const ghostImageAbsPath = path.join(process.cwd(), "public", ghostImageUrl);
+  const userGhostFriends = userFriends.filter(f => !isValidAddress(f.address));
+  const ghostFriendsIds = userGhostFriends.map(f => allGhosts.findIndex(g => g.name === f.address));
 
-  const imageBuffer = readFileSync(ghostImageAbsPath);
-  const ghostImageBase64 = `data:image/png;base64,${imageBuffer.toString("base64")}`;
+  const selectedGhost = await fetch(`${env.NEXT_PUBLIC_NOTIFY_URL}/user-ghost/${userAddress}`)
+    .then(res => res.json()).then(data => data.ghost_name || null as string | null)
+    .catch(() => null);
+
+  let currentGhostIndex = -1;
+
+  if (!selectedGhost || userGhostFriends.find(f => f.address === selectedGhost)) {
+    currentGhostIndex = getNumberByAddress(userAddress, allGhosts.length - 1, ghostFriendsIds);
+  } else {
+    currentGhostIndex = allGhosts.findIndex(g => g.name === selectedGhost);
+  }
+
+  const currentGhostImage = allGhosts[currentGhostIndex]?.image ?? "/ghosts/default.png";
+
+  // Puzzle image generation process
+  const currentGhostImagePath = path.join(process.cwd(), 'public', currentGhostImage);
+  const currentGhostImageBuffer = readFileSync(currentGhostImagePath);
+  const currentGhostImageBase64 = `data:image/png;base64,${currentGhostImageBuffer.toString('base64')}`;
+
+  const logoAbsPath = path.join(process.cwd(), "public", "logo.svg");
+  const logoFile = readFileSync(logoAbsPath).toString("utf-8");
 
   const ghost = generatePuzzleSvg({
-    src: ghostImageBase64,
+    src: currentGhostImageBase64,
     width: 400,
     height: 400,
     rows: Math.sqrt(requiredStreak),
     columns: Math.sqrt(requiredStreak),
-    filledCells: userData?.current_streak ?? 0,
+    filledCells: requiredStreak - (userData?.current_streak ?? 0),
   });
 
   try {
@@ -70,19 +95,27 @@ export async function GET(
         <circle cx="100" cy="100" r="80" fill="rgba(29, 78, 184, 0.05)" />
         <circle cx="1100" cy="530" r="100" fill="rgba(37, 99, 235, 0.05)" />
 
-        <text
-          x="50%"
-          y="70px"
-          font-family="Arial, sans-serif"
-          font-size="72"
-          font-weight="700"
-          fill="#1f2937"
-          width="100%"
-          text-anchor="middle"
-          dominant-baseline="middle"
-        >
-          Obyte Friends
-        </text>
+        <!-- Logo and Title Group (centered) -->
+        <g transform="translate(-15, 10)">
+          <!-- Logo -->
+          <g transform="translate(315, 35)">
+            ${logoFile}
+          </g>
+
+          <!-- Title -->
+          <text
+            x="435"
+            y="70"
+            font-family="Arial, sans-serif"
+            font-size="72"
+            font-weight="700"
+            fill="#000"
+            text-anchor="start"
+            dominant-baseline="middle"
+          >
+            Obyte Friends
+          </text>
+        </g>
 
         <g transform="translate(0, 50)">
           <g transform="translate(120, 115)">
