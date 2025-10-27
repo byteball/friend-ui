@@ -34,11 +34,14 @@ export default async function RootLayout({
           <ClientProviders>
             <Navbar />
 
-            <div className="container p-5 mx-auto min-h-[calc(100vh-11rem)]">{children}</div>
+            <div className="container p-5 mx-auto min-h-[calc(100vh-12rem)]">{children}</div>
           </ClientProviders>
         </DataProvider> : <NoDefineAsset />}
 
-        <footer className="p-4 text-center">
+        <footer className="p-4 pb-0 text-center">
+          <div className="text-xs text-muted-foreground mb-1">
+            All dates are in your local timezone UTC unless indicated otherwise
+          </div>
           <a href="https://obyte.org" target="_blank" rel="noopener noreferrer">Built on Obyte</a>
         </footer>
 
