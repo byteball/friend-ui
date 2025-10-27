@@ -33,7 +33,7 @@ export async function GET(
     height: 400,
     rows: Math.sqrt(requiredStreak),
     columns: Math.sqrt(requiredStreak),
-    filledCeils: userData?.current_streak ?? 0,
+    filledCells: userData?.current_streak ?? 0,
   });
 
   try {

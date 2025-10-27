@@ -24,6 +24,9 @@ export async function GET(
   const ghostImageUrl = ghostList["Tim May"].image; // select image based on user data
   const ghostImageAbsPath = path.join(process.cwd(), "public", ghostImageUrl);
 
+  const logoAbsPath = path.join(process.cwd(), "public", "logo.svg");
+  const logoFile = readFileSync(logoAbsPath).toString("utf-8");
+
   const imageBuffer = readFileSync(ghostImageAbsPath);
   const ghostImageBase64 = `data:image/png;base64,${imageBuffer.toString("base64")}`;
 
@@ -33,7 +36,7 @@ export async function GET(
     height: 400,
     rows: Math.sqrt(requiredStreak),
     columns: Math.sqrt(requiredStreak),
-    filledCeils: userData?.current_streak ?? 0,
+    filledCells: userData?.current_streak ?? 0,
   });
 
   try {
@@ -70,13 +73,18 @@ export async function GET(
         <circle cx="100" cy="100" r="80" fill="rgba(29, 78, 184, 0.05)" />
         <circle cx="1100" cy="530" r="100" fill="rgba(37, 99, 235, 0.05)" />
 
+        <!-- Logo -->
+        <g transform="translate(${(350)}, 42)">
+          ${logoFile}
+        </g>
+        
         <text
-          x="50%"
+          x="${(1200 / 2) + 100 + 10}px"
           y="70px"
           font-family="Arial, sans-serif"
           font-size="72"
           font-weight="700"
-          fill="#1f2937"
+          fill="#000"
           width="100%"
           text-anchor="middle"
           dominant-baseline="middle"

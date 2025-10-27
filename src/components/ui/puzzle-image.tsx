@@ -9,7 +9,7 @@ type PuzzleImageProps = ImageProps & {
   stroke?: string;
   strokeWidth?: number;
   className?: string;
-  filledCeils?: number;
+  filledCells?: number;
   // knob size as a fraction of min(cellW, cellH)
   knobScale?: number; // 0.15..0.45 typical
   // how wide along the edge the knob spans (as fraction of cell edge length)
@@ -34,8 +34,6 @@ type PuzzleImageProps = ImageProps & {
   knobCenterMin?: number;
   knobCenterMax?: number;
 };
-
-// const filledCeils = 4;
 
 // Generate a simple jigsaw-like edge path between two points (horizontal or vertical)
 function edgePath(
@@ -273,7 +271,7 @@ export const PuzzleImage: FC<PuzzleImageProps> = ({
   columns = 3,
 
   stroke = "#ffffff",
-  filledCeils = 5,
+  filledCells = 5,
   strokeWidth = 1.9,
   className,
   bulgeFactor = 0.45,
@@ -331,7 +329,7 @@ export const PuzzleImage: FC<PuzzleImageProps> = ({
   // Build piece-shaped paths (including knobs) for the first N cells (row-major)
   const filledPiecePaths = useMemo(() => {
     const total = rows * columns;
-    const count = Math.max(0, Math.min(filledCeils, total));
+    const count = Math.max(0, Math.min(filledCells, total));
     const paths: string[] = [];
 
     const knobR = Math.min(cellW, cellH) * Math.max(0, Math.min(knobScale, 0.5));
@@ -394,7 +392,7 @@ export const PuzzleImage: FC<PuzzleImageProps> = ({
       paths.push(path);
     }
     return paths;
-  }, [rows, columns, cellW, cellH, horizCenters, vertCenters, knobScale, bulgeFactor, filledCeils, knobWidthScale, knobCurveTension, horizDirs, vertDirs]);
+  }, [rows, columns, cellW, cellH, horizCenters, vertCenters, knobScale, bulgeFactor, filledCells, knobWidthScale, knobCurveTension, horizDirs, vertDirs]);
 
   return (
     <div className={className} style={{ position: "relative", display: "inline-block", userSelect: "none" }}>
