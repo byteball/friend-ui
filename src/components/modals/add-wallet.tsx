@@ -4,11 +4,12 @@ import { useReactiveSetCookie } from "cookies-next";
 import { useRouter } from 'next/navigation';
 import { FC, useRef, useState } from "react";
 
-import { WALLET_COOKIE_NAME } from "@/constants";
 import { isValidAddress } from "@/lib/is-valid-address";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Input } from "../ui/input";
+
+import { WALLET_COOKIE_NAME } from "@/constants";
 
 interface AddWalletModalProps {
   triggerClassName?: string;
@@ -17,14 +18,14 @@ interface AddWalletModalProps {
 }
 
 export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "", walletAddress, children }) => {
-  const [wallet, changeWallet] = useState(walletAddress || null);
+  const [wallet, changeWallet] = useState<string | null>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const router = useRouter();
   const setCookie = useReactiveSetCookie();
 
-  const isValid = isValidAddress(wallet);
+  const isValid = wallet && isValidAddress(wallet);
   const isChanged = walletAddress !== wallet;
 
   const restoreInputValue = () => {
@@ -36,7 +37,6 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-
       saveWallet();
     }
   }
@@ -73,7 +73,7 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
 
       <Input
         name="wallet"
-        value={wallet ?? ''}
+        value={wallet ?? walletAddress ?? ''}
         onChange={handleWalletChange}
         onKeyDown={handleKeyDown}
       />
