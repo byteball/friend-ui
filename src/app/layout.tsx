@@ -38,8 +38,8 @@ export default async function RootLayout({
           </ClientProviders>
         </DataProvider> : <NoDefineAsset />}
 
-        <footer className="p-4 pb-0 text-center">
-          <div className="text-xs text-muted-foreground mb-1">
+        <footer className="p-4 pb-1 text-center">
+          <div className="text-xs text-muted-foreground mb-0.5">
             All dates are in your local timezone UTC unless indicated otherwise
           </div>
           <a href="https://obyte.org" target="_blank" rel="noopener noreferrer">Built on Obyte</a>
