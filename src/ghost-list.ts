@@ -9,7 +9,7 @@ export const ghostList = {
   },
   "Phil Zimmermann": {
     name: "Phil Zimmermann",
-    image: "/ghosts/phil-zimmermann.png",
+    image: "/ghosts/phil-zimmermann.jpg",
   },
   "Nick Szabo": {
     name: "Nick Szabo",
