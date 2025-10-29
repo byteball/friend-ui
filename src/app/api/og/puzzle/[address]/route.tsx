@@ -167,7 +167,7 @@ export async function GET(
           fill="#57534d"
         >
           <tspan x="580" dy="0">days to become friends</tspan>
-          <tspan x="580" dy="60">with Tim May</tspan>
+          <tspan x="580" dy="60">with ${allGhosts[currentGhostIndex].name}</tspan>
         </text>
         </g>
       </svg>
