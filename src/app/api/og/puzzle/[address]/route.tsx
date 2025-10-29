@@ -149,7 +149,7 @@ export async function GET(
           <!-- Stat value -->
           <text
             x="580"
-            y="335"
+            y="330"
             font-family="Arial, sans-serif"
             font-size="48"
             font-weight="700"
@@ -160,7 +160,7 @@ export async function GET(
 
         <text
           x="580"
-          y="410"
+          y="400"
           font-family="Arial, sans-serif"
           font-size="48"
           font-weight="300"
