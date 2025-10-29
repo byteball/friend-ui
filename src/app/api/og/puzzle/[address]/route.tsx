@@ -141,7 +141,7 @@ export async function GET(
             font-family="Arial, sans-serif"
             font-size="48"
             font-weight="400"
-            fill="#6b7280"
+            fill="#57534d"
           >
             Current streak:
           </text>
@@ -149,7 +149,7 @@ export async function GET(
           <!-- Stat value -->
           <text
             x="580"
-            y="360"
+            y="335"
             font-family="Arial, sans-serif"
             font-size="48"
             font-weight="700"
@@ -160,11 +160,11 @@ export async function GET(
 
         <text
           x="580"
-          y="450"
+          y="410"
           font-family="Arial, sans-serif"
           font-size="48"
           font-weight="300"
-          fill="#9ca3af"
+          fill="#57534d"
         >
           <tspan x="580" dy="0">days to become friends</tspan>
           <tspan x="580" dy="60">with Tim May</tspan>
@@ -181,8 +181,6 @@ export async function GET(
       headers: {
         "Content-Type": "image/png",
         "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
-        "Pragma": "no-cache",
-        "Expires": "0",
       },
     });
   } catch (error) {
