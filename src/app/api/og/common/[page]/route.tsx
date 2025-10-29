@@ -12,15 +12,15 @@ const pagesWithCommonOGTemplate = {
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: Promise<{ page: keyof typeof pagesWithCommonOGTemplate }> }
+  { params }: { params: Promise<{ page: string }> }
 ) {
   const { page } = await params;
 
-  if (!pagesWithCommonOGTemplate[page]) {
+  if (!(page in pagesWithCommonOGTemplate)) {
     return new Response("Not Found", { status: 404 });
   }
 
-  const title = pagesWithCommonOGTemplate[page];
+  const title = pagesWithCommonOGTemplate[page as keyof typeof pagesWithCommonOGTemplate];
 
   // Split title into lines for better formatting
   const words = title.split(' ');
