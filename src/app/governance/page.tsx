@@ -1,4 +1,5 @@
 import { getCookie } from "cookies-next";
+import { Metadata } from "next";
 import { cookies } from "next/headers";
 
 import { WALLET_COOKIE_NAME } from "@/constants";
@@ -6,6 +7,24 @@ import { WALLET_COOKIE_NAME } from "@/constants";
 import { GovernanceProfile, GovernanceTabs } from "@/features/governance";
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: "Obyte friends — Governance",
+  description: "Community governance of Obyte Friends: change the rules for rewards and other parameters",
+  openGraph: {
+    images: [
+      `/api/og/common/governance`,
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    creator: '@ObyteOrg',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+}
 
 export default async function GovernancePage() {
   const walletAddress = await getCookie(WALLET_COOKIE_NAME, { cookies })

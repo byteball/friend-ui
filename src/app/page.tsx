@@ -4,10 +4,30 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { ClaimWidget } from "@/features/claim";
 import { DepositWidget } from "@/features/deposit";
+import { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 export const fetchCache = 'force-no-store';
+
+export const metadata: Metadata = {
+  title: "Obyte friends — make 1% a day by making friends every day",
+  description: "Make 1% a day by making friends every day and spreading the word about Obyte’s unstoppable, censorship-resistant tech",
+  openGraph: {
+    images: [
+      `/api/og/common/main`,
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    creator: '@ObyteOrg',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+}
+
 
 export default function Home() {
 
