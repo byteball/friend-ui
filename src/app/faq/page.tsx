@@ -1,12 +1,34 @@
+import { Metadata } from "next";
 import Link from "next/link";
+
 import "server-only";
 
 import Faq from "@/features/faq";
 import { toLocalString } from "@/lib/to-local-string";
 
 import { appConfig } from "@/app-config";
+import { env } from "@/env";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Obyte friends — Frequently asked questions",
+  description: "Frequently asked questions and answers about Obyte Friends",
+  openGraph: {
+    images: [
+      `/api/og/common/faq`,
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    creator: '@ObyteOrg',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
+}
 
 export default async function FaqPage() {
 

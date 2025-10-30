@@ -39,7 +39,7 @@ export const HowItWorksBlock = () => (<div>
         src="/ghosts/tim-may.png"
         rows={2}
         columns={2}
-        filledCeils={2}
+        filledCells={2}
         alt="Tim May"
         width={250}
         height={250}

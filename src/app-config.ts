@@ -33,20 +33,5 @@ export const appConfig = {
     new_user_reward: 10e9,
     referral_reward: 10e9,
     balance_cap: 200e9,
-  },
-  ghosts: [
-    {
-      key: "Tim May",
-      src: "/ghosts/tim-may.png"
-    },
-    {
-      key: "Phil Zimmermann",
-      src: "/ghosts/phil-zimmermann.jpg"
-    },
-    {
-      key: "Eric Hughes",
-      src: "/ghosts/eric-hughes.jpg"
-    }
-  ]
-
+  }
 } as const;

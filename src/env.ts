@@ -9,12 +9,14 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_TESTNET: z.boolean().default(false),
     NEXT_PUBLIC_SITE_URL: z.string().default("http://localhost:3000"),
+    NEXT_PUBLIC_NOTIFY_URL: z.string().default("http://localhost:3050"),
     NEXT_PUBLIC_AA_ADDRESS: z.string().min(4).default("CURJWJ2TQ36NBHVYVPIXEKKN4QNI43BT"),
   },
   runtimeEnv: {
     NEXT_PUBLIC_TESTNET: Boolean(process.env.NEXT_PUBLIC_TESTNET),
     NEXT_PUBLIC_AA_ADDRESS: process.env.NEXT_PUBLIC_AA_ADDRESS,
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+    NEXT_PUBLIC_NOTIFY_URL: process.env.NEXT_PUBLIC_NOTIFY_URL,
     WS_NO_BUFFER_UTIL: process.env.WS_NO_BUFFER_UTIL ? Number(process.env.WS_NO_BUFFER_UTIL) : undefined,
     WS_NO_UTF_8_VALIDATE: process.env.WS_NO_UTF_8_VALIDATE ? Number(process.env.WS_NO_UTF_8_VALIDATE) : undefined
   }

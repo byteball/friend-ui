@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import Navbar from "@/components/layouts/main-navbar";
@@ -12,11 +11,6 @@ import "./globals.css";
 const InterFont = Inter({
   subsets: ["latin"],
 });
-
-export const metadata: Metadata = {
-  title: "Friend",
-  description: "Become friends with someone and get rewards, or claim follow-up rewards",
-};
 
 export default async function RootLayout({
   children,

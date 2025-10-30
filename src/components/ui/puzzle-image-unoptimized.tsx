@@ -6,7 +6,7 @@ type PuzzleImageProps = {
   columns?: number;
   stroke?: string;
   strokeWidth?: number;
-  filledCeils?: number;
+  filledCells?: number;
   // knob size as a fraction of min(cellW, cellH)
   knobScale?: number; // 0.15..0.45 typical
   // how wide along the edge the knob spans (as fraction of cell edge length)
@@ -30,7 +30,6 @@ type PuzzleImageProps = {
   knobCenterMax?: number;
 };
 
-// const filledCeils = 4;
 
 // Generate a simple jigsaw-like edge path between two points (horizontal or vertical)
 function edgePath(
@@ -270,7 +269,7 @@ export const generatePuzzleSvg = ({
   rows = 3,
   columns = 3,
   stroke = "#ffffff",
-  filledCeils = 5,
+  filledCells = 5,
   strokeWidth = 1.9,
   bulgeFactor = 0.45,
   overlayOpacity = 0.9,
@@ -305,7 +304,7 @@ export const generatePuzzleSvg = ({
 
   // Build piece-shaped paths (including knobs) for the first N cells (row-major)
   const total = rows * columns;
-  const count = Math.max(0, Math.min(filledCeils, total));
+  const count = Math.max(0, Math.min(filledCells, total));
   const paths: string[] = [];
 
   const knobR = Math.min(cellW, cellH) * Math.max(0, Math.min(knobScale, 0.5));

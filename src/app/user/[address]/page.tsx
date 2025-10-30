@@ -2,27 +2,48 @@ import "server-only";
 
 import { env } from "@/env";
 import { FriendsList, ProfileInfo, ProfileStats } from "@/features/profile";
+import { getFriendList } from "@/lib/calculations/get-friend-list";
 import { getCeilingPrice, getTotalBalance } from "@/lib/calculations/get-rewards";
 import { getProfileUsername } from "@/lib/get-profile-username.server";
 import { isValidAddress } from "@/lib/is-valid-address";
+import { toLocalString } from "@/lib/to-local-string";
 import { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
 
 
 export async function generateMetadata(
-  { params, searchParams }: { params: Promise<{ address: string }>; searchParams: Promise<Record<string, string | string[]>> }
+  { params }: { params: Promise<{ address: string }>; searchParams: Promise<Record<string, string | string[]>> }
 ): Promise<Metadata> {
   const { address } = await params;
   const username = await getProfileUsername(address) || "Anonymous";
+  const state = globalThis.__GLOBAL_STORE__?.getState() ?? {};
+
+  const userData: IUserData | undefined = state?.[`user_${address}`];
+  const friends = getFriendList(state, address);
+
+  const ceilingPrice = getCeilingPrice(state.constants!);
+  const totalBalance = await getTotalBalance(userData?.balances ?? {}, ceilingPrice);
+
+  const frdTokenMeta = globalThis.__GLOBAL_STORE__?.getOwnToken();
+  const frdDecimals = frdTokenMeta?.decimals ?? 9;
+  const frdSymbol = frdTokenMeta?.symbol ?? "FRD";
 
   return ({
-    title: `${username} profile`,
-    description: `View the profile and stats of user ${address} on Obyte Friend.`,
+    title: `Obyte friends — ${username}`,
+    description: `Profile of user ${username} in Obyte Friends: total ${friends.length} friends, ${toLocalString(totalBalance / 10 ** frdDecimals)} ${frdSymbol} locked`,
     openGraph: {
       images: [
-        `/api/og-puzzle/${address}`,
+        `/api/og/puzzle/${address}`,
       ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      creator: '@ObyteOrg',
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
     metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
   })
