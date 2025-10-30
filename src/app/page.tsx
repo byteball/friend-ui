@@ -1,10 +1,13 @@
+import { Metadata } from "next";
+
 import { HeroBlock } from "@/components/layouts/hero-block";
 import { HowItWorksBlock } from "@/components/layouts/how-it-works";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { ClaimWidget } from "@/features/claim";
 import { DepositWidget } from "@/features/deposit";
-import { Metadata } from "next";
+
+import { env } from "@/env";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -26,6 +29,7 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
 }
 
 

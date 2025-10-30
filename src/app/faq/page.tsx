@@ -7,6 +7,7 @@ import Faq from "@/features/faq";
 import { toLocalString } from "@/lib/to-local-string";
 
 import { appConfig } from "@/app-config";
+import { env } from "@/env";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +27,7 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
 }
 
 export default async function FaqPage() {
