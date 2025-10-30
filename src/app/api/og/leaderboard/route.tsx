@@ -1,8 +1,10 @@
 import { readFileSync } from "fs";
+import { NextRequest } from "next/server";
 import path from "path";
 import sharp from "sharp";
 
-import { NextRequest } from "next/server";
+import { getProfileUsernames } from "@/lib/get-profile-usernames.server";
+import { toLocalString } from "@/lib/to-local-string";
 
 export async function GET(
   _req: NextRequest,
@@ -11,6 +13,25 @@ export async function GET(
   const logoFile = readFileSync(logoAbsPath).toString("utf-8");
 
   try {
+    // Get leaderboard data
+    const leaderboardData = globalThis.__GLOBAL_STORE__?.getLeaderboardData() || [];
+    const frdToken = globalThis.__GLOBAL_STORE__?.getOwnToken();
+    const { symbol = "FRD", decimals = 0 } = frdToken || {};
+
+    // Get top 3 users
+    const top3 = leaderboardData.sort((a, b) => b.amount - a.amount).slice(0, 3);
+    const usernames = await getProfileUsernames(top3.map(d => d.address));
+
+    // Prepare top 3 data for display
+    const top3Data = top3.map((user, index) => {
+      const username = usernames.find((u) => u.address === user.address)?.username;
+      return {
+        rank: index + 1,
+        username: username || user.address.slice(0, 8) + "...",
+        amount: toLocalString(+Number(user.amount / 10 ** decimals).toFixed(6)),
+        friends: user.friends,
+      };
+    });
     const SVG = `
       <svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -70,15 +91,93 @@ export async function GET(
           <!-- TITLE -->
           <text
             x="600"
-            y="140"
+            y="200"
             font-family="Arial, sans-serif"
-            font-size="78"
-            font-weight="400"
+            font-size="64"
+            font-weight="600"
             fill="#000"
             text-anchor="middle"
           >
-            <tspan x="600" dy="104">Leaderboard</tspan>
+            Leaderboard
           </text>
+
+          <!-- Top 3 Users -->
+          ${top3Data.map((user, index) => {
+      const yPosition = 300 + (index * 100);
+      const cardY = yPosition - 40;
+      const cardHeight = 80;
+      const textY = cardY + (cardHeight / 2);
+
+      return `
+              <!-- User ${user.rank} Card -->
+              <g filter="url(#cardShadow)">
+                <rect
+                  x="100"
+                  y="${cardY}"
+                  width="1000"
+                  height="${cardHeight}"
+                  rx="12"
+                  fill="#ffffff"
+                  stroke="#e5e7eb"
+                  stroke-width="1"
+                />
+                
+                <!-- Medal -->
+                <text
+                  x="140"
+                  y="${textY}"
+                  font-family="Arial, sans-serif"
+                  font-size="34"
+                  fill="#6b7280"
+                  text-anchor="middle"
+                  dominant-baseline="middle"
+                >
+                  #${index + 1}
+                </text>
+                
+                <!-- Username -->
+                <text
+                  x="200"
+                  y="${textY}"
+                  font-family="Arial, sans-serif"
+                  font-size="34"
+                  font-weight="600"
+                  fill="#111827"
+                  text-anchor="start"
+                  dominant-baseline="middle"
+                >
+                  ${user.username.length > 20 ? user.username.slice(0, 20) + '...' : user.username}
+                </text>
+                
+                <!-- Amount -->
+                <text
+                  x="700"
+                  y="${textY}"
+                  font-family="Arial, sans-serif"
+                  font-size="34"
+                  font-weight="500"
+                  fill="#1d4ed8"
+                  text-anchor="end"
+                  dominant-baseline="middle"
+                >
+                  ${user.amount} ${symbol}
+                </text>
+                
+                <!-- Friends -->
+                <text
+                  x="900"
+                  y="${textY}"
+                  font-family="Arial, sans-serif"
+                  font-size="34"
+                  fill="#6b7280"
+                  text-anchor="end"
+                  dominant-baseline="middle"
+                >
+                  ${user.friends} friends
+                </text>
+              </g>
+            `;
+    }).join('')}
 
       </svg>
     `;
