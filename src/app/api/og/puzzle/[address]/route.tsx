@@ -134,41 +134,43 @@ export async function GET(
             ${username}
           </text>
 
-          <!-- Stat label -->
-          <text
-            x="580"
-            y="260"
-            font-family="Arial, sans-serif"
-            font-size="48"
-            font-weight="400"
-            fill="#57534d"
-          >
-            Current streak:
-          </text>
+          <g transform="translate(0, 20)">
+            <!-- Stat label -->
+            <text
+              x="580"
+              y="260"
+              font-family="Arial, sans-serif"
+              font-size="48"
+              font-weight="400"
+              fill="#57534d"
+            >
+              Current streak:
+            </text>
 
-          <!-- Stat value -->
-          <text
-            x="580"
-            y="330"
-            font-family="Arial, sans-serif"
-            font-size="48"
-            font-weight="700"
-            fill="#1d4ed8"
-          >
-            ${userData?.current_streak ?? 0} out of ${requiredStreak}
-          </text>
+            <!-- Stat value -->
+            <text
+              x="580"
+              y="330"
+              font-family="Arial, sans-serif"
+              font-size="48"
+              font-weight="700"
+              fill="#1d4ed8"
+            >
+              ${userData?.current_streak ?? 0} out of ${requiredStreak}
+            </text>
 
-        <text
-          x="580"
-          y="400"
-          font-family="Arial, sans-serif"
-          font-size="48"
-          font-weight="300"
-          fill="#57534d"
-        >
-          <tspan x="580" dy="0">days to become friends</tspan>
-          <tspan x="580" dy="60">with ${allGhosts[currentGhostIndex].name}</tspan>
-        </text>
+            <text
+              x="580"
+              y="400"
+              font-family="Arial, sans-serif"
+              font-size="48"
+              font-weight="300"
+              fill="#57534d"
+            >
+              <tspan x="580" dy="0">days to become friends</tspan>
+              <tspan x="580" dy="60">with ${allGhosts[currentGhostIndex].name}</tspan>
+            </text>
+          </g>
         </g>
       </svg>
     `;
