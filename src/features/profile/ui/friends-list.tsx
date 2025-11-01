@@ -13,7 +13,6 @@ interface IFriendsListProps {
 export const FriendsList: FC<IFriendsListProps> = async ({ address }) => {
   const state = globalThis.__GLOBAL_STORE__?.getState() ?? {};
   const username = await getProfileUsername(address) ?? address.slice(0, 6) + "..." + address.slice(-4);
-
   const friends = getFriendList(state, address);
 
   if (friends.length === 0) return null;

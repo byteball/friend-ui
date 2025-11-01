@@ -15,11 +15,6 @@ export const FriendsListItem: FC<IFriendsListItemProps> = async ({ friendAddress
 
   return <div className="flex flex-col gap-2">
     <div className="text-xl font-semibold first-letter:uppercase">{username}</div>
-
-    {!isGhost && <div>Lives at <a href={`https://city.obyte.org/user/${friendAddress}`} className="text-red-700">
-      Phil Zimmermann Avenue, 350847/W32126</a>
-    </div>}
-
     <div className="text-muted-foreground">{formatDateAsUTC(new Date(date * 1000))}</div>
   </div>
 
