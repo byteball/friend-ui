@@ -1,8 +1,8 @@
 "use client";
 
 import { useGetCookie } from "cookies-next";
-import { addDays } from "date-fns";
-import { formatInTimeZone } from 'date-fns-tz';
+import { addDays, differenceInDays, parse } from "date-fns";
+import { formatInTimeZone, } from 'date-fns-tz';
 import { FC, useCallback, useRef, useState } from "react";
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
@@ -19,8 +19,8 @@ import { QRButton } from "@/components/ui/qr-button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 
-const MAX_LOCKED_TERM_DAYS = 365 * 4;
-const now = new Date();
+const MAX_LOCKED_TERM_DAYS = 365 * 5;
+const now = formatInTimeZone(new Date(), "UTC", "yyyy-MM-dd HH:mm:ssXXX");
 
 interface DepositFormProps { }
 
@@ -28,9 +28,8 @@ export const DepositForm: FC<DepositFormProps> = () => {
   const [currency, setCurrency] = useState<TokenMeta>(GBYTE_TOKEN_META);
   const btnRef = useRef<HTMLButtonElement>(null);
   const [amount, setAmount] = useState<string>("0.1");
-  const [term, setTerm] = useState<number>(appConfig.MIN_LOCKED_TERM_DAYS);
+  const [term, setTerm] = useState<number>(0);
   const data = useData();
-
   const getCookie = useGetCookie();
 
   const walletAddress = getCookie(WALLET_COOKIE_NAME) as string | undefined;
@@ -43,8 +42,29 @@ export const DepositForm: FC<DepositFormProps> = () => {
   const frdMeta: TokenMeta | undefined = frdAsset ? data?.tokens?.[frdAsset] : undefined;
   const userData = (walletAddress ? state[`user_${walletAddress}`] : undefined) as IUserData | undefined;
 
+  const unlockDate = userData?.unlock_date
+    ? formatInTimeZone(
+      parse(
+        userData.unlock_date,
+        "yyyy-MM-dd",
+        new Date()
+      ),
+      "UTC",
+      "yyyy-MM-dd"
+    )
+    : undefined;
 
-  const until = addDays(now, term);
+  const daysUntilUnlock = differenceInDays(unlockDate || now, now);
+
+  let minTerm = appConfig.MIN_LOCKED_TERM_DAYS;
+
+  if (daysUntilUnlock >= appConfig.MIN_LOCKED_TERM_DAYS) {
+    minTerm = daysUntilUnlock + 2; // TODO: why +2? maybe it's not UTC?
+  }
+
+  const selectedTerm = Math.max(term, minTerm);
+
+  const until = addDays(now, selectedTerm);
 
   const handleTokenChange = useCallback((asset: string) => {
     const token = data?.tokens?.[asset];
@@ -60,10 +80,13 @@ export const DepositForm: FC<DepositFormProps> = () => {
   }, [btnRef]);
 
   const url = generateLink({
-    aa: appConfig.AA_ADDRESS, amount: Math.ceil(Number(amount) * 10 ** currency?.decimals), from_address: walletAddress, data: {
+    aa: appConfig.AA_ADDRESS,
+    amount: Math.ceil(Number(amount) * 10 ** currency?.decimals),
+    from_address: walletAddress,
+    data: {
       deposit: 1,
       deposit_asset: currency?.asset === 'base' ? undefined : currency?.asset,
-      term,
+      term: selectedTerm,
       ref: (!userData || !walletAddress) ? referralAddress : undefined
     }
   })
@@ -126,17 +149,16 @@ export const DepositForm: FC<DepositFormProps> = () => {
             <label htmlFor="term" className="text-muted-foreground">Locked term</label>
 
             <Slider
-              value={[term]}
+              value={[selectedTerm]}
               id="term"
               className="mt-2"
-              onValueChange={(value) => setTerm(value[0] as number)}
+              onValueChange={(value) => setTerm((value[0] <= minTerm ? minTerm : value[0]) as number)}
               step={30}
-              min={appConfig.MIN_LOCKED_TERM_DAYS}
+              min={0}
               max={MAX_LOCKED_TERM_DAYS}
             />
           </div>
-
-          <div suppressHydrationWarning>Locking term: {formatDays(term)} — until {formatInTimeZone(until, "UTC", "MMMM do, yyyy")} UTC
+          <div suppressHydrationWarning>Locking term: {formatDays(selectedTerm)} — until {formatInTimeZone(until, "UTC", "MMMM do, yyyy")} UTC
           </div>
         </div>
 
