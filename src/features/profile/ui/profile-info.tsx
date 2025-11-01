@@ -12,6 +12,7 @@ import { getProfileUsername } from "@/lib/get-profile-username.server";
 import { isActiveUser } from "@/lib/is-active-user";
 
 import { appConfig } from "@/app-config";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { env } from "@/env";
 
 interface ProfileInfoProps {
@@ -25,6 +26,41 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
 }) => {
   const username = await getProfileUsername(address) ?? address.slice(0, 6) + "..." + address.slice(-4);
   const isActive = isActiveUser(userData);
+
+  const store = globalThis.__GLOBAL_STORE__;
+
+  if (!store) {
+    console.error("error(getProfileUsername): global store missing");
+    return null;
+  }
+
+  const client = globalThis.__OBYTE_CLIENT__;
+
+  let tgUsername = store.tgAttestations.get(address);
+  let discordUsername = store.discordAttestations.get(address);
+
+  let attestations = [];
+
+  if ((!tgUsername || !discordUsername) && client) {
+    // @ts-expect-error not error
+    attestations = await client.api.getAttestations({ address }).catch(() => null);
+  }
+
+  if (!tgUsername) {
+    tgUsername = attestations.find(att => att.attestor_address === appConfig.NEXT_PUBLIC_TELEGRAM_ATTESTOR)?.profile?.username as string | undefined;
+
+    if (tgUsername) {
+      store.tgAttestations.set(address, tgUsername);
+    }
+  }
+
+  if (!discordUsername) {
+    discordUsername = attestations.find(att => att.attestor_address === appConfig.NEXT_PUBLIC_DISCORD_ATTESTOR)?.profile?.username as string | undefined;
+
+    if (discordUsername) {
+      store.discordAttestations.set(address, discordUsername);
+    }
+  }
 
   const connectUrl = generateLink({
     aa: appConfig.AA_ADDRESS,
@@ -50,6 +86,49 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
           <QRButton href={connectUrl} disabled={!isActive} variant="secondary">Add friend</QRButton>
           <small className="text-xs text-muted-foreground">Before sending a request, please contact {username} first</small>
         </div>
+      </div>
+
+      <div className="grid gap-y-2">
+        {tgUsername && <div className="flex gap-x-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <svg width={24} height={24} viewBox="0 0 24 24" strokeWidth="2" stroke="#ccc" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4" />
+                </svg>
+              </TooltipTrigger>
+              <TooltipContent>
+                Telegram
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <div>{tgUsername}</div>
+        </div>}
+
+        {discordUsername && <div className="flex gap-x-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <svg width={24} height={24} viewBox="0 0 24 24" >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M14.983 3l.123 .006c2.014 .214 3.527 .672 4.966 1.673a1 1 0 0 1 .371 .488c1.876 5.315 2.373 9.987 1.451 12.28c-1.003 2.005 -2.606 3.553 -4.394 3.553c-.732 0 -1.693 -.968 -2.328 -2.045a21.512 21.512 0 0 0 2.103 -.493a1 1 0 1 0 -.55 -1.924c-3.32 .95 -6.13 .95 -9.45 0a1 1 0 0 0 -.55 1.924c.717 .204 1.416 .37 2.103 .494c-.635 1.075 -1.596 2.044 -2.328 2.044c-1.788 0 -3.391 -1.548 -4.428 -3.629c-.888 -2.217 -.39 -6.89 1.485 -12.204a1 1 0 0 1 .371 -.488c1.439 -1.001 2.952 -1.459 4.966 -1.673a1 1 0 0 1 .935 .435l.063 .107l.651 1.285l.137 -.016a12.97 12.97 0 0 1 2.643 0l.134 .016l.65 -1.284a1 1 0 0 1 .754 -.54l.122 -.009zm-5.983 7a2 2 0 0 0 -1.977 1.697l-.018 .154l-.005 .149l.005 .15a2 2 0 1 0 1.995 -2.15zm6 0a2 2 0 0 0 -1.977 1.697l-.018 .154l-.005 .149l.005 .15a2 2 0 1 0 1.995 -2.15z" strokeWidth="0" fill="#ccc" />
+                </svg>
+              </TooltipTrigger>
+              <TooltipContent>
+                Discord
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <div>{discordUsername}</div>
+        </div>}
+
+        <div>
+          <a href={`https://city.obyte.org/user/${address}`} target="_blank" rel="noopener noreferrer" className="text-blue-700">Link on CITY profile</a>
+        </div>
+
       </div>
 
       <ProfileShareLinks

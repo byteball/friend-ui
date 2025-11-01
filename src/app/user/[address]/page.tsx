@@ -64,12 +64,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
   return <div className="grid gap-y-5">
     <ProfileInfo address={address} userData={userData} />
 
-    <div className="grid gap-4">
-      <div>
-        <a href={`https://city.obyte.org/user/${address}`} target="_blank" rel="noopener noreferrer" className="text-blue-700">Link on CITY profile</a>
-      </div>
-    </div>
-
     <ProfileStats
       address={address}
       totalBalance={totalBalance}
