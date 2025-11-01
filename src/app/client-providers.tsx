@@ -4,6 +4,7 @@ import { ProgressProvider } from '@bprogress/next/app';
 import { CookiesNextProvider } from "cookies-next";
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { ReactNode, useCallback } from "react";
+import { SWRConfig } from 'swr';
 
 interface ProvidersProps {
   children: ReactNode;
@@ -29,7 +30,14 @@ export function ClientProviders({ children }: ProvidersProps) {
   >
     <CookiesNextProvider pollingOptions={{ enabled: true, intervalMs: 1000 }}>
       <NuqsAdapter>
-        {children}
+        <SWRConfig
+          value={{
+            refreshInterval: 60000,
+            fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
+          }}
+        >
+          {children}
+        </SWRConfig>
       </NuqsAdapter>
     </CookiesNextProvider>
   </ProgressProvider>;

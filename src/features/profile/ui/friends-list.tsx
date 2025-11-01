@@ -3,6 +3,7 @@ import { FC } from "react";
 import "server-only";
 
 import { getProfileUsername } from "@/lib/get-profile-username.server";
+import { isValidAddress } from "@/lib/is-valid-address";
 import { FriendsListItem } from "./friends-list-item";
 
 interface IFriendsListProps {
@@ -23,6 +24,7 @@ export const FriendsList: FC<IFriendsListProps> = async ({ address }) => {
     <div className="flex flex-col gap-6">
       {friends.map((friend) => <FriendsListItem
         key={friend.address}
+        isGhost={!isValidAddress(friend.address)}
         friendAddress={friend.address}
         date={friend.date}
       />)}
