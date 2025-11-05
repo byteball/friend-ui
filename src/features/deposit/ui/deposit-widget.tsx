@@ -2,7 +2,7 @@
 
 import { FC } from "react";
 
-import { DepositForm } from "../deposit-form";
+import { DepositForm } from "./deposit-form";
 
 
 interface IDepositProps { }
