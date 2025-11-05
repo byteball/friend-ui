@@ -7,7 +7,7 @@ import { formatDateAsUTC } from "@/lib/format-date-as-utc";
 import { parseDateFromAA } from "@/lib/parse-date-from-aa";
 import { toLocalString } from "@/lib/to-local-string";
 import { FC } from "react";
-import { GhostFriendsCard } from "./ghost-friends-card";
+import { GhostFriendsCard } from "../../ghost/ui/ghost-friends-card";
 import { RewardChartCard } from "./reward-chart-card";
 
 interface ProfileStatsProps {

@@ -9,7 +9,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { generateLink } from "@/lib/generate-link";
 import Image from 'rc-image';
 import { FC } from "react";
-import { getGhostsFromVars } from "../domain/get-ghosts-from-vars";
+import { getGhostsFromVars } from "../../profile/domain/get-ghosts-from-vars";
 
 interface IGhostFriendsProps {
   userData?: IUserData;
