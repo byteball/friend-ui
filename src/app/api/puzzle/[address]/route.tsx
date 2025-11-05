@@ -5,6 +5,7 @@ import sharp from "sharp";
 
 import { generatePuzzleSvg } from "@/components/ui/puzzle-image-unoptimized";
 import { env } from "@/env";
+import { getRequiredStreak } from "@/features/ghost/domain/get-required-streak";
 import { getGhostsFromVars } from "@/features/profile/domain/get-ghosts-from-vars";
 import { getFriendList } from "@/lib/calculations/get-friend-list";
 import { getNumberByAddress } from "@/lib/get-number-by-address";
@@ -20,7 +21,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ add
 
   const state = __GLOBAL_STORE__?.getState();
   const userData = state?.[`user_${userAddress}`] as IUserData | undefined;
-  const requiredStreak = ((userData?.current_ghost_num ?? 1) + 1) ** 2;
+  const requiredStreak = getRequiredStreak(userData?.current_ghost_num);
 
   const allGhosts = getGhostsFromVars(state ?? {});
   const userFriends = getFriendList(state ?? {}, userAddress);
