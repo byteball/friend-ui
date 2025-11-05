@@ -1,8 +1,6 @@
 import { appConfig } from '@/app-config';
 import useSWR from 'swr';
 
-
-
 interface IHistoryItem {
   address: string;
   trigger_unit: string;
