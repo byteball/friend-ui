@@ -4,6 +4,7 @@ import path from "path";
 import sharp from "sharp";
 
 import { generatePuzzleSvg } from "@/components/ui/puzzle-image-unoptimized";
+import { getRequiredStreak } from "@/features/ghost/domain/get-required-streak";
 import { ghostList } from "@/ghost-list";
 import { getProfileUsername } from "@/lib/get-profile-username.server";
 
@@ -19,7 +20,7 @@ export async function GET(
   const userData = state?.[`user_${address}`] as IUserData | undefined;
   const username = (await getProfileUsername(address)) || "Anonymous";
 
-  const requiredStreak = ((userData?.current_ghost_num ?? 1) + 1) ** 2;
+  const requiredStreak = getRequiredStreak(userData?.current_ghost_num);
 
   const ghostImageUrl = ghostList["Tim May"].image; // select image based on user data
   const ghostImageAbsPath = path.join(process.cwd(), "public", ghostImageUrl);

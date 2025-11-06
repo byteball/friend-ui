@@ -40,7 +40,7 @@ export const getTotalBalance = async (balances: Balances, ceilingPrice: number) 
   return (balances.frd ?? 0) + (totals.in_bytes / ceilingPrice);
 }
 
-export const getRewards = async (user1: IUserData, user2: IUserData, constants: IConstants) => {
+export const getRewards = async (user1: IUserData | null, user2: IUserData | null, constants: IConstants) => {
   const ceilingPrice = getCeilingPrice(constants);
   const totalBalance1 = await getTotalBalance(user1?.balances ?? {}, ceilingPrice);
   const totalBalance2 = await getTotalBalance(user2?.balances ?? {}, ceilingPrice);

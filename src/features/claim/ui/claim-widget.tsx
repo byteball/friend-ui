@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { ClaimForm } from "../claim-form";
+import { ClaimForm } from "./claim-form";
 
 interface ClaimWidgetProps { }
 

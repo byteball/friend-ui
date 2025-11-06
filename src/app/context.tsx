@@ -31,6 +31,9 @@ export function useData() {
     },
     getGovernanceAA: (): string => {
       return data.state?.constants?.governance_aa;
+    },
+    getUserData: (address: string): IUserData | null => {
+      return (data.state?.[`user_${address}`] || null) as IUserData | null;
     }
   };
 }
