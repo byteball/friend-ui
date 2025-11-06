@@ -18,14 +18,14 @@ export const useRewards = () => {
   const [friendWallet, setFriendWallet] = useState<string | null>(null);
   const isValidFriendWallet = isValidAddress(friendWallet);
 
-  const data = useData();
+  const { state, getUserData } = useData();
 
   useEffect(() => {
     (async () => {
 
       if (isValidFriendWallet) {
-        const userData1: IUserData = walletAddress ? data.state[`user_${walletAddress}`] : undefined;
-        const userData2: IUserData = isValidFriendWallet ? data.state[`user_${friendWallet}`] : undefined;
+        const userData1 = walletAddress ? getUserData(walletAddress) : null;
+        const userData2 = isValidFriendWallet ? getUserData(friendWallet!) : null;
 
         if (!userData2) {
           setError("Both you and your friend must have deposited before claiming rewards");
@@ -41,7 +41,7 @@ export const useRewards = () => {
           }
         }
 
-        const rewards = await getRewards(userData1, userData2, data.state.constants);
+        const rewards = await getRewards(userData1, userData2, state.constants);
         setRewards(walletAddress ? rewards : null);
         setError(null);
       } else {
@@ -50,7 +50,7 @@ export const useRewards = () => {
       }
 
     })();
-  }, [data, walletAddress, friendWallet, isValidFriendWallet]);
+  }, [state, walletAddress, friendWallet, isValidFriendWallet, getUserData]);
 
   return { error, rewards, friendWallet, isValidFriendWallet, changeFriendWallet: setFriendWallet };
 }

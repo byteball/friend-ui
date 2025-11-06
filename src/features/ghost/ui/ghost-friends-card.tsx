@@ -2,16 +2,20 @@
 
 import { appConfig } from "@/app-config";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { QRButton } from "@/components/ui/qr-button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { WALLET_COOKIE_NAME } from "@/constants";
 import { generateLink } from "@/lib/generate-link";
 import cn from "classnames";
+import { useReactiveGetCookie } from "cookies-next";
 import Image from 'rc-image';
 import { FC } from "react";
 import { getRequiredStreak } from "../domain/get-required-streak";
 import { useUserGhost } from "../domain/use-user-ghost";
+import { SelectGhostModal } from "./select-ghost-modal";
 
 interface IGhostFriendsProps {
   userData?: IUserData;
@@ -26,10 +30,13 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
   }, isLoading } = useUserGhost(address);
 
   const requiredStreak = getRequiredStreak(userData?.current_ghost_num);
+  const getCookie = useReactiveGetCookie();
+  const walletAddress = getCookie(WALLET_COOKIE_NAME)
 
   const url = generateLink({
     amount: 1e4,
     aa: appConfig.AA_ADDRESS,
+    from_address: walletAddress,
     data: {
       friend: ghostName,
       connect: 1
@@ -81,18 +88,26 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
                   Become friends
                 </QRButton>}
             </div>
-
           </div>
-          {isLoading ? <Skeleton className="w-[250px] h-[250px]" /> : <div className="w-[250px] h-[250px] relative bg-accent rounded-md overflow-hidden animate-pulse [&:has(img)]:animate-none">
-            <Image
-              wrapperClassName="w-full h-full"
-              className="w-full h-full object-cover"
-              src={`/api/puzzle/${address}?t=${Math.floor(Date.now() / (60 * 1000))}`} // cache buster every minute
-              fallback="/ghosts/default.png"
-              loading="eager"
-              alt={ghostName}
-            />
-          </div>}
+
+          {isLoading
+            ? <Skeleton className="w-[250px] h-[250px]" />
+            : <div className="text-center">
+              <div className="w-[250px] h-[250px] relative bg-accent rounded-md overflow-hidden animate-pulse [&:has(img)]:animate-none">
+                <Image
+                  wrapperClassName="w-full h-full"
+                  className="w-full h-full object-cover"
+                  src={`/api/puzzle/${address}?t=${Math.floor(Date.now() / (60 * 1000))}`} // cache buster every minute
+                  fallback="/ghosts/default.png"
+                  loading="eager"
+                  alt={ghostName}
+                />
+              </div>
+
+              {address === walletAddress && <SelectGhostModal address={address}>
+                <Button variant="link" className="text-blue-700">change the next ghost</Button>
+              </SelectGhostModal>}
+            </div>}
         </div>
       </CardContent>
     </Card>

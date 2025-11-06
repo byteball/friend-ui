@@ -7,10 +7,8 @@ import { isValidAddress } from '@/lib/is-valid-address';
 import useSWR from 'swr';
 
 interface ICurrentGhost {
-  data: {
-    address: string;
-    ghost_name: string | null;
-  }
+  address: string;
+  ghost_name: string | null;
 }
 
 interface IUseCurrentGhostResult {
@@ -19,6 +17,7 @@ interface IUseCurrentGhostResult {
     address: string;
     ghostFriendIds: number[];
     allGhosts: IGhost[];
+    requiredStreak?: number;
   }
   isLoading: boolean;
   isError: any;
@@ -33,7 +32,7 @@ export function useUserGhost(address: string): IUseCurrentGhostResult {
   const userGhostFriends = userFriends.filter(f => !isValidAddress(f.address));
   const ghostFriendIds = userGhostFriends.map(f => allGhosts.findIndex(g => g.name === f.address));
 
-  let ghostName = data?.data?.ghost_name || null;
+  let ghostName = data?.ghost_name || null;
 
   if (!ghostName) {
     const ghostIdByAddress = getNumberByAddress(address, allGhosts.length - 1, ghostFriendIds);
