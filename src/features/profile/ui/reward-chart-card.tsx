@@ -1,5 +1,6 @@
 "use client"
 
+import { useMemo } from "react"
 import { Area, AreaChart, XAxis } from "recharts"
 
 import { useData } from "@/app/context"
@@ -7,102 +8,146 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card"
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent
+  ChartTooltipContent,
 } from "@/components/ui/chart"
 import { Skeleton } from "@/components/ui/skeleton"
+import { toLocalString } from "@/lib/to-local-string"
+import { minBy } from "lodash"
 import { useRewardChartData } from "../domain/hooks/use-reward-chart-data"
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
+const rewardChartConfig = {
+  rewards: {
+    label: "Rewards",
     color: "var(--chart-1)",
-  }
+  },
 } satisfies ChartConfig
 
+type RewardSeriesPoint = {
+  trigger_date: string
+  rewards: number
+}
+
+type RewardHistoryEvent = {
+  trigger_date: string
+  locked_reward?: number | string
+  liquid_reward?: number | string
+  new_user_reward?: number | string
+  referral_reward?: number | string
+}
 
 interface RewardChartCardProps {
-  address: string;
+  address: string
+}
+
+/**
+ * Builds a cumulative reward series with normalized daily points.
+ */
+function buildRewardSeries(
+  rewardEvents: RewardHistoryEvent[],
+  decimals: number
+): RewardSeriesPoint[] {
+  if (!Array.isArray(rewardEvents) || rewardEvents.length === 0) {
+    return []
+  }
+
+  const sortedEvents = [...rewardEvents].sort((a, b) =>
+    a.trigger_date.localeCompare(b.trigger_date)
+  )
+
+  const normalizedDailyDeltas = new Map<string, number>()
+  const eventDates = new Set<string>()
+
+  for (const event of sortedEvents) {
+    const triggerDate = event.trigger_date?.slice(0, 10)
+    if (!triggerDate) {
+      continue
+    }
+
+    eventDates.add(triggerDate)
+
+    const lockedReward = Number(event.locked_reward ?? 0)
+    const liquidReward = Number(event.liquid_reward ?? 0)
+    const newUserReward = Number(event.new_user_reward ?? 0)
+    const referralReward = Number(event.referral_reward ?? 0)
+
+    const totalInBaseUnits =
+      lockedReward + liquidReward + newUserReward + referralReward
+
+    const dailyIncrement = totalInBaseUnits / 10 ** Number(decimals)
+    if (!Number.isFinite(dailyIncrement) || dailyIncrement === 0) {
+      continue
+    }
+
+    normalizedDailyDeltas.set(
+      triggerDate,
+      (normalizedDailyDeltas.get(triggerDate) ?? 0) + dailyIncrement
+    )
+  }
+
+  const earliestRewardDate =
+    [...normalizedDailyDeltas.keys()].sort()[0] ?? [...eventDates].sort()[0]
+
+  if (!earliestRewardDate) {
+    return []
+  }
+
+  const startDate = new Date(`${earliestRewardDate}T00:00:00Z`)
+  const todayUtc = new Date()
+  todayUtc.setUTCHours(0, 0, 0, 0)
+
+  const cumulativeSeries: RewardSeriesPoint[] = []
+  let cumulativeRewards = 0
+
+  for (
+    const cursor = new Date(startDate);
+    cursor <= todayUtc;
+    cursor.setUTCDate(cursor.getUTCDate() + 1)
+  ) {
+    const cursorKey = cursor.toISOString().slice(0, 10)
+    const dailyIncrement = normalizedDailyDeltas.get(cursorKey) ?? 0
+    cumulativeRewards += dailyIncrement
+
+    cumulativeSeries.push({
+      trigger_date: cursorKey,
+      rewards: cumulativeRewards,
+    })
+  }
+
+  return cumulativeSeries
 }
 
 export function RewardChartCard({ address }: RewardChartCardProps) {
-  const { data, isLoading, isError } = useRewardChartData(address);
+  const { data: rewardEvents, isLoading, isError } = useRewardChartData(address)
 
-  const { getFrdToken } = useData();
-  const { decimals = 9, symbol = "FRD" } = getFrdToken();
+  const { getFrdToken } = useData()
+  const { decimals = 9, symbol = "FRD" } = getFrdToken()
 
-  // Assumes: `data` is the array from your example, `decimals` is a number
-  const filteredData = (() => {
-    if (!Array.isArray(data) || data.length === 0) return [];
+  const rewardSeries = useMemo(
+    () => buildRewardSeries(rewardEvents, decimals),
+    [rewardEvents, decimals]
+  )
 
-    // 1) Sort events by trigger_date asc (string like "YYYY-MM-DD HH:mm:ss")
-    const sorted = [...data].sort((a, b) =>
-      a.trigger_date.localeCompare(b.trigger_date)
-    );
+  const minimumRewardValue =
+    minBy(rewardSeries, (point) => point.rewards)?.rewards ?? 0
 
-    // 2) Aggregate daily increments (sum of event-level rewards per day)
-    //    We'll divide by 10**decimals to get human-readable units.
-    const dayIncrements = new Map<string, number>();
-
-    for (const item of sorted) {
-      // Normalize to YYYY-MM-DD
-      const date = item.trigger_date.slice(0, 10);
-
-      // Per-event increment (not totals!)
-      const incRaw =
-        (Number(item.locked_reward || 0) +
-          Number(item.liquid_reward || 0) +
-          Number(item.new_user_reward || 0) +
-          Number(item.referral_reward || 0)) /
-        (10 ** Number(decimals || 0));
-
-      if (!Number.isFinite(incRaw) || incRaw === 0) {
-        // Ignore non-finite and zero increments; deposits will be 0 anyway
-        continue;
-      }
-
-      dayIncrements.set(date, (dayIncrements.get(date) ?? 0) + incRaw);
+  const normalizedRewardSeries = useMemo(() => {
+    if (rewardSeries.length === 0) {
+      return []
     }
 
-    // If there are no reward increments at all, still return a flat series from first date?
-    // Choose first date from either events or from dayIncrements keys.
-    const allDates = new Set<string>(sorted.map(e => e.trigger_date.slice(0, 10)));
-    const firstDateStr =
-      [...dayIncrements.keys()].sort()[0] ??
-      [...allDates].sort()[0];
+    return rewardSeries.map((point) => ({
+      ...point,
+      rewards: point.rewards - minimumRewardValue,
+    }))
+  }, [rewardSeries, minimumRewardValue])
 
-    if (!firstDateStr) return [];
-
-    // 3) Build continuous daily series from first date to today (UTC midnight)
-    const firstDate = new Date(`${firstDateStr}T00:00:00Z`);
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
-
-    const result: { trigger_date: string; rewards: number }[] = [];
-
-    // Start from 0 and accumulate daily increments
-    let cumulative = 0;
-
-    // If you want the first day to start at 0 and then show 0 on days
-    // without increments until a reward arrives, leave as is.
-    for (let d = new Date(firstDate); d <= today; d.setUTCDate(d.getUTCDate() + 1)) {
-      const dateStr = d.toISOString().slice(0, 10);
-      const inc = dayIncrements.get(dateStr) ?? 0;
-      cumulative += inc;
-
-      result.push({
-        trigger_date: dateStr,
-        rewards: cumulative,
-      });
-    }
-
-    return result;
-  })();
+  const shouldShowSkeleton = isLoading || isError
 
   return (
     <Card className="col-span-3">
@@ -110,66 +155,60 @@ export function RewardChartCard({ address }: RewardChartCardProps) {
         <CardTitle>Total rewards</CardTitle>
       </CardHeader>
       <CardContent>
-        {(isLoading || isError) ? <Skeleton className="aspect-auto h-[220px] w-full" /> : <ChartContainer
-          config={chartConfig}
-          className="aspect-auto h-[220px] w-full"
-        >
-          <AreaChart data={filteredData}>
-            <defs>
-              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="#1447e5"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="#1447e5"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-            </defs>
+        {shouldShowSkeleton ? (
+          <Skeleton className="aspect-auto h-[230px] w-full" />
+        ) : (
+          <ChartContainer
+            config={rewardChartConfig}
+            className="aspect-auto h-[230px] w-full"
+          >
+            <AreaChart data={normalizedRewardSeries}>
+              <defs>
+                <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#1447e5" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#1447e5" stopOpacity={0.1} />
+                </linearGradient>
+              </defs>
 
-            <XAxis
-              dataKey="trigger_date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
-              tickFormatter={(value) => {
-                const date = new Date(value)
-                return date.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })
-              }}
-            />
-            <ChartTooltip
-              cursor={false}
-              formatter={(v) => `${v} ${symbol}`}
-              content={
-                <ChartTooltipContent
-                  labelFormatter={(value) => {
-
-                    return new Date(value).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    })
-                  }}
-                  indicator="dot"
-                />
-              }
-            />
-            <Area
-              dataKey="rewards"
-              type="natural"
-              fill="url(#fillDesktop)"
-              stroke="#1447e5"
-              stackId="a"
-
-            />
-          </AreaChart>
-        </ChartContainer>}
+              <XAxis
+                dataKey="trigger_date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                minTickGap={32}
+                tickFormatter={(value) => {
+                  const date = new Date(value)
+                  return date.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })
+                }}
+              />
+              <ChartTooltip
+                cursor={false}
+                formatter={(value) => `${toLocalString(Number(value) + minimumRewardValue)} ${symbol}`}
+                content={
+                  <ChartTooltipContent
+                    labelFormatter={(value) => {
+                      return new Date(value).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })
+                    }}
+                    indicator="dot"
+                  />
+                }
+              />
+              <Area
+                dataKey="rewards"
+                type="natural"
+                fill="url(#fillDesktop)"
+                stroke="#1447e5"
+                stackId="a"
+              />
+            </AreaChart>
+          </ChartContainer>
+        )}
       </CardContent>
     </Card>
   )
