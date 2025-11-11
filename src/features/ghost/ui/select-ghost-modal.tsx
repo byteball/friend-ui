@@ -46,7 +46,7 @@ export const SelectGhostModal: FC<ISelectGhostModalProps> = ({ children, address
       </DialogHeader>
 
       <div className="grid grid-cols-2 gap-8">
-        <div className="grid-span-1 flex flex-col gap-y-4">
+        <div className="md:col-span-1 col-span-2 flex flex-col gap-y-4">
           <div>Current selection: {ghostName}</div>
           <div>
             <Select
@@ -84,7 +84,7 @@ export const SelectGhostModal: FC<ISelectGhostModalProps> = ({ children, address
           </div>
         </div>
 
-        <div className="grid-span-1">
+        <div className="md:col-span-1 col-span-2">
           <PuzzleImage
             src={ghostImageFilename}
             width={300}

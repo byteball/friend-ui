@@ -3,7 +3,7 @@
 import { appConfig } from "@/app-config";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardSharedLink, CardTitle } from "@/components/ui/card";
 import { QRButton } from "@/components/ui/qr-button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -44,12 +44,15 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
   });
 
   return (
-    <Card className="col-span-3">
-      <CardContent>
+    <Card className="col-span-6 md:col-span-3">
+      <CardHeader>
         <CardTitle>
-          {isLoading ? <Skeleton className="w-full h-4" /> : <div>Become friends with the ghost of {ghostName}</div>}
+          {isLoading ? <Skeleton className="w-[calc(100%-20px)] h-4" /> : <div>Become friends with the ghost of {ghostName}</div>}
         </CardTitle>
-        <div className="flex justify-between mt-2 gap-8">
+        <CardSharedLink href="/rewards" tooltipText="Share your rewards" />
+      </CardHeader>
+      <CardContent>
+        <div className="flex md:flex-row flex-col justify-between mt-2 gap-8">
           <div className="mt-2 flex flex-col gap-1">
 
             <TooltipProvider>

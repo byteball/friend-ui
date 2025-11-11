@@ -23,37 +23,39 @@ export const ProfileShareLinks: FC<ProfileShareLinksProps> = ({
   title
 }) => (
   <div>
-    <div className="flex items-center gap-4">
-      <div className="text-muted-foreground">Share profile</div>
+    <div className="flex md:flex-row flex-col md:items-center gap-4">
+      <div className="text-muted-foreground md:block hidden">Share profile</div>
 
-      <TelegramShareButton
-        url={url}
-        title={title}
-      >
-        <TelegramIcon size={32} round />
-      </TelegramShareButton>
+      <div className='flex gap-4'>
+        <TelegramShareButton
+          url={url}
+          title={title}
+        >
+          <TelegramIcon size={32} round />
+        </TelegramShareButton>
 
-      <FacebookShareButton
-        url={url}
-        quote={title}
-        hashtag={'#friends #crypto #obyte'}
-      >
-        <FacebookIcon size={32} round />
-      </FacebookShareButton>
+        <FacebookShareButton
+          url={url}
+          quote={title}
+          hashtag={'#friends #crypto #obyte'}
+        >
+          <FacebookIcon size={32} round />
+        </FacebookShareButton>
 
-      <TwitterShareButton
-        url={url}
-        title={title}
-      >
-        <TwitterIcon size={32} round />
-      </TwitterShareButton>
+        <TwitterShareButton
+          url={url}
+          title={title}
+        >
+          <TwitterIcon size={32} round />
+        </TwitterShareButton>
 
-      <RedditShareButton
-        url={url}
-        title={title}
-      >
-        <RedditIcon size={32} round />
-      </RedditShareButton>
+        <RedditShareButton
+          url={url}
+          title={title}
+        >
+          <RedditIcon size={32} round />
+        </RedditShareButton>
+      </div>
 
     </div>
   </div>)

@@ -1,6 +1,8 @@
+import { LinkIcon } from "lucide-react"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip"
 
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -20,7 +22,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-header"
       className={cn(
-        "@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6",
+        "@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 relative",
         className
       )}
       {...props}
@@ -81,7 +83,30 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+function CardSharedLink({ href, tooltipText, className = "" }: React.ComponentProps<"div"> & { className?: string; href?: string; tooltipText: string }) {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div
+            data-slot="card-shared-link"
+            className={cn(
+              "text-sm text-primary underline-offset-4 hover:underline right-3 -top-2.5 absolute",
+              className
+            )}>
+
+            <LinkIcon className="inline h-6 w-6" />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          {tooltipText}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  )
+}
+
 export {
-  Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
+  Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardSharedLink, CardTitle
 }
 

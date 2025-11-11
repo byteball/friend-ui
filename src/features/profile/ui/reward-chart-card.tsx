@@ -8,6 +8,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CardSharedLink,
   CardTitle,
 } from "@/components/ui/card"
 import {
@@ -150,9 +151,10 @@ export function RewardChartCard({ address }: RewardChartCardProps) {
   const shouldShowSkeleton = isLoading || isError
 
   return (
-    <Card className="col-span-3">
+    <Card className="col-span-6 md:col-span-3">
       <CardHeader>
         <CardTitle>Total rewards</CardTitle>
+        <CardSharedLink href="/rewards" tooltipText="Share your rewards" />
       </CardHeader>
       <CardContent>
         {shouldShowSkeleton ? (

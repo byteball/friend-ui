@@ -31,7 +31,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
   const friends = getFriendList(state, address);
 
   return <div className="grid grid-cols-6 gap-8 mt-10">
-    <Card className="col-span-2">
+    <Card className="col-span-6 md:col-span-2">
       <CardContent>
         <CardTitle>Total balance</CardTitle>
         <div className="mt-2 text-3xl">{toLocalString(Number(totalBalance / 10 ** frdDecimals).toPrecision(frdDecimals))} <small>{frdSymbol}</small></div>
@@ -42,7 +42,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       </CardContent>
     </Card>
 
-    <Card className="col-span-2">
+    <Card className="col-span-6 md:col-span-2">
       <CardContent>
         <CardTitle>Total rewards</CardTitle>
         <div className="mt-2 text-3xl">
@@ -55,7 +55,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       </CardContent>
     </Card>
 
-    <Card className="col-span-2">
+    <Card className="col-span-6 md:col-span-2">
       <CardContent>
         <CardTitle>Total friends</CardTitle>
         <div className="mt-2 text-3xl">{toLocalString(friends.length)}</div>
