@@ -5,7 +5,7 @@ import { ClaimForm } from "./claim-form";
 interface ClaimWidgetProps { }
 
 export const ClaimWidget: FC<ClaimWidgetProps> = ({ }) => (
-  <div className="max-w-4xl gap-4 mx-auto mt-16">
+  <div className="max-w-4xl gap-4 mx-auto mt-4 md:mt-12">
     <div className="rounded-lg bg-gray-50">
       <div className="w-full px-4 py-5 sm:p-6">
         <ClaimForm />
