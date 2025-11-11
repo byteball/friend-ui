@@ -3,7 +3,7 @@ import { PuzzleImage } from "../ui/puzzle-image"
 
 export const HowItWorksBlock = () => (<div>
   <div className="grid grid-cols-3 gap-8 max-w-5xl mx-auto">
-    <div className="col-span-2 p-4">
+    <div className="col-span-3 md:col-span-2 p-4">
 
       <div className="flex gap-4 items-center mb-6">
         <div className="shrink-0 rounded-full w-8 h-8 bg-gray-300/30 flex items-center justify-center font-semibold text-muted-foreground">1</div>
@@ -26,7 +26,7 @@ export const HowItWorksBlock = () => (<div>
       </div>
     </div>
 
-    <div className="bg-white rounded-xl p-4 flex items-center">
+    <div className="bg-white hidden rounded-xl p-4 md:flex items-center">
       <img src="/handshake.svg" width="100%" alt="Handshake" />
     </div>
 
@@ -34,7 +34,7 @@ export const HowItWorksBlock = () => (<div>
 
   <div className="grid grid-cols-3 items-center gap-8 max-w-5xl mx-auto mt-8">
 
-    <div className="col-span-1 select-none">
+    <div className="col-span-3 md:col-span-1 select-none">
       <PuzzleImage
         src="/ghosts/tim-may.png"
         rows={2}
@@ -47,7 +47,7 @@ export const HowItWorksBlock = () => (<div>
       />
     </div>
 
-    <div className="col-span-2 space-y-4">
+    <div className="col-span-3 md:col-span-2 space-y-4">
       <p>
         After completing a 4-day streak of making new friends daily, you can become friends with the ghost of a famous cypherpunk, such as Satoshi Nakamoto, Tim May, Hal Finney, and others. After an additional 9 days, you can meet another, and so on.
       </p>
