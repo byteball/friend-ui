@@ -4,12 +4,12 @@ import { useMemo } from "react"
 import { Area, AreaChart, XAxis } from "recharts"
 
 import { useData } from "@/app/context"
+import { CardFooterReferral } from "@/components/layouts/card-footer-refferal"
 import {
   Card,
   CardContent,
   CardHeader,
-  CardSharedLink,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card"
 import {
   ChartConfig,
@@ -154,15 +154,14 @@ export function RewardChartCard({ address }: RewardChartCardProps) {
     <Card className="col-span-6 md:col-span-3">
       <CardHeader>
         <CardTitle>Total rewards</CardTitle>
-        <CardSharedLink href="/rewards" tooltipText="Share your rewards" />
       </CardHeader>
-      <CardContent>
+      <CardContent className="min-h-[275px]">
         {shouldShowSkeleton ? (
-          <Skeleton className="aspect-auto h-[230px] w-full" />
+          <Skeleton className="aspect-auto h-[260px] w-full" />
         ) : (
           <ChartContainer
             config={rewardChartConfig}
-            className="aspect-auto h-[230px] w-full"
+            className="aspect-auto h-[260px] w-full"
           >
             <AreaChart data={normalizedRewardSeries}>
               <defs>
@@ -212,6 +211,8 @@ export function RewardChartCard({ address }: RewardChartCardProps) {
           </ChartContainer>
         )}
       </CardContent>
+
+      <CardFooterReferral query="?content=chart" />
     </Card>
   )
 }

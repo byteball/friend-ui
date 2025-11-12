@@ -1,9 +1,12 @@
 "use client"
 
+import "client-only";
+
 import { appConfig } from "@/app-config";
+import { CardFooterReferral } from "@/components/layouts/card-footer-refferal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardSharedLink, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { QRButton } from "@/components/ui/qr-button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -11,6 +14,7 @@ import { WALLET_COOKIE_NAME } from "@/constants";
 import { generateLink } from "@/lib/generate-link";
 import cn from "classnames";
 import { useReactiveGetCookie } from "cookies-next";
+import { usePathname } from "next/navigation";
 import Image from 'rc-image';
 import { FC } from "react";
 import { getRequiredStreak } from "../domain/get-required-streak";
@@ -32,6 +36,8 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
   const requiredStreak = getRequiredStreak(userData?.current_ghost_num);
   const getCookie = useReactiveGetCookie();
   const walletAddress = getCookie(WALLET_COOKIE_NAME)
+  const pathname = usePathname()
+  const host = typeof window !== 'undefined' ? window.location.host : ''
 
   const url = generateLink({
     amount: 1e4,
@@ -49,9 +55,8 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
         <CardTitle>
           {isLoading ? <Skeleton className="w-[calc(100%-20px)] h-4" /> : <div>Become friends with the ghost of {ghostName}</div>}
         </CardTitle>
-        <CardSharedLink href="/rewards" tooltipText="Share your rewards" />
       </CardHeader>
-      <CardContent>
+      <CardContent className="min-h-[275px]">
         <div className="flex md:flex-row flex-col justify-between mt-2 gap-8">
           <div className="mt-2 flex flex-col gap-1">
 
@@ -113,6 +118,8 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
             </div>}
         </div>
       </CardContent>
-    </Card>
+
+      <CardFooterReferral />
+    </Card >
   )
 }
