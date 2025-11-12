@@ -14,7 +14,6 @@ import { WALLET_COOKIE_NAME } from "@/constants";
 import { generateLink } from "@/lib/generate-link";
 import cn from "classnames";
 import { useReactiveGetCookie } from "cookies-next";
-import { usePathname } from "next/navigation";
 import Image from 'rc-image';
 import { FC } from "react";
 import { getRequiredStreak } from "../domain/get-required-streak";
@@ -35,9 +34,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
 
   const requiredStreak = getRequiredStreak(userData?.current_ghost_num);
   const getCookie = useReactiveGetCookie();
-  const walletAddress = getCookie(WALLET_COOKIE_NAME)
-  const pathname = usePathname()
-  const host = typeof window !== 'undefined' ? window.location.host : ''
+  const walletAddress = getCookie(WALLET_COOKIE_NAME);
 
   const url = generateLink({
     amount: 1e4,
@@ -119,7 +116,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
         </div>
       </CardContent>
 
-      <CardFooterReferral />
+      <CardFooterReferral query={`?refAddr=${address}`} />
     </Card >
   )
 }

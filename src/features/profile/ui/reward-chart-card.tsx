@@ -212,7 +212,7 @@ export function RewardChartCard({ address }: RewardChartCardProps) {
         )}
       </CardContent>
 
-      <CardFooterReferral query="?content=chart" />
+      <CardFooterReferral query={`?type=chart&refAddr=${address}`} />
     </Card>
   )
 }
