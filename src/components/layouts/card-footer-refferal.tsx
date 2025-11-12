@@ -28,7 +28,7 @@ export const CardFooterReferral: FC<CardFooterReferralProps> = ({ query = "" }) 
     {pathname && host ? <CardFooter className="items-end justify-end">
       <FieldGroup>
         <Field>
-          <FieldLabel>Share to get new friends and referrals</FieldLabel>
+          <FieldLabel>Share the link to get new friends and referrals</FieldLabel>
           <InputGroup>
             <InputGroupInput value={`https://${host + pathname}${query}`} readOnly />
             <InputGroupAddon align="inline-end">
