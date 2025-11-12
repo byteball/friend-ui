@@ -48,7 +48,7 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
   })
 
   return <div className="grid gap-4">
-    <h2 className="text-3xl font-bold">Claim reward</h2>
+    <h2 className="text-3xl font-bold">Claim rewards for becoming friends</h2>
 
     <div className="grid gap-4 text-muted-foreground">
       <div>You and your new friend must claim rewards here within 10 minutes of each other. If any of you is late, you have to claim again.</div>

@@ -51,7 +51,7 @@ export default function Home() {
           value="claim"
           className="cursor-pointer text-md data-[state=active]:after:bg-primary relative rounded-none py-2 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
         >
-          Claim
+          New friendship
         </TabsTrigger>
       </TabsList>
       <TabsContent value="deposit">
