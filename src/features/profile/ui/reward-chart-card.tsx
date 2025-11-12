@@ -155,7 +155,7 @@ export function RewardChartCard({ address }: RewardChartCardProps) {
       <CardHeader>
         <CardTitle>Total rewards</CardTitle>
       </CardHeader>
-      <CardContent className="min-h-[275px]">
+      <CardContent className="min-h-[300px]">
         {shouldShowSkeleton ? (
           <Skeleton className="aspect-auto h-[260px] w-full" />
         ) : (

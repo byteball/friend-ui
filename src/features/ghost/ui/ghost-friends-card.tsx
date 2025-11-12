@@ -29,7 +29,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
   const { data: {
     ghostName,
     ghostFriendIds,
-    allGhosts
+    allGhosts,
   }, isLoading } = useUserGhost(address);
 
   const requiredStreak = getRequiredStreak(userData?.current_ghost_num);
@@ -50,12 +50,14 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
     <Card className="col-span-6 md:col-span-3">
       <CardHeader>
         <CardTitle>
-          {isLoading ? <Skeleton className="w-[calc(100%-20px)] h-4" /> : <div>Become friends with the ghost of {ghostName}</div>}
+          {isLoading
+            ? <Skeleton className="w-[calc(100%-20px)] h-12" />
+            : <div className="leading-6">On {userData?.current_streak ?? 0} out of {requiredStreak} days streak to become friends with the ghost of {ghostName}</div>}
         </CardTitle>
       </CardHeader>
-      <CardContent className="min-h-[275px]">
-        <div className="flex md:flex-row flex-col justify-between mt-2 gap-8">
-          <div className="mt-2 flex flex-col gap-1">
+      <CardContent className="min-h-[268px]">
+        <div className="flex md:flex-row flex-col justify-between gap-4">
+          <div className="mt-2 flex flex-col">
 
             <TooltipProvider>
               <div className="*:data-[slot=tooltip-trigger]:ring-background flex -space-x-2 *:data-[slot=tooltip-trigger]:ring-2 *:data-[slot=tooltip-trigger]:hover:z-10">
@@ -96,7 +98,10 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
           </div>
 
           {isLoading
-            ? <Skeleton className="w-[250px] h-[250px]" />
+            ? <div>
+              <Skeleton className="w-[230px] h-[230px]" />
+              <Skeleton className="w-full h-[36px]" />
+            </div>
             : <div className="text-center">
               <div className="w-[230px] h-[230px] relative bg-accent rounded-md overflow-hidden animate-pulse [&:has(img)]:animate-none">
                 <Image
