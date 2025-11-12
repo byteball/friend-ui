@@ -38,6 +38,8 @@ export const HeroBlock = () => {
           <p className="text-center mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
             <Highlighter action="underline" color="#FF9800">Make 1% a day</Highlighter> by making <Highlighter action="underline" color="#87CEFA">friends</Highlighter> every day
           </p>
+
+          <p className="text-center mt-2 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">and spreading the word about Obyte’s unstoppable, censorship-resistant tech</p>
         </div>
       </div>
 
