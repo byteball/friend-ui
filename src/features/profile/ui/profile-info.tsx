@@ -12,6 +12,7 @@ import { isActiveUser } from "@/lib/is-active-user";
 
 import { appConfig } from "@/app-config";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { getContactUrlByUsername } from "@/lib/get-contact-url-by-username";
 
 interface ProfileInfoProps {
   address: string;
@@ -28,37 +29,20 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
   const store = globalThis.__GLOBAL_STORE__;
 
   if (!store) {
+
+    // this should never happen
     console.error("error(getProfileUsername): global store missing");
     return null;
   }
 
-  const client = globalThis.__OBYTE_CLIENT__;
+  const tgAttestation = await store.getTgAttestation(address);
+  const discordAttestation = await store.getDiscordAttestation(address);
 
-  let tgUsername = store.tgAttestations.get(address);
-  let discordUsername = store.discordAttestations.get(address);
+  const tgUsername = tgAttestation?.username;
+  const tgUrl = getContactUrlByUsername(tgUsername, "telegram", tgAttestation?.userId);
 
-  let attestations = [];
-
-  if ((!tgUsername || !discordUsername) && client) {
-    // @ts-expect-error not error
-    attestations = await client.api.getAttestations({ address }).catch(() => null);
-  }
-
-  if (!tgUsername) {
-    tgUsername = attestations.find(att => att.attestor_address === appConfig.NEXT_PUBLIC_TELEGRAM_ATTESTOR)?.profile?.username as string | undefined;
-
-    if (tgUsername) {
-      store.tgAttestations.set(address, tgUsername);
-    }
-  }
-
-  if (!discordUsername) {
-    discordUsername = attestations.find(att => att.attestor_address === appConfig.NEXT_PUBLIC_DISCORD_ATTESTOR)?.profile?.username as string | undefined;
-
-    if (discordUsername) {
-      store.discordAttestations.set(address, discordUsername);
-    }
-  }
+  const discordUsername = discordAttestation?.username;
+  const discordUrl = getContactUrlByUsername(discordUsername, "discord", discordAttestation?.userId);
 
   const connectUrl = generateLink({
     aa: appConfig.AA_ADDRESS,
@@ -102,7 +86,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
             </Tooltip>
           </TooltipProvider>
 
-          <div>{tgUsername}</div>
+          <div>{tgUrl ? <a href={tgUrl} target="_blank" rel="noopener noreferrer">{tgUsername}</a> : tgUsername}</div>
         </div>}
 
         {discordUsername && <div className="flex gap-x-2">
@@ -120,7 +104,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
             </Tooltip>
           </TooltipProvider>
 
-          <div>{discordUsername}</div>
+          <div>{discordUrl ? <a href={discordUrl} target="_blank" rel="noopener noreferrer">{discordUsername}</a> : discordUsername}</div>
         </div>}
         {/* 
         <div>

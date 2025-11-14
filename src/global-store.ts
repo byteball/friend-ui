@@ -17,16 +17,22 @@ interface GlobalStoreOptions {
   initGovernanceState: Record<string, any>;
 }
 
+interface IAttestation {
+  username?: string;
+  userId?: string;
+}
+
 const ATTESTATION_TTL = 1000 * 60 * 60; // 1 hour
 
 export class GlobalStore extends EventEmitter {
+  client: typeof globalThis.__OBYTE_CLIENT__;
   state: LRUCache<string, any>;
   governanceState: LRUCache<string, any>;
   tokens: LRUCache<string, TokenMeta>;
   leaderboardData: LRUCache<string, UserRank>;
 
-  tgAttestations: LRUCache<string, string>;
-  discordAttestations: LRUCache<string, string>;
+  tgAttestations: LRUCache<string, IAttestation>;
+  discordAttestations: LRUCache<string, IAttestation>;
 
   ready: boolean = false;
   stateUpdateId: number;
@@ -56,12 +62,12 @@ export class GlobalStore extends EventEmitter {
       ttl: 0,
     });
 
-    this.tgAttestations = new LRUCache<string, string>({
+    this.tgAttestations = new LRUCache<string, IAttestation>({
       max: 500,
       ttl: ATTESTATION_TTL
     });
 
-    this.discordAttestations = new LRUCache<string, string>({
+    this.discordAttestations = new LRUCache<string, IAttestation>({
       max: 500,
       ttl: ATTESTATION_TTL
     });
@@ -69,6 +75,8 @@ export class GlobalStore extends EventEmitter {
     this.initializeState(initState);
     this.initializeGovernanceState(initGovernanceState);
     this.initializeTokens(initTokens);
+
+    this.client = globalThis.__OBYTE_CLIENT__;
 
     this.ready = true;
     this.stateUpdateId = 0;
@@ -213,5 +221,49 @@ export class GlobalStore extends EventEmitter {
     for (const [addr, data] of newEntries) {
       this.leaderboardData.set(addr, data);
     }
+  }
+
+  // Attestations management
+
+  async getTgAttestation(address: string): Promise<IAttestation | null> {
+    if (this.tgAttestations.has(address)) {
+      return this.tgAttestations.get(address) || null;
+    }
+
+    if (!this.client) {
+      console.error("error(getTgAttestation): obyte client missing");
+      return null;
+    }
+
+    const attestations = await this.client.api.getAttestations({ address }).catch(() => ([]));
+
+    const tgAttestation = attestations.find(att => att.attestor_address === appConfig.NEXT_PUBLIC_TELEGRAM_ATTESTOR)?.profile as IAttestation | undefined;
+
+    if (tgAttestation) {
+      this.tgAttestations.set(address, tgAttestation);
+    }
+
+    return tgAttestation || null;
+  }
+
+  async getDiscordAttestation(address: string): Promise<IAttestation | null> {
+    if (this.discordAttestations.has(address)) {
+      return this.discordAttestations.get(address) || null;
+    }
+
+    if (!this.client) {
+      console.error("error(discordAttestations): obyte client missing");
+      return null;
+    }
+
+    const attestations = await this.client.api.getAttestations({ address }).catch(() => null) || [];
+
+    const discordAttestation = attestations.find(att => att.attestor_address === appConfig.NEXT_PUBLIC_DISCORD_ATTESTOR)?.profile as IAttestation | undefined;
+
+    if (discordAttestation) {
+      this.discordAttestations.set(address, discordAttestation);
+    }
+
+    return discordAttestation || null;
   }
 }

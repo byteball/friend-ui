@@ -21,40 +21,23 @@ export const getProfileUsername = async (address: string): Promise<string | null
 
     if (cityName) return cityName;
 
-    if (store.tgAttestations.has(address)) {
-      return store.tgAttestations.get(address) || null;
+    const tgAttestation = await store.getTgAttestation(address);
+
+    if (tgAttestation && tgAttestation?.username) {
+      return tgAttestation.username;
     }
 
-    const attestations = await client.api.getAttestations({ address }).catch(() => null);
-    if (!attestations) return address.slice(0, 6) + "..." + address.slice(-4);
+    const discordAttestation = await store.getDiscordAttestation(address);
 
-    // @ts-expect-error not error
-    const telegramName = attestations.find(att => att.attestor_address === appConfig.NEXT_PUBLIC_TELEGRAM_ATTESTOR)?.profile?.username as string | undefined;
-
-    if (telegramName) {
-      store.tgAttestations.set(address, telegramName);
-
-      return telegramName;
+    if (discordAttestation && discordAttestation?.username) {
+      return discordAttestation.username;
     }
 
-    if (store.discordAttestations.has(address)) {
-      return store.discordAttestations.get(address) || null;
-    }
 
-    // @ts-expect-error not error
-    const discordName = attestations.find(att => att.attestor_address === appConfig.NEXT_PUBLIC_DISCORD_ATTESTOR)?.profile?.username as string | undefined;
+  } catch (error) {
+    console.error("error(getProfileUsername):", error);
 
-
-    if (discordName) {
-      store.discordAttestations.set(address, discordName);
-
-      return discordName;
-    }
-
-    throw new Error("no attestations found");
-
-  } catch (e) {
-    console.error("error(getProfileUsername):", e);
+    return address.slice(0, 6) + "..." + address.slice(-4);
   }
 
   return address.slice(0, 6) + "..." + address.slice(-4);
