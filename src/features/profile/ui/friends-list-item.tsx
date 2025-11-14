@@ -3,7 +3,6 @@ import Link from "next/link";
 import { FC } from "react";
 import "server-only";
 
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { IFriendRewards } from "@/lib/calculations/get-friend-list";
 import { formatDateAsUTC } from "@/lib/format-date-as-utc";
 import { getProfileUsername } from "@/lib/get-profile-username.server";
@@ -18,11 +17,16 @@ interface IFriendsListItemProps {
   rewards: IFriendRewards;
 }
 
-export const FriendsListItem: FC<IFriendsListItemProps> = async ({ friendAddress, rewards, frdAssetDecimals, frdAssetSymbol, date, isGhost = false }) => {
+export const FriendsListItem: FC<IFriendsListItemProps> = async ({ friendAddress, rewards, frdAssetDecimals, frdAssetSymbol: frdSmb, date, isGhost = false }) => {
   const username = isGhost ? friendAddress : await getProfileUsername(friendAddress) ?? friendAddress.slice(0, 6) + "..." + friendAddress.slice(-4);
-  const totalRewards = (rewards.liquid || 0) + (rewards.locked || 0) + (rewards.new_user_reward || 0);
 
   const cns = "text-xl font-semibold first-letter:uppercase";
+
+  const liquidRewardsView = toLocalString((rewards.liquid || 0) / 10 ** frdAssetDecimals)
+  const lockedRewardsView = toLocalString(((rewards.locked || 0) + (rewards.new_user_reward || 0)) / 10 ** frdAssetDecimals);
+
+  const hasNewUserReward = rewards.new_user_reward > 0;
+  const newUserRewardView = hasNewUserReward ? toLocalString((rewards.new_user_reward || 0) / 10 ** frdAssetDecimals) : null;
 
   return <div className="flex flex-col gap-2">
     {isGhost
@@ -35,24 +39,8 @@ export const FriendsListItem: FC<IFriendsListItemProps> = async ({ friendAddress
           {username}
         </Link>
       </div>}
-    <div className="text-muted-foreground">Became friends on {formatDateAsUTC(new Date(date * 1000))} and brought <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger>
-          <span className="underline underline-offset-4 text-black decoration-dotted">
-            {toLocalString(totalRewards / 10 ** frdAssetDecimals)} {frdAssetSymbol}
-          </span>
-        </TooltipTrigger>
-
-        <TooltipContent>
-          <div>
-            <div>Liquid rewards: {toLocalString((rewards.liquid || 0) / 10 ** frdAssetDecimals)} {frdAssetSymbol}</div>
-            <div>Locked rewards: {toLocalString((rewards.locked || 0) / 10 ** frdAssetDecimals)} {frdAssetSymbol}</div>
-            <div>New user reward: {toLocalString((rewards.new_user_reward || 0) / 10 ** frdAssetDecimals)} {frdAssetSymbol}</div>
-          </div>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-      {" "} rewards
+    <div className="text-muted-foreground">Became friends on {formatDateAsUTC(new Date(date * 1000))}, rewards:    {liquidRewardsView} {frdSmb} liquid,{" "}
+      {lockedRewardsView} {frdSmb} locked {hasNewUserReward ? `(including ${newUserRewardView} ${frdSmb} new user reward)` : null}
     </div>
   </div>
 }
