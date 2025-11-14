@@ -15,7 +15,7 @@ export const ActiveUserLabel: FC<ActiveUserLabelProps> = ({ isActive }: { isActi
       <TooltipTrigger>
         <VerifiedIcon className="w-10 h-10 text-blue-500" />
       </TooltipTrigger>
-      <TooltipContent >
+      <TooltipContent>
         This user already has a locked deposit, and you can become their friend.
       </TooltipContent>
     </Tooltip>
