@@ -86,7 +86,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
             </Tooltip>
           </TooltipProvider>
 
-          <div>{tgUrl ? <a href={tgUrl} target="_blank" rel="noopener noreferrer">{tgUsername}</a> : tgUsername}</div>
+          <div>{tgUrl ? <a href={tgUrl} target="_blank" rel="noopener noreferrer" className="text-blue-700">{tgUsername}</a> : tgUsername}</div>
         </div>}
 
         {discordUsername && <div className="flex gap-x-2">
@@ -104,7 +104,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
             </Tooltip>
           </TooltipProvider>
 
-          <div>{discordUrl ? <a href={discordUrl} target="_blank" rel="noopener noreferrer">{discordUsername}</a> : discordUsername}</div>
+          <div>{discordUrl ? <a href={discordUrl} target="_blank" rel="noopener noreferrer" className="text-blue-700">{discordUsername}</a> : discordUsername}</div>
         </div>}
         {/* 
         <div>
