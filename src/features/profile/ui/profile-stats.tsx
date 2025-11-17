@@ -8,7 +8,7 @@ import { parseDateFromAA } from "@/lib/parse-date-from-aa";
 import { toLocalString } from "@/lib/to-local-string";
 import { FC } from "react";
 import { GhostFriendsCard } from "../../ghost/ui/ghost-friends-card";
-import { RewardChartCard } from "./reward-chart-card";
+import { TotalBalanceChartCardProps } from "./total-balance-chart-card";
 
 interface ProfileStatsProps {
   address: string;
@@ -75,7 +75,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       address={address}
     />
 
-    <RewardChartCard
+    <TotalBalanceChartCardProps
       address={address}
     />
   </div>
