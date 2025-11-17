@@ -1,11 +1,11 @@
 "use client"
 
-import { cva, type VariantProps } from "class-variance-authority"
 import { useMemo } from "react"
+import { cva, type VariantProps } from "class-variance-authority"
 
+import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { cn } from "@/lib/utils"
 
 function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
   return (
@@ -145,7 +145,7 @@ function FieldDescription({ className, ...props }: React.ComponentProps<"p">) {
       className={cn(
         "text-muted-foreground text-sm leading-normal font-normal group-has-[[data-orientation=horizontal]]/field:text-balance",
         "last:mt-0 nth-last-2:-mt-1 [[data-variant=legend]+&]:-mt-1.5",
-        "[&>a:hover]:text-primary",
+        "[&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4",
         className
       )}
       {...props}
@@ -196,17 +196,21 @@ function FieldError({
       return children
     }
 
-    if (!errors) {
+    if (!errors?.length) {
       return null
     }
 
-    if (errors?.length === 1 && errors[0]?.message) {
-      return errors[0].message
+    const uniqueErrors = [
+      ...new Map(errors.map((error) => [error?.message, error])).values(),
+    ]
+
+    if (uniqueErrors?.length == 1) {
+      return uniqueErrors[0]?.message
     }
 
     return (
       <ul className="ml-4 flex list-disc flex-col gap-1">
-        {errors.map(
+        {uniqueErrors.map(
           (error, index) =>
             error?.message && <li key={index}>{error.message}</li>
         )}
@@ -231,10 +235,14 @@ function FieldError({
 }
 
 export {
-  Field, FieldContent, FieldDescription,
+  Field,
+  FieldLabel,
+  FieldDescription,
   FieldError,
-  FieldGroup, FieldLabel, FieldLegend,
+  FieldGroup,
+  FieldLegend,
   FieldSeparator,
-  FieldSet, FieldTitle
+  FieldSet,
+  FieldContent,
+  FieldTitle,
 }
-
