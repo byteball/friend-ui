@@ -121,7 +121,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
         </div>
       </CardContent>
 
-      <CardFooterReferral query={`?refAddr=${address}`} />
+      <CardFooterReferral />
     </Card >
   )
 }
