@@ -29,7 +29,7 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
   const { rewards, error, changeFriendWallet, isValidFriendWallet, friendWallet } = useRewards();
   const data = useData();
 
-  const { symbol: frdSymbol } = data.getFrdToken();
+  const { symbol: frdSymbol, decimals: frdDecimals } = data.getFrdToken();
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.code === "Enter" && isValidFriendWallet) {
@@ -83,21 +83,23 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
             <DescriptionTerm>Locked rewards</DescriptionTerm>
             <DescriptionDetail>
               <div>
-                {toLocalString((rewards.user1.totalBalance * 0.01) / 10 ** 9)} <small>{frdSymbol}</small> (1% of your total balance {toLocalString(rewards.user1.totalBalance / 10 ** 9)} <small>{frdSymbol}</small>)</div>
+                {toLocalString((rewards.user1.totalBalance * 0.01) / 10 ** frdDecimals)} <small>{frdSymbol}</small> (1% of your total balance {toLocalString(rewards.user1.totalBalance / 10 ** frdDecimals)} <small>{frdSymbol}</small>)</div>
               <div>
-                {toLocalString((rewards?.user1?.new_user_reward ?? 0) / 10 ** 9)} <small>{frdSymbol}</small> (new user reward)
+                {toLocalString((rewards?.user1?.new_user_reward ?? 0) / 10 ** frdDecimals)} <small>{frdSymbol}</small> (new user reward)
               </div>
             </DescriptionDetail>
           </DescriptionGroup>
-          <DescriptionGroup horizontal>
-            <DescriptionTerm>Total rewards</DescriptionTerm>
-            <DescriptionDetail>{toLocalString(rewards.user1.locked / 10 ** 9)} <small>{frdSymbol}</small></DescriptionDetail>
-          </DescriptionGroup>
+
           <DescriptionGroup horizontal>
             <DescriptionTerm>Liquid rewards</DescriptionTerm>
             <DescriptionDetail>
-              {toLocalString(rewards.user1.liquid / 10 ** 9)} <small>{frdSymbol}</small> (0.1% of your total balance {toLocalString(rewards.user1.totalBalance / 10 ** 9)} <small>{frdSymbol}</small>)
+              {toLocalString(rewards.user1.liquid / 10 ** frdDecimals)} <small>{frdSymbol}</small> (0.1% of your total balance {toLocalString(rewards.user1.totalBalance / 10 ** frdDecimals)} <small>{frdSymbol}</small>)
             </DescriptionDetail>
+          </DescriptionGroup>
+
+          <DescriptionGroup horizontal>
+            <DescriptionTerm>Total rewards</DescriptionTerm>
+            <DescriptionDetail>{toLocalString((rewards.user1.locked + rewards.user1.liquid) / 10 ** frdDecimals)} <small>{frdSymbol}</small></DescriptionDetail>
           </DescriptionGroup>
         </DescriptionList> : (!walletAddress ? <div className="text-yellow-600">
           <AddWalletModal>
