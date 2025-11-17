@@ -2,8 +2,8 @@
 
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { FC } from "react";
-import { useClipboard } from 'use-clipboard-copy';
+import { FC, useEffect, useState } from "react";
+import { useClipboard } from "use-clipboard-copy";
 import { CardFooter } from "../ui/card";
 import { Field, FieldGroup, FieldLabel } from "../ui/field";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "../ui/input-group";
@@ -20,22 +20,38 @@ export const CardFooterReferral: FC<CardFooterReferralProps> = ({ query = "" }) 
     copiedTimeout: 1000, // timeout duration in milliseconds
   });
 
-  const host = typeof window !== 'undefined' ? window.location.host : '';
+  const [host, setHost] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    setHost(window.location.host);
+  }, []);
+
+  const referralUrl = host && pathname ? `https://${host + pathname}${query}` : "";
+  const canShare = Boolean(referralUrl);
 
   return <>
     <Separator />
 
-    {pathname && host ? <CardFooter className="items-end justify-end">
+    {canShare ? <CardFooter className="items-end justify-end">
       <FieldGroup>
         <Field>
           <FieldLabel>Share this link to get new friends and referrals</FieldLabel>
           <InputGroup>
-            <InputGroupInput value={`https://${host + pathname}${query}`} readOnly />
+            <InputGroupInput value={referralUrl} readOnly />
             <InputGroupAddon align="inline-end">
               <InputGroupButton
                 onClick={() => {
-                  copy(`https://${host + pathname}${query}`)
+                  if (!canShare) {
+                    return;
+                  }
+
+                  copy(referralUrl);
                 }}
+                disabled={!canShare}
               >
                 {copied ? <CheckIcon className="stroke-green-700" size={6} /> : <CopyIcon size={6} />}
               </InputGroupButton>
