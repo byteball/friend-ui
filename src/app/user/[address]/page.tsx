@@ -13,14 +13,15 @@ export const dynamic = 'force-dynamic';
 
 
 export async function generateMetadata(
-  { params }: { params: Promise<{ address: string }>; searchParams: Promise<Record<string, string | string[]>> }
+  { params, searchParams }: { params: Promise<{ address: string }>; searchParams: Promise<Record<string, string | string[]>> }
 ): Promise<Metadata> {
   const { address } = await params;
   const username = await getProfileUsername(address) || "Anonymous";
   const state = globalThis.__GLOBAL_STORE__?.getState() ?? {};
-
+  const queryParams = await searchParams;
   const userData: IUserData | undefined = state?.[`user_${address}`];
   const friends = getFriendList(state, address);
+  const isChart = queryParams.type === 'chart';
 
   const ceilingPrice = getCeilingPrice(state.constants!);
   const totalBalance = await getTotalBalance(userData?.balances ?? {}, ceilingPrice);
@@ -34,7 +35,7 @@ export async function generateMetadata(
     description: `Profile of user ${username} in Obyte Friends: total ${friends.length} friends, ${toLocalString(totalBalance / 10 ** frdDecimals)} ${frdSymbol} locked`,
     openGraph: {
       images: [
-        `/api/og/puzzle/${address}`,
+        `/api/og/${isChart ? 'chart' : 'puzzle'}/${address}`,
       ]
     },
     twitter: {
