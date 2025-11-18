@@ -4,7 +4,7 @@ import path from "path";
 import sharp from "sharp";
 
 import { appConfig } from "@/app-config";
-import { buildRewardSeries } from "@/features/profile/domain/build-reward-series";
+import { buildTotalBalanceSeries } from "@/features/profile/domain/build-total-balance-series";
 import { getProfileUsername } from "@/lib/get-profile-username.server";
 import { toLocalString } from "@/lib/to-local-string";
 import { minBy } from "lodash";
@@ -13,13 +13,13 @@ import { minBy } from "lodash";
 export const dynamic = "force-dynamic"; // Avoid caching during development
 
 const CHART_DIMENSIONS = {
-  width: 600,
-  height: 400,
-  margin: { top: 12, right: 16, bottom: 36, left: 56 },
+  width: 1100,
+  height: 380,
+  margin: { top: 30, right: 16, bottom: 40, left: 130 },
 } as const;
 
-type RewardPoint = {
-  rewards: number;
+type BalancePoint = {
+  totalBalance: number;
   trigger_date: string;
 };
 
@@ -28,21 +28,25 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
 });
 
-const buildAreaPath = (points: Array<{ x: number; y: number }>, baselineY: number) => {
-  if (!points.length) {
+type ChartPoint = { x: number; y: number };
+
+const buildLinePath = (points: ChartPoint[]) => {
+  if (points.length === 0) {
     return "M0 0";
   }
 
-  const firstPoint = points[0];
-  const lastPoint = points[points.length - 1];
-  const line = points
+  // Build straight line path (no smoothing, no fill)
+  return points
     .map(({ x, y }, index) => `${index === 0 ? "M" : "L"}${x.toFixed(2)} ${y.toFixed(2)}`)
     .join(" ");
-
-  return `${line} L${lastPoint.x.toFixed(2)} ${baselineY.toFixed(2)} L${firstPoint.x.toFixed(2)} ${baselineY.toFixed(2)} Z`;
 };
 
-const generateChartSvg = (data: RewardPoint[], minimumRewardValue: number) => {
+const generateChartSvg = (
+  data: BalancePoint[],
+  minimumBalanceValue: number,
+  decimals: number,
+  symbol: string
+) => {
   const { width, height, margin } = CHART_DIMENSIONS;
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
@@ -53,34 +57,48 @@ const generateChartSvg = (data: RewardPoint[], minimumRewardValue: number) => {
       <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
         <rect width="${width}" height="${height}" rx="16" fill="rgba(20, 71, 229, 0.06)" />
         <text x="50%" y="50%" fill="#6b7280" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" dominant-baseline="middle">
-          No rewards yet
+          No balance history yet
         </text>
       </svg>
     `;
   }
 
-  // Normalize rewards so the chart baseline matches the client card rendering.
   const normalizedSeries = data.map((point) => ({
     ...point,
-    normalizedReward: Math.max(0, point.rewards - minimumRewardValue),
+    normalizedBalance: Math.max(0, point.totalBalance - minimumBalanceValue),
   }));
 
   const maxValue = normalizedSeries.reduce(
-    (max, point) => Math.max(max, point.normalizedReward),
+    (max, point) => Math.max(max, point.normalizedBalance),
     Number.NEGATIVE_INFINITY
   );
-  const safeRange = maxValue === 0 ? 1 : maxValue;
 
-  const xPositions = normalizedSeries.map((_, index) => {
-    if (normalizedSeries.length === 1) {
-      return margin.left + innerWidth / 2;
-    }
+  // Calculate actual range - if it's too small, use a minimum range for visibility
+  const actualRange = maxValue;
+  const minRange = maxValue * 0.1; // Use 10% of max as minimum range for visibility
+  const valueRange = Math.max(minRange, actualRange);
 
-    return margin.left + (index / (normalizedSeries.length - 1)) * innerWidth;
-  });
+  // Use valueRange or 1 for safe calculations
+  const safeRange = valueRange === 0 ? 1 : valueRange;
 
-  const points = normalizedSeries.map((point, index) => {
-    const y = margin.top + (1 - point.normalizedReward / safeRange) * innerHeight;
+  // If all values are the same (range is 0), offset them to show in the middle of the chart
+  const isConstantValue = actualRange === 0;
+  const displayNormalizedSeries = isConstantValue
+    ? normalizedSeries.map(point => ({ ...point, normalizedBalance: 0.5 }))
+    : normalizedSeries; const xPositions = displayNormalizedSeries.map((_, index) => {
+      if (displayNormalizedSeries.length === 1) {
+        return margin.left + innerWidth / 2;
+      }
+
+      const paddingRatio = 1 / (displayNormalizedSeries.length + 1);
+      const horizontalPadding = innerWidth * paddingRatio;
+      const availableWidth = innerWidth - horizontalPadding * 2;
+
+      return margin.left + horizontalPadding + (index / (displayNormalizedSeries.length - 1)) * availableWidth;
+    });
+
+  const points = displayNormalizedSeries.map((point, index) => {
+    const y = margin.top + (1 - point.normalizedBalance / safeRange) * innerHeight;
     return {
       x: xPositions[index],
       y,
@@ -88,24 +106,40 @@ const generateChartSvg = (data: RewardPoint[], minimumRewardValue: number) => {
     };
   });
 
-  const areaPath = buildAreaPath(points, baselineY);
+  const areaPath = buildLinePath(points);
 
-  const gridLines = Array.from({ length: 4 }).map((_, index) => {
-    const y = margin.top + (index / 3) * innerHeight;
+  const GRID_LINE_COUNT = 4;
+
+  const gridLines = Array.from({ length: GRID_LINE_COUNT }).map((_, index) => {
+    const ratio = index / (GRID_LINE_COUNT - 1);
+    const y = margin.top + ratio * innerHeight;
     return `<line x1="${margin.left}" y1="${y.toFixed(2)}" x2="${width - margin.right}" y2="${y.toFixed(2)}" stroke="rgba(107, 114, 128, 0.15)" stroke-width="1" />`;
   });
 
-  const tickCount = Math.min(4, normalizedSeries.length);
+  const yAxisLabels = Array.from({ length: GRID_LINE_COUNT }).map((_, index) => {
+    const ratio = index / (GRID_LINE_COUNT - 1);
+    // When all values are equal, show the actual value at all label positions
+    const displayValue = isConstantValue ? minimumBalanceValue : (1 - ratio) * valueRange + minimumBalanceValue;
+    const roundedValue = Number.isFinite(displayValue)
+      ? Number(displayValue.toPrecision(Math.max(0, Math.min(5, decimals))))
+      : 0;
+    const formattedValue = toLocalString(roundedValue);
+    const y = margin.top + ratio * innerHeight;
+    const label = `${formattedValue} ${symbol}`.trim();
+    return `<text x="${margin.left - 12}" y="${(y + 4).toFixed(2)}" font-family="Arial, sans-serif" font-size="16" fill="#4b5563" text-anchor="end" dominant-baseline="central">${label}</text>`;
+  });
+
+  const tickCount = Math.min(4, displayNormalizedSeries.length);
   const tickIndexes = new Set<number>();
 
-  if (tickCount === normalizedSeries.length) {
-    normalizedSeries.forEach((_, index) => tickIndexes.add(index));
+  if (tickCount === displayNormalizedSeries.length) {
+    displayNormalizedSeries.forEach((_, index) => tickIndexes.add(index));
   } else {
     tickIndexes.add(0);
-    tickIndexes.add(normalizedSeries.length - 1);
+    tickIndexes.add(displayNormalizedSeries.length - 1);
 
-    if (normalizedSeries.length > 2) {
-      const step = (normalizedSeries.length - 1) / (tickCount - 1);
+    if (displayNormalizedSeries.length > 2) {
+      const step = (displayNormalizedSeries.length - 1) / (tickCount - 1);
       for (let i = 1; i < tickCount - 1; i += 1) {
         tickIndexes.add(Math.round(i * step));
       }
@@ -126,13 +160,6 @@ const generateChartSvg = (data: RewardPoint[], minimumRewardValue: number) => {
 
   return `
     <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#1447e5" stop-opacity="0.8" />
-          <stop offset="100%" stop-color="#1447e5" stop-opacity="0.05" />
-        </linearGradient>
-      </defs>
-
       <rect x="0" y="0" width="${width}" height="${height}" rx="16" fill="rgba(20, 71, 229, 0.08)" />
       <g>
         <line x1="${margin.left}" y1="${baselineY}" x2="${width - margin.right}" y2="${baselineY}" stroke="#d1d5db" stroke-width="1.5" />
@@ -143,7 +170,11 @@ const generateChartSvg = (data: RewardPoint[], minimumRewardValue: number) => {
         ${gridLines.join("\n")} 
       </g>
 
-      <path d="${areaPath}" fill="url(#chartFill)" stroke="#1447e5" stroke-width="3" stroke-linejoin="round" />
+      <g>
+        ${yAxisLabels.join("\n")}
+      </g>
+
+      <path d="${areaPath}" fill="none" stroke="#1447e5" stroke-width="3" stroke-linejoin="round" />
 
       <g>
         ${points
@@ -164,29 +195,27 @@ export async function GET(
 ) {
   const { address: userAddress } = await params;
 
-  const state = __GLOBAL_STORE__?.getState();
-  const userData = state?.[`user_${userAddress}`] as IUserData | undefined;
   const username = (await getProfileUsername(userAddress)) || "Anonymous";
 
   const logoAbsPath = path.join(process.cwd(), "public", "logo.svg");
   const logoFile = readFileSync(logoAbsPath).toString("utf-8");
 
-
-
   const rewardEvents = await fetch(`${appConfig.NOTIFY_URL}/history/${userAddress}`).then(res => res.json()).catch(() => []);
 
   const frdTokenMeta = __GLOBAL_STORE__?.getOwnToken();
-  const decimals = frdTokenMeta?.decimals ?? 9;
+  const decimals = Number(frdTokenMeta?.decimals ?? 9);
   const symbol = frdTokenMeta?.symbol ?? "FRD";
 
-  const rewardSeries = buildRewardSeries(rewardEvents, decimals);
+  const balanceSeries = buildTotalBalanceSeries(rewardEvents, decimals);
 
-  const minimumRewardValue =
-    minBy(rewardSeries, (point) => point.rewards)?.rewards ?? 0;
+  const minimumBalanceValue =
+    minBy(balanceSeries, (point) => point.totalBalance)?.totalBalance ?? 0;
+
+  const latestTotalBalance = balanceSeries.at(-1)?.totalBalance ?? 0;
 
   // chart
 
-  const chartSvg = generateChartSvg(rewardSeries, minimumRewardValue);
+  const chartSvg = generateChartSvg(balanceSeries, minimumBalanceValue, decimals, symbol);
 
   try {
     const SVG = `
@@ -244,46 +273,25 @@ export async function GET(
           </text>
         </g>
 
-        <g transform="translate(0, 50)">
-      <g transform="translate(120, 115)">
-        ${chartSvg}
+        <g transform="translate(0, 40)">
+          <g transform="translate(50, 180)">
+            ${chartSvg}
           </g>
 
-          <!-- Username -->
-          <text
-            x="750"
-            y="160"
-            font-family="Arial, sans-serif"
-            font-size="64"
-            font-weight="700"
-            fill="#1f2937"
-          >
-            ${username}
-          </text>
-
-          <g transform="translate(170, 20)">
+          <g transform="translate(0, 0)">
             <!-- Stat label -->
             <text
-              x="580"
-              y="260"
+              x="600"
+              y="155"
               font-family="Arial, sans-serif"
-              font-size="48"
+              font-size="54"
               font-weight="400"
               fill="#57534d"
+              text-anchor="middle"
             >
-              Total rewards
-            </text>
-
-            <!-- Stat value -->
-            <text
-              x="580"
-              y="330"
-              font-family="Arial, sans-serif"
-              font-size="48"
-              font-weight="700"
-              fill="#1d4ed8"
-            >
-              ${toLocalString((((userData?.liquid_rewards ?? 0) + (userData?.locked_rewards ?? 0) + (userData?.new_user_rewards ?? 0)) / 10 ** decimals).toPrecision(decimals - 3))} ${symbol}
+              My balance: ${toLocalString(latestTotalBalance.toPrecision(
+      Math.max(1, decimals - 3)
+    ))} ${symbol}
             </text>
           </g>
         </g>

@@ -100,7 +100,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
           {isLoading
             ? <div>
               <Skeleton className="w-[230px] h-[230px]" />
-              <Skeleton className="w-full h-[36px]" />
+              <Skeleton className="w-full h-9" />
             </div>
             : <div className="text-center">
               <div className="w-[230px] h-[230px] relative bg-accent rounded-md overflow-hidden animate-pulse [&:has(img)]:animate-none">

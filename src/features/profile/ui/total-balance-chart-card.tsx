@@ -20,12 +20,12 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 import { toLocalString } from "@/lib/to-local-string"
 import { minBy } from "lodash"
-import { buildRewardSeries } from "../domain/build-reward-series"
-import { useRewardChartData } from "../domain/hooks/use-reward-chart-data"
+import { buildTotalBalanceSeries } from "../domain/build-total-balance-series"
+import { useHistoryData } from "../domain/hooks/use-history-data"
 
-const rewardChartConfig = {
-  rewards: {
-    label: "Rewards",
+const totalBalanceChartConfig = {
+  totalBalance: {
+    label: "Total balance",
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig
@@ -36,46 +36,46 @@ interface TotalBalanceChartCardProps {
 }
 
 export function TotalBalanceChartCardProps({ address }: TotalBalanceChartCardProps) {
-  const { data: rewardEvents, isLoading, isError } = useRewardChartData(address)
+  const { data: rewardEvents, isLoading, isError } = useHistoryData(address)
 
   const { getFrdToken } = useData()
   const { decimals = 9, symbol = "FRD" } = getFrdToken()
 
-  const rewardSeries = useMemo(
-    () => buildRewardSeries(rewardEvents, decimals),
+  const balanceSeries = useMemo(
+    () => buildTotalBalanceSeries(rewardEvents, decimals),
     [rewardEvents, decimals]
   )
 
-  const minimumRewardValue =
-    minBy(rewardSeries, (point) => point.rewards)?.rewards ?? 0
+  const minimumBalanceValue =
+    minBy(balanceSeries, (point) => point.totalBalance)?.totalBalance ?? 0
 
-  const normalizedRewardSeries = useMemo(() => {
-    if (rewardSeries.length === 0) {
+  const normalizedBalanceSeries = useMemo(() => {
+    if (balanceSeries.length === 0) {
       return []
     }
 
-    return rewardSeries.map((point) => ({
+    return balanceSeries.map((point) => ({
       ...point,
-      rewards: point.rewards - minimumRewardValue,
+      totalBalance: point.totalBalance - minimumBalanceValue,
     }))
-  }, [rewardSeries, minimumRewardValue])
+  }, [balanceSeries, minimumBalanceValue])
 
   const shouldShowSkeleton = isLoading || isError
 
   return (
     <Card className="col-span-6 md:col-span-3">
       <CardHeader>
-        <CardTitle>Total rewards</CardTitle>
+        <CardTitle>Total balance</CardTitle>
       </CardHeader>
       <CardContent className="min-h-[300px]">
         {shouldShowSkeleton ? (
           <Skeleton className="aspect-auto h-[260px] w-full" />
         ) : (
           <ChartContainer
-            config={rewardChartConfig}
+            config={totalBalanceChartConfig}
             className="aspect-auto h-[260px] w-full"
           >
-            <AreaChart data={normalizedRewardSeries}>
+            <AreaChart data={normalizedBalanceSeries}>
               <defs>
                 <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#1447e5" stopOpacity={0.8} />
@@ -88,7 +88,7 @@ export function TotalBalanceChartCardProps({ address }: TotalBalanceChartCardPro
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
-                minTickGap={32}
+                minTickGap={1}
                 tickFormatter={(value) => {
                   const date = new Date(value)
                   return date.toLocaleDateString("en-US", {
@@ -99,7 +99,7 @@ export function TotalBalanceChartCardProps({ address }: TotalBalanceChartCardPro
               />
               <ChartTooltip
                 cursor={false}
-                formatter={(value) => `${toLocalString(Number(value) + minimumRewardValue)} ${symbol}`}
+                formatter={(value) => `${toLocalString(Number(value) + minimumBalanceValue)} ${symbol}`}
                 content={
                   <ChartTooltipContent
                     labelFormatter={(value) => {
@@ -113,9 +113,9 @@ export function TotalBalanceChartCardProps({ address }: TotalBalanceChartCardPro
                 }
               />
               <Area
-                dataKey="rewards"
-                type="natural"
-                fill="url(#fillDesktop)"
+                dataKey="totalBalance"
+                type="linear"
+                fill="url(#fillDesktop)" // transparent
                 stroke="#1447e5"
                 stackId="a"
               />
@@ -124,7 +124,7 @@ export function TotalBalanceChartCardProps({ address }: TotalBalanceChartCardPro
         )}
       </CardContent>
 
-      <CardFooterReferral query={`?type=chart&refAddr=${address}`} />
+      <CardFooterReferral query={`?type=chart`} />
     </Card>
   )
 }

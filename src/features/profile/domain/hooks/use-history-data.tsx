@@ -1,22 +1,6 @@
 import { appConfig } from "@/app-config";
+import { fetcher } from "@/lib/fetcher";
 import useSWR from "swr";
-
-const historyFetcher = async (url: string): Promise<IHistoryItem[]> => {
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch reward history: ${response.status}`);
-  }
-
-  const payload = await response.json().catch(() => null);
-
-  if (!Array.isArray(payload)) {
-    return [];
-  }
-
-  return payload;
-};
-
 interface IHistoryItem {
   address: string;
   trigger_unit: string;
@@ -34,21 +18,21 @@ interface IHistoryItem {
   total_liquid_rewards: number;
 }
 
-export function useRewardChartData(address: string) {
+export function useHistoryData(address: string) {
   const shouldFetch = Boolean(address);
 
   const { data, error, isLoading } = useSWR<IHistoryItem[]>(
     shouldFetch ? `${appConfig.NOTIFY_URL}/history/${address}` : null,
-    historyFetcher
+    fetcher<IHistoryItem>
   );
 
-  const rewardsOnly = Array.isArray(data)
-    ? data.filter((item) => item?.event === "rewards")
+  const balanceHistory = Array.isArray(data)
+    ? data.filter((item) => Number.isFinite(item?.total_balance))
     : [];
 
   return {
-    data: rewardsOnly,
+    data: balanceHistory,
     isLoading,
-    isError: error,
+    isError: Boolean(error),
   };
 }

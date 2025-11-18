@@ -1,6 +1,6 @@
-type RewardSeriesPoint = {
+type TotalBalanceSeriesPoint = {
   trigger_date: string
-  rewards: number
+  totalBalance: number
 }
 
 type RewardHistoryEvent = {
@@ -14,12 +14,12 @@ type RewardHistoryEvent = {
 
 
 /**
- * Builds a cumulative reward series with normalized daily points.
+ * Builds a normalized total balance series with per-day snapshots.
  */
-export function buildRewardSeries(
+export function buildTotalBalanceSeries(
   events: RewardHistoryEvent[],
   decimals: number
-): RewardSeriesPoint[] {
+): TotalBalanceSeriesPoint[] {
   if (!Array.isArray(events) || events.length === 0) {
     return []
   }
@@ -28,8 +28,10 @@ export function buildRewardSeries(
     a.trigger_date.localeCompare(b.trigger_date)
   )
 
-  const normalizedDailyDeltas = new Map<string, number>()
+  const dailyTotals = new Map<string, number>()
   const eventDates = new Set<string>()
+  const decimalsValue = Number.isFinite(Number(decimals)) ? Number(decimals) : 0
+  const decimalsFactor = 10 ** decimalsValue || 1
 
   for (const event of sortedEvents) {
     const triggerDate = event.trigger_date?.slice(0, 10)
@@ -39,22 +41,18 @@ export function buildRewardSeries(
 
     eventDates.add(triggerDate)
 
-    const totalInBaseUnits = event.total_balance;
+    const normalizedTotal = event.total_balance / decimalsFactor
 
-    const dailyIncrement = totalInBaseUnits / 10 ** Number(decimals)
-
-    if (!Number.isFinite(dailyIncrement) || dailyIncrement === 0) {
+    if (!Number.isFinite(normalizedTotal)) {
       continue
     }
 
-    normalizedDailyDeltas.set(
-      triggerDate,
-      (normalizedDailyDeltas.get(triggerDate) ?? 0) + dailyIncrement
-    )
+    // prefer the latest total per day, events are already sorted chronologically
+    dailyTotals.set(triggerDate, normalizedTotal)
   }
 
   const earliestRewardDate =
-    [...normalizedDailyDeltas.keys()].sort()[0] ?? [...eventDates].sort()[0]
+    [...dailyTotals.keys()].sort()[0] ?? [...eventDates].sort()[0]
 
   if (!earliestRewardDate) {
     return []
@@ -64,8 +62,8 @@ export function buildRewardSeries(
   const todayUtc = new Date()
   todayUtc.setUTCHours(0, 0, 0, 0)
 
-  const cumulativeSeries: RewardSeriesPoint[] = []
-  let cumulativeRewards = 0
+  const cumulativeSeries: TotalBalanceSeriesPoint[] = []
+  let lastKnownTotal = 0
 
   for (
     const cursor = new Date(startDate);
@@ -73,12 +71,13 @@ export function buildRewardSeries(
     cursor.setUTCDate(cursor.getUTCDate() + 1)
   ) {
     const cursorKey = cursor.toISOString().slice(0, 10)
-    const dailyIncrement = normalizedDailyDeltas.get(cursorKey) ?? 0
-    cumulativeRewards += dailyIncrement
+    if (dailyTotals.has(cursorKey)) {
+      lastKnownTotal = dailyTotals.get(cursorKey) ?? lastKnownTotal
+    }
 
     cumulativeSeries.push({
       trigger_date: cursorKey,
-      rewards: cumulativeRewards,
+      totalBalance: lastKnownTotal,
     })
   }
 
