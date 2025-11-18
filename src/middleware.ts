@@ -35,6 +35,22 @@ export async function middleware(request: NextRequest) {
 
       return response;
     }
+  } else if (pathname.includes("/user/")) {
+    const address = pathname.split("/user/")[1]?.split("/")[0];
+
+    if (isValidAddress(address)) {
+      if (!request.cookies.has(REF_COOKIE_NAME)) {
+        // set cookie
+        const response = NextResponse.next();
+
+        response.cookies.set(REF_COOKIE_NAME, address, {
+          maxAge: REF_COOKIE_EXPIRES,
+          path: "/",
+        });
+
+        return response;
+      }
+    }
   }
 
   return NextResponse.next();
