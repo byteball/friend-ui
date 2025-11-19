@@ -115,7 +115,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
               </div>
 
               {address === walletAddress && <SelectGhostModal address={address}>
-                <Button variant="link" className="text-blue-700">change the next ghost</Button>
+                <Button variant="link" className="text-blue-700">choose another next ghost</Button>
               </SelectGhostModal>}
             </div>}
         </div>
