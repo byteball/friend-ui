@@ -33,7 +33,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
   return <div className="grid grid-cols-6 gap-8 mt-10">
     <Card className="col-span-6 md:col-span-2">
       <CardContent>
-        <CardTitle>Total balance</CardTitle>
+        <CardTitle>Locked balance</CardTitle>
         <div className="mt-2 text-3xl">{toLocalString(Number(totalBalance / 10 ** frdDecimals).toPrecision(frdDecimals))} <small>{frdSymbol}</small></div>
 
         {userData?.unlock_date ? <div className="mt-2 text-sm text-muted-foreground">
