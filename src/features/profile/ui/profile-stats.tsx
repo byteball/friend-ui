@@ -61,7 +61,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
         <div className="mt-2 text-3xl">{toLocalString(friends.length)}</div>
         {userData?.last_date
           ? <div className="mt-2 text-sm text-muted-foreground">
-            Last friend activity: {" "}
+            Last: {" "}
             {formatDateAsUTC(parseDateFromAA(userData.last_date))}
           </div>
           : null}
