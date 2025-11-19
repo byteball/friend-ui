@@ -158,7 +158,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
               max={MAX_LOCKED_TERM_DAYS}
             />
           </div>
-          <div suppressHydrationWarning>Locking term: {formatDays(selectedTerm)} — until {formatInTimeZone(until, "UTC", "MMMM do, yyyy")} UTC
+          <div suppressHydrationWarning>Locking term: {formatDays(selectedTerm)} — until {formatInTimeZone(until, "UTC", "MMMM do, yyyy")}
           </div>
         </div>
 
