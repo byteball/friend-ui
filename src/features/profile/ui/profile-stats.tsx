@@ -49,8 +49,12 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
           {toLocalString((totalRewards / 10 ** frdDecimals).toPrecision(frdDecimals))} <small>{frdSymbol}</small>
         </div>
         {userData?.last_date
-          ? <div className="mt-2 text-sm text-muted-foreground">
-            including {toLocalString((lockedRewards / 10 ** frdDecimals).toPrecision(frdDecimals))} locked</div>
+          ? <>
+            <div className="mt-2 text-sm text-muted-foreground">
+              including {toLocalString((lockedRewards / 10 ** frdDecimals).toPrecision(frdDecimals))} {frdSymbol} locked</div>
+            <div className="mt-2 text-sm text-muted-foreground">
+              including {toLocalString((liquidRewards / 10 ** frdDecimals).toPrecision(frdDecimals))} {frdSymbol} liquid</div>
+          </>
           : null}
       </CardContent>
     </Card>

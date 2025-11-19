@@ -26,7 +26,7 @@ const getDepositAssetExchangeRate = async (asset: string): Promise<number> => {
   return httpClient.executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rate', [appConfig.AA_ADDRESS, asset])
 }
 
-export const getTotalBalance = async (balances: Balances, ceilingPrice: number) => {
+export const getTotalBalanceWithAssetReducer = async (balances: Balances, ceilingPrice: number) => {
   const totals = { in_bytes: (balances.base ?? 0) * bytes_reducer };
 
   for (const [asset, balance] of Object.entries(balances)) {
@@ -40,10 +40,24 @@ export const getTotalBalance = async (balances: Balances, ceilingPrice: number) 
   return (balances.frd ?? 0) + (totals.in_bytes / ceilingPrice);
 }
 
+export const getTotalBalance = async (balances: Balances, ceilingPrice: number) => {
+  const totals = { in_bytes: (balances.base ?? 0) };
+
+  for (const [asset, balance] of Object.entries(balances)) {
+    if (asset === 'base' || asset === 'frd') continue;
+
+    const exchangeRate = await getDepositAssetExchangeRate(asset);
+
+    totals.in_bytes = totals.in_bytes + balance * exchangeRate;
+  }
+
+  return (balances.frd ?? 0) + (totals.in_bytes / ceilingPrice);
+}
+
 export const getRewards = async (user1: IUserData | null, user2: IUserData | null, constants: IConstants) => {
   const ceilingPrice = getCeilingPrice(constants);
-  const totalBalance1 = await getTotalBalance(user1?.balances ?? {}, ceilingPrice);
-  const totalBalance2 = await getTotalBalance(user2?.balances ?? {}, ceilingPrice);
+  const totalBalance1 = await getTotalBalanceWithAssetReducer(user1?.balances ?? {}, ceilingPrice);
+  const totalBalance2 = await getTotalBalanceWithAssetReducer(user2?.balances ?? {}, ceilingPrice);
 
   const bNewUser = !user1?.last_date || !user2?.last_date;
 
