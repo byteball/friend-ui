@@ -88,13 +88,13 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
               <div>Total streak: {userData?.total_streak ?? 0}</div>
             </div>}
 
-            <div className="mt-4">
+            {address === walletAddress ? <div className="mt-4">
               {isLoading
                 ? <Skeleton className="w-47 h-9" />
                 : <QRButton href={url} disabled={isLoading || (userData?.current_streak ?? 0) < requiredStreak}>
                   Become friends
                 </QRButton>}
-            </div>
+            </div> : null}
           </div>
 
           {isLoading
