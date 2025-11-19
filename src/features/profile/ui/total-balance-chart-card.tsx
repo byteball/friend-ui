@@ -25,7 +25,6 @@ import { useGetCookie } from "cookies-next"
 import { minBy } from "lodash"
 import { buildTotalBalanceSeries } from "../domain/build-total-balance-series"
 import { useHistoryData } from "../domain/hooks/use-history-data"
-import cn from "classnames"
 
 const totalBalanceChartConfig = {
   totalBalance: {
@@ -103,6 +102,9 @@ export function TotalBalanceChartCardProps({ address }: TotalBalanceChartCardPro
                   })
                 }}
               />
+
+              <CartesianGrid vertical={false} />
+
               <ChartTooltip
                 cursor={false}
                 formatter={(value) => `${toLocalString(Number(value) + minimumBalanceValue)} ${symbol}`}
@@ -118,6 +120,7 @@ export function TotalBalanceChartCardProps({ address }: TotalBalanceChartCardPro
                   />
                 }
               />
+
               <Area
                 dataKey="totalBalance"
                 type="linear"
