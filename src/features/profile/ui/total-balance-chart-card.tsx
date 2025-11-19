@@ -18,7 +18,10 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { Skeleton } from "@/components/ui/skeleton"
+import { WALLET_COOKIE_NAME } from "@/constants"
 import { toLocalString } from "@/lib/to-local-string"
+import cn from "classnames"
+import { useGetCookie } from "cookies-next"
 import { minBy } from "lodash"
 import { buildTotalBalanceSeries } from "../domain/build-total-balance-series"
 import { useHistoryData } from "../domain/hooks/use-history-data"
