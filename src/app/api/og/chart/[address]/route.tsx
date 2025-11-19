@@ -5,7 +5,6 @@ import sharp from "sharp";
 
 import { appConfig } from "@/app-config";
 import { buildTotalBalanceSeries } from "@/features/profile/domain/build-total-balance-series";
-import { getProfileUsername } from "@/lib/get-profile-username.server";
 import { toLocalString } from "@/lib/to-local-string";
 import { minBy } from "lodash";
 
@@ -121,7 +120,7 @@ const generateChartSvg = (
     // When all values are equal, show the actual value at all label positions
     const displayValue = isConstantValue ? minimumBalanceValue : (1 - ratio) * valueRange + minimumBalanceValue;
     const roundedValue = Number.isFinite(displayValue)
-      ? Number(displayValue.toPrecision(Math.max(0, Math.min(5, decimals))))
+      ? Number(displayValue.toPrecision(3))
       : 0;
     const formattedValue = toLocalString(roundedValue);
     const y = margin.top + ratio * innerHeight;
@@ -195,8 +194,6 @@ export async function GET(
 ) {
   const { address: userAddress } = await params;
 
-  const username = (await getProfileUsername(userAddress)) || "Anonymous";
-
   const logoAbsPath = path.join(process.cwd(), "public", "logo.svg");
   const logoFile = readFileSync(logoAbsPath).toString("utf-8");
 
@@ -247,10 +244,6 @@ export async function GET(
         <!-- Background -->
         <rect width="1200" height="630" fill="url(#bgGradient)" />
 
-        <!-- Decorative circles -->
-        <circle cx="100" cy="100" r="80" fill="rgba(29, 78, 184, 0.05)" />
-        <circle cx="1100" cy="530" r="100" fill="rgba(37, 99, 235, 0.05)" />
-
         <!-- Logo and Title Group (centered) -->
         <g transform="translate(-15, 10)">
           <!-- Logo -->
@@ -289,9 +282,7 @@ export async function GET(
               fill="#57534d"
               text-anchor="middle"
             >
-              My balance: ${toLocalString(latestTotalBalance.toPrecision(
-      Math.max(1, decimals - 3)
-    ))} ${symbol}
+              My balance: ${toLocalString((latestTotalBalance).toPrecision(4))} ${symbol}
             </text>
           </g>
         </g>
