@@ -37,6 +37,8 @@ interface TotalBalanceChartCardProps {
 
 export function TotalBalanceChartCardProps({ address }: TotalBalanceChartCardProps) {
   const { data: rewardEvents, isLoading, isError } = useHistoryData(address)
+  const getCookie = useGetCookie();
+  const walletAddress = getCookie(WALLET_COOKIE_NAME);
 
   const { getFrdToken } = useData()
   const { decimals = 9, symbol = "FRD" } = getFrdToken()
@@ -124,7 +126,7 @@ export function TotalBalanceChartCardProps({ address }: TotalBalanceChartCardPro
         )}
       </CardContent>
 
-      <CardFooterReferral query={`?type=chart`} />
+      {address === walletAddress ? <CardFooterReferral query={`?type=chart`} /> : null}
     </Card>
   )
 }
