@@ -55,7 +55,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
             : <div className="leading-6">On {userData?.current_streak ?? 0} out of {requiredStreak} days streak to become friends with the ghost of {ghostName}</div>}
         </CardTitle>
       </CardHeader>
-      <CardContent className="min-h-[268px]">
+      <CardContent className={cn({ "min-h-[268px]": address === walletAddress, "min-h-60": address !== walletAddress })}>
         <div className="flex md:flex-row flex-col justify-between gap-4">
           <div className="mt-2 flex flex-col">
 
@@ -100,7 +100,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
           {isLoading
             ? <div>
               <Skeleton className="w-[230px] h-[230px]" />
-              <Skeleton className="w-full h-9" />
+              {address === walletAddress ? <Skeleton className="w-full h-9" /> : null}
             </div>
             : <div className="text-center">
               <div className="w-[230px] h-[230px] relative bg-accent rounded-md overflow-hidden animate-pulse [&:has(img)]:animate-none">

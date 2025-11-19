@@ -22,6 +22,7 @@ import { toLocalString } from "@/lib/to-local-string"
 import { minBy } from "lodash"
 import { buildTotalBalanceSeries } from "../domain/build-total-balance-series"
 import { useHistoryData } from "../domain/hooks/use-history-data"
+import cn from "classnames"
 
 const totalBalanceChartConfig = {
   totalBalance: {
@@ -69,7 +70,7 @@ export function TotalBalanceChartCardProps({ address }: TotalBalanceChartCardPro
       <CardHeader>
         <CardTitle>Total balance</CardTitle>
       </CardHeader>
-      <CardContent className="min-h-[300px]">
+      <CardContent className={cn({ "min-h-[300px]": address === walletAddress, "min-h-60": address !== walletAddress })}>
         {shouldShowSkeleton ? (
           <Skeleton className="aspect-auto h-[260px] w-full" />
         ) : (
