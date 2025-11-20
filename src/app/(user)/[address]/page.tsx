@@ -8,6 +8,7 @@ import { getProfileUsername } from "@/lib/get-profile-username.server";
 import { isValidAddress } from "@/lib/is-valid-address";
 import { toLocalString } from "@/lib/to-local-string";
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const dynamic = 'force-dynamic';
 
@@ -62,6 +63,8 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
   const ceilingPrice = getCeilingPrice(state.constants!);
   const totalBalance = await getTotalBalance(userData?.balances ?? {}, ceilingPrice);
 
+  const username = await getProfileUsername(address) ?? address.slice(0, 6) + "..." + address.slice(-4);
+
   return <div className="grid gap-y-5">
     <ProfileInfo address={address} userData={userData} />
 
@@ -69,6 +72,16 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
       address={address}
       totalBalance={totalBalance}
     />
+
+    <div>
+      <Link
+        href={`https://obyte.city/user/${address}`}
+        className="text-blue-700"
+        target="_blank"
+      >
+        {username}&apos;s profile on Obyte City
+      </Link>
+    </div>
 
     <FriendsList
       address={address}
