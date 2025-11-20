@@ -70,8 +70,8 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
         </div>
       </div>
 
-      <div className="grid gap-y-2">
-        {tgUsername && <div className="flex gap-x-2">
+      <div className="flex space-x-4 flex-wrap gap-y-2">
+        {tgUsername && <div className="flex gap-x-2 items-center">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
@@ -89,7 +89,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
           <div>{tgUrl ? <a href={tgUrl} target="_blank" rel="noopener noreferrer" className="text-blue-700">{tgUsername}</a> : tgUsername}</div>
         </div>}
 
-        {discordUsername && <div className="flex gap-x-2">
+        {discordUsername && <div className="flex gap-x-2 items-center">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
