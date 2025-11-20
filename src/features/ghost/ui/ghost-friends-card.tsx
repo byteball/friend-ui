@@ -84,8 +84,8 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
               <Skeleton className="w-full h-4" />
               <Skeleton className="w-full h-4" />
             </div> : <div className="mt-4 gap-2">
-              <div>Current streak: {userData?.current_streak ?? 0} / {requiredStreak}</div>
-              <div>Total streak: {userData?.total_streak ?? 0}</div>
+              <div>Current streak: {userData?.current_streak ?? 0} days / {requiredStreak} days</div>
+              <div>Total streak: {userData?.total_streak ?? 0} days</div>
             </div>}
 
             {address === walletAddress ? <div className="mt-4">
