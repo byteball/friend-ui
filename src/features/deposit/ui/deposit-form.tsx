@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { QRButton } from "@/components/ui/qr-button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { getCeilingPrice } from "@/lib/calculations/get-rewards";
 
 const MAX_LOCKED_TERM_DAYS = 365 * 5;
 const now = formatInTimeZone(new Date(), "UTC", "yyyy-MM-dd HH:mm:ssXXX");
@@ -41,6 +42,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
   const frdAsset = state?.constants?.asset;
   const frdMeta: TokenMeta | undefined = frdAsset ? data?.tokens?.[frdAsset] : undefined;
   const userData = (walletAddress ? state[`user_${walletAddress}`] : undefined) as IUserData | undefined;
+  const ceilingPrice = getCeilingPrice(state.constants);
 
   const unlockDate = userData?.unlock_date
     ? formatInTimeZone(
@@ -97,7 +99,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
     <div className="grid gap-4 text-muted-foreground">
       <div>Before depositing, you must be attested on <a className="text-blue-700" href={appConfig.TELEGRAM_BOT_URL}>telegram</a> and/or <a className="text-blue-700" href={appConfig.DISCORD_BOT_URL}>discord</a>. This is important to notify you about follow-up rewards in the future.</div>
 
-      <div>If you deposit less than {toLocalString(agentParams.min_balance_instead_of_real_name / 10 ** (frdMeta?.decimals ?? 0))} <small>{frdMeta?.symbol}</small> (or equivalent), you must be <a className="text-blue-700" href="#">real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
+      <div>If you deposit less than {toLocalString(agentParams.min_balance_instead_of_real_name / 10 ** (frdMeta?.decimals ?? 0))} {frdMeta?.symbol} (or equivalent), you must be <a className="text-blue-700" href="#">real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
     </div>
 
     <div>
@@ -145,6 +147,9 @@ export const DepositForm: FC<DepositFormProps> = () => {
         </div>
 
         <div className="flex flex-col w-full gap-4">
+          {currency.asset === "base"
+            ? <div suppressHydrationWarning>{toLocalString(Number(amount) / ceilingPrice)} FRD (according to the current ceiling price 1 FRD = {toLocalString(ceilingPrice)} {currency.symbol})</div>
+            : null}
           <div>
             <Slider
               value={[selectedTerm]}
