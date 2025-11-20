@@ -25,8 +25,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
 
   const liquidRewards = userData?.liquid_rewards ?? 0;
   const lockedRewards = userData?.locked_rewards ?? 0;
-  const newUserRewards = userData?.new_user_rewards ?? 0;
-  const totalRewards = liquidRewards + lockedRewards + newUserRewards;
+  const totalRewards = liquidRewards + lockedRewards; // newUserRewards are not included in locked rewards
 
   const friends = getFriendList(state, address);
 
@@ -49,12 +48,8 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
           {toLocalString((totalRewards / 10 ** frdDecimals).toPrecision(frdDecimals))} <small>{frdSymbol}</small>
         </div>
         {userData?.last_date
-          ? <>
-            <div className="mt-2 text-sm text-muted-foreground">
-              including {toLocalString((lockedRewards / 10 ** frdDecimals).toPrecision(frdDecimals))} {frdSymbol} locked</div>
-            <div className="mt-2 text-sm text-muted-foreground">
-              including {toLocalString((liquidRewards / 10 ** frdDecimals).toPrecision(frdDecimals))} {frdSymbol} liquid</div>
-          </>
+          ? <div className="mt-2 text-sm text-muted-foreground">
+            including {toLocalString((liquidRewards / 10 ** frdDecimals).toPrecision(frdDecimals))} {frdSymbol} liquid</div>
           : null}
       </CardContent>
     </Card>
