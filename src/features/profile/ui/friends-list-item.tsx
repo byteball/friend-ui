@@ -33,7 +33,7 @@ export const FriendsListItem: FC<IFriendsListItemProps> = async ({ friendAddress
       ? <div className={cns}>{username}</div>
       : <div>
         <Link
-          href={`/user/${friendAddress}`}
+          href={`/${friendAddress}`}
           className={cn(cns, "text-blue-700 inline")}
         >
           {username}

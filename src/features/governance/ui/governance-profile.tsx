@@ -32,7 +32,7 @@ export const GovernanceProfile: FC<GovernanceProfileProps> = ({ walletAddress })
   }
 
   return <div>
-    Your wallet address: <span><Link href={`/user/${walletAddress}`} className="text-blue-700">
+    Your wallet address: <span><Link href={`/${walletAddress}`} className="text-blue-700">
       {String(walletAddress).slice(0, 5)}...{String(walletAddress).slice(-5, String(walletAddress).length)}
     </Link>
     </span>

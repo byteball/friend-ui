@@ -51,7 +51,7 @@ export const governanceDepositAssetItemSupportsColumns: ColumnDef<IAggregatedDat
 
           <div className="grid gap-2">
             {voters?.map(voter => <div key={voter}>
-              <Link className="text-blue-700" href={`/user/${voter}`}>{voter}</Link>
+              <Link className="text-blue-700" href={`/${voter}`}>{voter}</Link>
             </div>)}
           </div>
         </DialogContent>

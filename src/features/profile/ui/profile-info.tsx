@@ -108,13 +108,13 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
         </div>}
         {/* 
         <div>
-          <a href={`https://city.obyte.org/user/${address}`} target="_blank" rel="noopener noreferrer" className="text-blue-700">Link on CITY profile</a>
+          <a href={`https://city.obyte.org/${address}`} target="_blank" rel="noopener noreferrer" className="text-blue-700">Link on CITY profile</a>
         </div> */}
 
       </div>
 
       {/* <ProfileShareLinks
-        url={`${env.NEXT_PUBLIC_SITE_URL}/user/${address}`}
+        url={`${env.NEXT_PUBLIC_SITE_URL}/${address}`}
         title={`Become friends with ${username} on Obyte friends!`}
       /> */}
     </>

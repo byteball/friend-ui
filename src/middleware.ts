@@ -1,16 +1,14 @@
-import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { isValidAddress } from "./lib/is-valid-address";
 
-import { REF_COOKIE_EXPIRES, REF_COOKIE_NAME } from "@/constants";
+import { REF_COOKIE_EXPIRES, REF_COOKIE_NAME, WALLET_COOKIE_NAME } from "@/constants";
 
 export async function middleware(request: NextRequest) {
   if (request.method !== "GET") return NextResponse.next();
 
-  const refCookie = (await cookies()).get(REF_COOKIE_NAME);
-
+  const refCookie = request.cookies.get(REF_COOKIE_NAME)?.value;
   const { pathname } = request.nextUrl;
 
   if (/\.[a-zA-Z0-9]+$/.test(pathname) || refCookie) {
@@ -18,13 +16,14 @@ export async function middleware(request: NextRequest) {
   }
 
   const url = request.nextUrl.clone();
+  const userWallet = request.cookies.get(WALLET_COOKIE_NAME)?.value;
 
   if (url.searchParams.has("refAddr")) {
 
     const ref = url.searchParams.get("refAddr");
     const valid = isValidAddress(ref);
 
-    if (!request.cookies.has(REF_COOKIE_NAME) && ref && valid) {
+    if (!request.cookies.has(REF_COOKIE_NAME) && ref && valid && (!userWallet || userWallet !== ref)) {
       // set cookie
       const response = NextResponse.next();
 
@@ -35,10 +34,10 @@ export async function middleware(request: NextRequest) {
 
       return response;
     }
-  } else if (pathname.includes("/user/")) {
-    const address = pathname.split("/user/")[1]?.split("/")[0];
+  } else if (pathname.includes("/") && pathname.split("/").length === 2) {
+    const address = pathname.split("/")[1]?.split("/")[0];
 
-    if (isValidAddress(address)) {
+    if (isValidAddress(address) && (!userWallet || userWallet !== address)) {
       if (!request.cookies.has(REF_COOKIE_NAME)) {
         // set cookie
         const response = NextResponse.next();

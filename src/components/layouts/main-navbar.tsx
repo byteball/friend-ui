@@ -71,7 +71,7 @@ export default async function MainNavbar({ className }: NavbarProps) {
 
             {walletAddress ? (
               <NavbarLinkItem
-                link={{ text: "Profile", href: `/user/${walletAddress}` }}
+                link={{ text: "Profile", href: `/${walletAddress}` }}
                 className="hidden text-sm text-muted-foreground hover:text-blue-700 md:block"
                 prefetch={false}
               />
