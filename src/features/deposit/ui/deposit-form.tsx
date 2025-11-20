@@ -146,8 +146,6 @@ export const DepositForm: FC<DepositFormProps> = () => {
 
         <div className="flex flex-col w-full gap-4">
           <div>
-            <label htmlFor="term" className="text-muted-foreground">Locked term</label>
-
             <Slider
               value={[selectedTerm]}
               id="term"
@@ -158,6 +156,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
               max={MAX_LOCKED_TERM_DAYS}
             />
           </div>
+
           <div suppressHydrationWarning>Locking term: {formatDays(selectedTerm)} — until {formatInTimeZone(until, "UTC", "MMMM do, yyyy")}
           </div>
         </div>
