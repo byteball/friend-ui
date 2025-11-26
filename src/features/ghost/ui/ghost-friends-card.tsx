@@ -52,7 +52,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
         <CardTitle>
           {isLoading
             ? <Skeleton className="w-[calc(100%-20px)] h-12" />
-            : <div className="leading-6">On {userData?.current_streak ?? 0} out of {requiredStreak} days streak to become friends with the ghost of {ghostName}</div>}
+            : <div className="leading-6 max-w-lg">On {userData?.current_streak ?? 0} out of {requiredStreak} days streak to become friends with the ghost of {ghostName}</div>}
         </CardTitle>
       </CardHeader>
       <CardContent className={cn({ "min-h-[268px]": address === walletAddress, "min-h-60": address !== walletAddress })}>
