@@ -5,7 +5,10 @@ interface IHistoryItem {
   address: string;
   trigger_unit: string;
   event: 'rewards' | "deposit";
-  total_balance: number;
+
+  total_balance_with_reducers: number;
+  total_balance_sans_reducers: number;
+
   locked_reward: number;
 
   liquid_reward: number;
@@ -27,7 +30,7 @@ export function useHistoryData(address: string) {
   );
 
   const balanceHistory = Array.isArray(data)
-    ? data.filter((item) => Number.isFinite(item?.total_balance))
+    ? data.filter((item) => Number.isFinite(item?.total_balance_sans_reducers))
     : [];
 
   return {

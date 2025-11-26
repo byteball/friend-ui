@@ -1,15 +1,16 @@
 type TotalBalanceSeriesPoint = {
-  trigger_date: string
-  totalBalance: number
+  trigger_date: string;
+  totalBalance: number;
 }
 
 type RewardHistoryEvent = {
-  trigger_date: string
-  locked_reward?: number | string
-  liquid_reward?: number | string
-  new_user_reward?: number | string
-  referral_reward?: number | string
-  total_balance: number
+  trigger_date: string;
+  locked_reward?: number | string;
+  liquid_reward?: number | string;
+  new_user_reward?: number | string;
+  referral_reward?: number | string;
+  total_balance_with_reducers: number;
+  total_balance_sans_reducers: number;
 }
 
 
@@ -41,7 +42,7 @@ export function buildTotalBalanceSeries(
 
     eventDates.add(triggerDate)
 
-    const normalizedTotal = event.total_balance / decimalsFactor
+    const normalizedTotal = event.total_balance_sans_reducers / decimalsFactor
 
     if (!Number.isFinite(normalizedTotal)) {
       continue
