@@ -28,7 +28,7 @@ import { useHistoryData } from "../domain/hooks/use-history-data"
 
 const totalBalanceChartConfig = {
   totalBalance: {
-    label: "Total balance",
+    label: "Locked balance",
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig
@@ -84,7 +84,7 @@ export function TotalBalanceChartCardProps({ address }: TotalBalanceChartCardPro
   return (
     <Card className="col-span-6 md:col-span-3">
       <CardHeader>
-        <CardTitle>Total balance</CardTitle>
+        <CardTitle>Locked balance</CardTitle>
       </CardHeader>
       <CardContent className={cn({ "min-h-[300px]": address === walletAddress, "min-h-60": address !== walletAddress })}>
         {shouldShowSkeleton ? (
