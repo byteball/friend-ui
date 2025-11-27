@@ -23,7 +23,9 @@ export const getCeilingPrice = (aaConstants: IConstants) => {
 
 
 const getDepositAssetExchangeRate = async (asset: string): Promise<number> => {
-  return httpClient.executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rate', [appConfig.AA_ADDRESS, asset])
+  const result = await httpClient.executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rates', [asset]) as { min: number; max: number };
+
+  return (result.min + result.max) / 2;
 }
 
 export const getTotalBalanceWithAssetReducer = async (balances: Balances, ceilingPrice: number) => {
