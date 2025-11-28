@@ -1,41 +1,31 @@
-import { appConfig } from "@/app-config";
-import { fetcher } from "@/lib/fetcher";
 import useSWR from "swr";
-interface IHistoryItem {
-  address: string;
-  trigger_unit: string;
-  event: 'rewards' | "deposit";
 
-  total_balance_with_reducers: number;
-  total_balance_sans_reducers: number;
+import { fetcher } from "@/lib/fetcher";
+import { historySchema } from "@/lib/schemas";
 
-  locked_reward: number;
-
-  liquid_reward: number;
-  new_user_reward: number;
-  referral_reward: number;
-  is_stable: number;
-  trigger_date: string;
-  creation_date: string;
-  total_locked_rewards: number;
-  total_liquid_rewards: number;
-}
+import { appConfig } from "@/app-config";
 
 export function useHistoryData(address: string) {
   const shouldFetch = Boolean(address);
 
-  const { data, error, isLoading } = useSWR<IHistoryItem[]>(
+  const { data, error, isLoading } = useSWR(
     shouldFetch ? `${appConfig.NOTIFY_URL}/history/${address}` : null,
-    fetcher<IHistoryItem>
+    fetcher
   );
 
-  const balanceHistory = Array.isArray(data)
-    ? data.filter((item) => Number.isFinite(item?.total_balance_sans_reducers))
+  const parsedData = historySchema.safeParse(data ?? []);
+
+  if (!parsedData.success) {
+    console.error("Failed to parse reward history", parsedData.error.issues);
+  }
+
+  const balanceHistory = parsedData.success
+    ? parsedData.data.filter((item) => Number.isFinite(item?.total_balance_sans_reducers))
     : [];
 
   return {
     data: balanceHistory,
     isLoading,
-    isError: Boolean(error),
+    isError: Boolean(error || !parsedData.success),
   };
 }
