@@ -98,13 +98,6 @@ export function TotalBalanceChartCardProps({ address }: TotalBalanceChartCardPro
               accessibilityLayer
               data={balanceSeries}
             >
-              {/* <defs>
-                <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#1447e5" stopOpacity={0.35} />
-                  <stop offset="100%" stopColor="#1447e5" stopOpacity={0.05} />
-                </linearGradient>
-              </defs> */}
-
               <XAxis
                 dataKey="trigger_date"
                 tickLine={false}
