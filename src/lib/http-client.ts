@@ -1,4 +1,5 @@
 import { appConfig } from '@/app-config';
+import { cache } from 'react';
 
 class Client {
   hubAddress: string;
@@ -76,9 +77,6 @@ class Client {
     return await this.request("get_profile_units", { addresses });
   }
 
-  async getDefinition(address: string) {
-    return await this.request("get_definition", { address });
-  }
 
   async getDataFeed(oracles: string[], feed_name: string, ifnone: string) {
     return await this.request("get_data_feed", { oracles, feed_name, ifnone });
@@ -139,17 +137,22 @@ class Client {
     });
   }
 
-  async executeGetter(address: string, getter: string, args: any[] = []) {
-    return await this.request("execute_getter", { address, getter, args }).then(data => data.result);
-  }
-
   async getAaBalances(address: string) {
     return await this.request("get_aa_balances", { address }).then(data => data.balances);
   }
-
-  async getAaStateVars(address: string, var_prefix: string, var_prefix_from: string | undefined = undefined, var_prefix_to: string | undefined = undefined) {
-    return await this.request("get_aa_state_vars", { address, var_prefix, var_prefix_from, var_prefix_to });
-  }
 }
 
-export default new Client();
+const client = new Client();
+
+export const executeGetter = cache(async (address: string, getter: string, args: any[] = []) => {
+  const data = await client.request("execute_getter", { address, getter, args });
+  return data.result;
+});
+
+export const getDefinition = cache(async (address: string) => {
+  return await client.request("get_definition", { address });
+});
+
+export const getAaStateVars = cache(async (address: string, var_prefix: string, var_prefix_from: string | undefined = undefined, var_prefix_to: string | undefined = undefined) => {
+  return await client.request("get_aa_state_vars", { address, var_prefix, var_prefix_from, var_prefix_to });
+})

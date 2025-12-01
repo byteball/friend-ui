@@ -2,7 +2,7 @@
 "use no memo";
 
 import { appConfig } from "@/app-config";
-import httpClient from "@/lib/http-client";
+import { getAaStateVars } from "@/lib/http-client";
 import { useEffect, useState } from "react";
 
 /** In-memory cache with TTL */
@@ -109,8 +109,7 @@ export const useToken = (input: TokenInput, options?: Options) => {
 
       const stateVarKey = kind === "asset" ? `a2s_${lookupValue}` : `s2a_${lookupValue}`;
 
-      httpClient
-        .getAaStateVars(appConfig.TOKEN_REGISTRY_AA, stateVarKey)
+      getAaStateVars(appConfig.TOKEN_REGISTRY_AA, stateVarKey)
         .then((res) => {
           if (cancelled) return;
           const fetchedValue = res?.[stateVarKey];

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import httpClient from "@/lib/http-client";
+import { getDefinition } from "@/lib/http-client";
 import { isValidAddress } from "@/lib/is-valid-address";
 
 export const useCheckPoolAddress = (address: string, asset: string | null) => {
@@ -11,7 +11,7 @@ export const useCheckPoolAddress = (address: string, asset: string | null) => {
   const [error, setError] = useState<null | string>(null);
 
   const checkPool = useCallback(async (address: string, asset: string): Promise<boolean> => {
-    const data = await httpClient.getDefinition(address);
+    const data = await getDefinition(address);
     if (!data) return false;
 
     const params = data[1]?.params;

@@ -1,5 +1,5 @@
 import { getUnixTime } from "date-fns";
-import httpClient from "../http-client";
+import { executeGetter } from "../http-client";
 
 import { YEAR } from "@/constants";
 
@@ -23,7 +23,7 @@ export const getCeilingPrice = (aaConstants: IConstants) => {
 
 
 const getDepositAssetExchangeRate = async (asset: string): Promise<number> => {
-  const result = await httpClient.executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rates', [asset]) as { min: number; max: number };
+  const result = await executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rates', [asset]) as { min: number; max: number };
 
   return result.min / 0.9;
 }
