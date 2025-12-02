@@ -1,14 +1,23 @@
 "use client"
 
-import { useData } from "@/app/context";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { useGetCookie } from "cookies-next";
+import { isAfter, parseISO } from "date-fns";
+import { toZonedTime } from 'date-fns-tz';
+import { FC } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
+import { WALLET_COOKIE_NAME } from "@/constants";
 import { getFriendList } from "@/lib/calculations/get-friend-list";
 import { formatDateAsUTC } from "@/lib/format-date-as-utc";
 import { parseDateFromAA } from "@/lib/parse-date-from-aa";
 import { toLocalString } from "@/lib/to-local-string";
-import { FC } from "react";
 import { GhostFriendsCard } from "../../ghost/ui/ghost-friends-card";
+import { ProfileAssetsBalance } from "./profile-assets-balance";
+import { ReplaceForm } from "./replace-form";
 import { TotalBalanceChartCardProps } from "./total-balance-chart-card";
+
+import { useData } from "@/app/context";
 
 interface ProfileStatsProps {
   address: string;
@@ -17,6 +26,9 @@ interface ProfileStatsProps {
 
 export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) => {
   const { state, getFrdToken } = useData();
+  const getCookie = useGetCookie();
+
+  const walletAddress = getCookie(WALLET_COOKIE_NAME);
 
   const userData: IUserData | undefined = state?.[`user_${address}`];
 
@@ -25,9 +37,17 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
 
   const liquidRewards = userData?.liquid_rewards ?? 0;
   const lockedRewards = userData?.locked_rewards ?? 0;
+
   const totalRewards = liquidRewards + lockedRewards; // newUserRewards are not included in locked rewards
 
   const friends = getFriendList(state, address);
+
+
+  const unlockDate = userData?.unlock_date ? parseISO(userData.unlock_date) : undefined;
+
+  const locked = unlockDate && userData && userData.unlock_date
+    ? isAfter(userData.unlock_date, toZonedTime(new Date(), "UTC"))
+    : false;
 
   return <div className="grid grid-cols-6 gap-8 mt-10">
     <Card className="col-span-6 md:col-span-2">
@@ -67,8 +87,6 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       </CardContent>
     </Card>
 
-
-
     <GhostFriendsCard
       userData={userData}
       address={address}
@@ -77,5 +95,39 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
     <TotalBalanceChartCardProps
       address={address}
     />
+
+    {walletAddress === address && locked ? <Card className="col-span-6 md:col-span-2">
+      <CardContent>
+        <CardTitle>Replace</CardTitle>
+        <CardDescription className="mt-2">You can replace your locked GBYTE/USDC/ETH for FRD</CardDescription>
+        <div className="mt-4">
+          <ReplaceForm
+            address={address}
+          />
+        </div>
+      </CardContent>
+    </Card> : null}
+
+    <Card className="col-span-6 md:col-span-2">
+      <CardContent className="h-full grow-0">
+        <CardTitle>Balances</CardTitle>
+
+        <div className="flex flex-col justify-between h-full pb-3">
+          <ProfileAssetsBalance
+            address={address}
+            balances={userData?.balances ?? {}}
+          />
+
+          <div className="grid gap-y-2">
+            <Button className="w-full">Withdraw</Button>
+            {userData?.unlock_date ? <div className="text-sm text-center text-muted-foreground">
+              Unlock date: {formatDateAsUTC(parseDateFromAA(userData.unlock_date))}
+            </div> : null}
+          </div>
+        </div>
+
+      </CardContent>
+    </Card>
+
   </div>
 }
