@@ -108,7 +108,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       </CardContent>
     </Card> : null}
 
-    <Card className="col-span-6 md:col-span-2">
+    {walletAddress === address ? <Card className="col-span-6 md:col-span-2">
       <CardContent className="h-full grow-0">
         <CardTitle>Balances</CardTitle>
 
@@ -127,7 +127,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
         </div>
 
       </CardContent>
-    </Card>
+    </Card> : null}
 
   </div>
 }
