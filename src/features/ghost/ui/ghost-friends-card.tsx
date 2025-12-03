@@ -46,8 +46,6 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
     }
   });
 
-  console.log('userData', userData)
-
   return (
     <Card className="col-span-6 md:col-span-3">
       <CardHeader>
@@ -134,7 +132,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
         </div>
       </CardContent>
 
-      {address === walletAddress ? <CardFooterReferral /> : null}
+      {address === walletAddress ? <CardFooterReferral hasDeposit={!!userData?.balances} /> : null}
     </Card >
   )
 }

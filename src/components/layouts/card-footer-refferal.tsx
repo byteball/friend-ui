@@ -12,9 +12,10 @@ import { Skeleton } from "../ui/skeleton";
 
 interface CardFooterReferralProps {
   query?: string;
+  hasDeposit?: boolean;
 }
 
-export const CardFooterReferral: FC<CardFooterReferralProps> = ({ query = "" }) => {
+export const CardFooterReferral: FC<CardFooterReferralProps> = ({ hasDeposit = false, query = "" }) => {
   const pathname = usePathname();
   const { copied, copy } = useClipboard({
     copiedTimeout: 1000, // timeout duration in milliseconds
@@ -38,7 +39,7 @@ export const CardFooterReferral: FC<CardFooterReferralProps> = ({ query = "" }) 
 
     {canShare ? <CardFooter className="items-end justify-end">
       <FieldGroup>
-        <Field>
+        {hasDeposit ? <Field>
           <FieldLabel>Share this link to get new friends and referrals</FieldLabel>
           <InputGroup>
             <InputGroupInput value={referralUrl} readOnly />
@@ -57,7 +58,9 @@ export const CardFooterReferral: FC<CardFooterReferralProps> = ({ query = "" }) 
               </InputGroupButton>
             </InputGroupAddon>
           </InputGroup>
-        </Field>
+        </Field> : <Field>
+          <FieldLabel className="text-yellow-600">To be able to find new friends and referrals, make a deposit</FieldLabel>
+        </Field>}
       </FieldGroup>
     </CardFooter> : <CardFooter>
       <FieldGroup>
