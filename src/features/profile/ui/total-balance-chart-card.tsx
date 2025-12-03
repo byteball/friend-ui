@@ -38,7 +38,7 @@ interface TotalBalanceChartCardProps {
   address: string
 }
 
-export function TotalBalanceChartCardProps({ address }: TotalBalanceChartCardProps) {
+export function TotalBalanceChartCard({ address }: TotalBalanceChartCardProps) {
   const { data: rewardEvents, isLoading, isError } = useHistoryData(address)
   const getCookie = useGetCookie();
   const walletAddress = getCookie(WALLET_COOKIE_NAME);

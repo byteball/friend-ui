@@ -14,7 +14,7 @@ import { toLocalString } from "@/lib/to-local-string";
 import { GhostFriendsCard } from "../../ghost/ui/ghost-friends-card";
 import { ProfileAssetsBalance } from "./profile-assets-balance";
 import { ReplaceForm } from "./replace-form";
-import { TotalBalanceChartCardProps } from "./total-balance-chart-card";
+import { TotalBalanceChartCard } from "./total-balance-chart-card";
 
 import { appConfig } from "@/app-config";
 import { useData } from "@/app/context";
@@ -104,9 +104,9 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       address={address}
     />
 
-    <TotalBalanceChartCardProps
+    {userData?.balances ? <TotalBalanceChartCard
       address={address}
-    />
+    /> : null}
 
     {walletAddress === address && locked ? <Card className="col-span-6 md:col-span-2">
       <CardContent>
@@ -120,7 +120,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       </CardContent>
     </Card> : null}
 
-    {walletAddress === address ? <Card className="col-span-6 md:col-span-2">
+    {walletAddress === address && userData && userData.balances ? <Card className="col-span-6 md:col-span-2">
       <CardContent className="h-full grow-0">
         <CardTitle>Balances</CardTitle>
 
