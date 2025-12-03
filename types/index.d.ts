@@ -46,7 +46,7 @@ type IUserData = {
   locked_rewards?: number; // locked rewards amount
   total_streak?: number; // total connect streak
   new_user_rewards?: number; // new user rewards amount
-  current_streak?: number; // current connect streak
+  current_streak?: false | number; // current connect streak
   [key: string]: any; // allow additional properties
 }
 

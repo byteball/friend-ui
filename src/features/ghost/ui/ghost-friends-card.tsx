@@ -46,13 +46,15 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
     }
   });
 
+  console.log('userData', userData)
+
   return (
     <Card className="col-span-6 md:col-span-3">
       <CardHeader>
         <CardTitle>
           {isLoading
             ? <Skeleton className="w-[calc(100%-20px)] h-12" />
-            : <div className="leading-6 max-w-lg">On {userData?.current_streak ?? 0} out of {requiredStreak} days streak to become friends with the ghost of {ghostName}</div>}
+            : <div className="leading-6 max-w-lg">On {userData?.current_streak || 0} out of {requiredStreak} days streak to become friends with the ghost of {ghostName}</div>}
         </CardTitle>
       </CardHeader>
       <CardContent className={cn({ "min-h-[268px]": address === walletAddress, "min-h-60": address !== walletAddress })}>
@@ -84,8 +86,8 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
               <Skeleton className="w-full h-4" />
               <Skeleton className="w-full h-4" />
             </div> : <div className="mt-4 gap-2">
-              <div>Current streak: {userData?.current_streak ?? 0} / {requiredStreak} days</div>
-              <div>Total streak: {userData?.total_streak ?? 0} day(s)</div>
+              <div>Current streak: {userData?.current_streak || 0} / {requiredStreak} days</div>
+              <div>Total streak: {userData?.total_streak || 0} day(s)</div>
             </div>}
 
             {address === walletAddress ? <div className="mt-4">
@@ -94,12 +96,12 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
                 : <Tooltip>
                   <TooltipTrigger asChild>
                     <div>
-                      <QRButton href={url} disabled={isLoading || (userData?.current_streak ?? 0) < requiredStreak}>
+                      <QRButton href={url} disabled={isLoading || (userData?.current_streak || 0) < requiredStreak}>
                         Become friends
                       </QRButton>
                     </div>
                   </TooltipTrigger>
-                  {((userData?.current_streak ?? 0) < requiredStreak) && <TooltipContent>
+                  {((userData?.current_streak || 0) < requiredStreak) && <TooltipContent>
                     <p>
                       You need to complete the <b>{requiredStreak}-day</b> streak to become friends with <b>{ghostName}</b>
                     </p>

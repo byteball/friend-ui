@@ -59,7 +59,7 @@ export async function GET(
     height: 400,
     rows: Math.sqrt(requiredStreak),
     columns: Math.sqrt(requiredStreak),
-    filledCells: requiredStreak - (userData?.current_streak ?? 0),
+    filledCells: requiredStreak - (userData?.current_streak || 0),
   });
 
   try {
@@ -157,7 +157,7 @@ export async function GET(
               font-weight="700"
               fill="#1d4ed8"
             >
-              ${userData?.current_streak ?? 0} out of ${requiredStreak}
+              ${userData?.current_streak || 0} out of ${requiredStreak}
             </text>
 
             <text

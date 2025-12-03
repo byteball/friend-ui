@@ -54,7 +54,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ add
     height: PUZZLE_IMAGE_SIZE,
     rows: Math.sqrt(requiredStreak),
     columns: Math.sqrt(requiredStreak),
-    filledCells: requiredStreak - (userData?.current_streak ?? 0),
+    filledCells: requiredStreak - (userData?.current_streak || 0),
   });
 
   let buffer: Buffer;

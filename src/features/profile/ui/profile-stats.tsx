@@ -55,6 +55,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
     amount: 1e4,
     aa: appConfig.AA_ADDRESS,
     from_address: walletAddress || undefined,
+    is_single: true,
     data: {
       withdraw: 1
     }

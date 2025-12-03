@@ -26,7 +26,7 @@ export const SelectGhostModal: FC<ISelectGhostModalProps> = ({ children, address
   const userData = getUserData(address);
 
   const requiredStreak = getRequiredStreak(userData?.current_ghost_num);
-  const currentStreak = userData?.current_streak ?? 0;
+  const currentStreak = userData?.current_streak || 0;
   const currentGhostId = allGhosts.findIndex(g => g.name === ghostName);
   const selectedGhostId = selectedGhostIndex !== null ? selectedGhostIndex : currentGhostId;
 
