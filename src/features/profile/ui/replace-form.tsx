@@ -37,7 +37,7 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
   const [inputAsset, setInputAsset] = useState<string>(state.constants.asset);
   const [outputAsset, setOutputAsset] = useState<null | string>("base");
 
-  const [inputAmount, setInputAmount] = useState<number | null>(1);
+  const [inputAmount, setInputAmount] = useState<number | null>(0.01);
   const [outputAmount, setOutputAmount] = useState<number | null>(null);
 
   const userData = state[`user_${address}`] as IUserData | null;
