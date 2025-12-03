@@ -5,7 +5,6 @@ import { isAfter, parseISO } from "date-fns";
 import { toZonedTime } from 'date-fns-tz';
 import { FC } from "react";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { WALLET_COOKIE_NAME } from "@/constants";
 import { getFriendList } from "@/lib/calculations/get-friend-list";
@@ -17,7 +16,10 @@ import { ProfileAssetsBalance } from "./profile-assets-balance";
 import { ReplaceForm } from "./replace-form";
 import { TotalBalanceChartCardProps } from "./total-balance-chart-card";
 
+import { appConfig } from "@/app-config";
 import { useData } from "@/app/context";
+import { QRButton } from "@/components/ui/qr-button";
+import { generateLink } from "@/lib/generate-link";
 
 interface ProfileStatsProps {
   address: string;
@@ -48,6 +50,15 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
   const locked = unlockDate && userData && userData.unlock_date
     ? isAfter(userData.unlock_date, toZonedTime(new Date(), "UTC"))
     : false;
+
+  const withdrawUrl = generateLink({
+    amount: 1e4,
+    aa: appConfig.AA_ADDRESS,
+    from_address: walletAddress || undefined,
+    data: {
+      withdraw: 1
+    }
+  })
 
   return <div className="grid grid-cols-6 gap-8 mt-10">
     <Card className="col-span-6 md:col-span-2">
@@ -119,8 +130,13 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
           />
 
           <div className="grid gap-y-2">
-            <Button className="w-full">Withdraw</Button>
-            {userData?.unlock_date ? <div className="text-sm text-center text-muted-foreground">
+            <QRButton href={withdrawUrl} className="w-full" disabled={locked}>
+              <div className="w-full">
+                Withdraw
+              </div>
+            </QRButton>
+
+            {userData?.unlock_date ? <div className="text-sm mt-1 text-muted-foreground">
               Unlock date: {formatDateAsUTC(parseDateFromAA(userData.unlock_date))}
             </div> : null}
           </div>
