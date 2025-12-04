@@ -50,9 +50,6 @@ type IUserData = {
   [key: string]: any; // allow additional properties
 }
 
-// total_locked_bytes: number; // total locked bytes
-// total_locked: number; // total locked amount
-
 interface IReward {
   locked: number;
   liquid: number;
