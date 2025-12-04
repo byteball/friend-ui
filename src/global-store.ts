@@ -266,4 +266,20 @@ export class GlobalStore extends EventEmitter {
 
     return discordAttestation || null;
   }
+
+
+  // tokens
+
+  async addTokenToList(asset: string) {
+    if (!asset || !this.client) return;
+
+    const tokenRegistry = this.client.api.getOfficialTokenRegistryAddress();
+
+    const [symbol, decimals] = await Promise.all([
+      this.client.api.getSymbolByAsset(tokenRegistry, asset),
+      this.client.api.getDecimalsBySymbolOrAsset(tokenRegistry, asset)
+    ]);
+
+    this.tokens.set(asset, { asset, symbol, decimals });
+  }
 }

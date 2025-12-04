@@ -52,7 +52,11 @@ const getObyteClient = async () => {
               for (const var_name in updatedStateVars[address]) {
                 if (address === appConfig.AA_ADDRESS) {
                   if (var_name.startsWith('deposit_asset_')) {
-                    // TODO: update deposit assets if needed
+                    const asset = var_name.split("_")?.[2];
+
+                    if (asset) {
+                      globalThis.__GLOBAL_STORE__?.addTokenToList(updatedStateVars[address][var_name].value);
+                    }
                   }
 
                   aaStateDiff[var_name] = updatedStateVars[address][var_name].value;
