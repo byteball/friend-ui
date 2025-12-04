@@ -7,6 +7,8 @@ import { getCeilingPrice, getTotalBalance } from "@/lib/calculations/get-rewards
 import { getProfileUsername } from "@/lib/get-profile-username.server";
 import { isValidAddress } from "@/lib/is-valid-address";
 import { toLocalString } from "@/lib/to-local-string";
+
+import { RefCookieApplier } from "@/components/ref-cookie-applier";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -22,7 +24,7 @@ export async function generateMetadata(
   const queryParams = await searchParams;
   const userData: IUserData | undefined = state?.[`user_${address}`];
   const friends = getFriendList(state, address);
-  const isChart = queryParams.type === 'chart';
+  const isChart = queryParams.r === 'c';
 
   const ceilingPrice = getCeilingPrice(state.constants!);
   const totalBalance = await getTotalBalance(userData?.balances ?? {}, ceilingPrice);
@@ -67,6 +69,10 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
 
   return <div className="grid gap-y-5">
     <ProfileInfo address={address} userData={userData} />
+
+    <RefCookieApplier
+      refAddress={address}
+    />
 
     <ProfileStats
       address={address}
