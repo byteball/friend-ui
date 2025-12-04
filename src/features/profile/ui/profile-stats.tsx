@@ -108,7 +108,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       address={address}
     /> : null}
 
-    {walletAddress === address && locked ? <Card className="col-span-6 md:col-span-2">
+    {walletAddress === address && locked ? <Card className="col-span-6 md:col-span-3">
       <CardContent>
         <CardTitle>Replace</CardTitle>
         <CardDescription className="mt-2">You can replace your locked GBYTE/USDC/ETH for FRD</CardDescription>
@@ -120,7 +120,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       </CardContent>
     </Card> : null}
 
-    {walletAddress === address && userData && userData.balances ? <Card className="col-span-6 md:col-span-2">
+    {walletAddress === address && userData && userData.balances ? <Card className="col-span-6 md:col-span-3">
       <CardContent className="h-full grow-0">
         <CardTitle>Balances</CardTitle>
 
