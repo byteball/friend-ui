@@ -77,5 +77,10 @@ const sseHandler = createSSEHandler((send, _close, { onClose }) => {
 export async function GET(request: NextRequest) {
   const response = await sseHandler(request);
   response.headers.set('X-Accel-Buffering', 'no');
+  response.headers.set('Cache-Control', 'no-store');
+  response.headers.set('Connection', 'keep-alive');
+  response.headers.set('Keep-Alive', 'timeout=25, max=100');
+  response.headers.set('Alt-Svc', 'clear');
+  response.headers.set('x-vercel-disable-http3', '1');
   return response;
 }
