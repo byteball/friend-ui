@@ -2,7 +2,7 @@ import { FC } from "react";
 import "server-only";
 
 import { QRButton } from "@/components/ui/qr-button";
-import { BOUNCE_FEES } from "@/constants";
+import { BOUNCE_FEES, WALLET_COOKIE_NAME } from "@/constants";
 import { generateLink } from "@/lib/generate-link";
 
 import { ActiveUserLabel } from "./active-user-label";
@@ -10,9 +10,11 @@ import { ActiveUserLabel } from "./active-user-label";
 import { getProfileUsername } from "@/lib/get-profile-username.server";
 import { isActiveUser } from "@/lib/is-active-user";
 
-import { appConfig } from "@/app-config";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { getContactUrlByUsername } from "@/lib/get-contact-url-by-username";
+
+import { appConfig } from "@/app-config";
+import { cookies } from "next/headers";
 
 interface ProfileInfoProps {
   address: string;
@@ -53,6 +55,9 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
     }
   });
 
+  const userCookies = await cookies()
+  const walletAddress = userCookies.get(WALLET_COOKIE_NAME)?.value;
+
   return (
     <>
       <div className="flex flex-col sm:gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -65,7 +70,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
         </div>
 
         <div className="flex flex-col mt-4 sm:mt-0 sm:text-right  sm:items-end gap-2">
-          <QRButton href={connectUrl} disabled={!isActive} variant="secondary">Add friend</QRButton>
+          <QRButton href={connectUrl} disabled={!isActive || walletAddress === address} variant="secondary">Add friend</QRButton>
           <small className="text-xs text-muted-foreground">Before sending a request, please contact {username} first</small>
         </div>
       </div>
@@ -106,17 +111,8 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
 
           <div>{discordUrl ? <a href={discordUrl} target="_blank" rel="noopener noreferrer" className="text-blue-700">{discordUsername}</a> : discordUsername}</div>
         </div>}
-        {/* 
-        <div>
-          <a href={`https://city.obyte.org/${address}`} target="_blank" rel="noopener noreferrer" className="text-blue-700">Link on CITY profile</a>
-        </div> */}
 
       </div>
-
-      {/* <ProfileShareLinks
-        url={`${env.NEXT_PUBLIC_SITE_URL}/${address}`}
-        title={`Become friends with ${username} on Obyte friends!`}
-      /> */}
     </>
   )
 }
