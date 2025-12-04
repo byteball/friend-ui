@@ -4,6 +4,7 @@ import { CheckIcon, CopyIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { useClipboard } from "use-clipboard-copy";
+
 import { CardFooter } from "../ui/card";
 import { Field, FieldGroup, FieldLabel } from "../ui/field";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "../ui/input-group";
