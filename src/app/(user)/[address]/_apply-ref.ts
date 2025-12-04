@@ -3,7 +3,6 @@
 import { REF_COOKIE_EXPIRES, REF_COOKIE_NAME, WALLET_COOKIE_NAME } from "@/constants";
 import { isValidAddress } from "@/lib/is-valid-address";
 import { cookies, headers } from "next/headers";
-import "server-only";
 
 export const applyRef = async (ref: string) => {
   if (!isValidAddress(ref)) return;
