@@ -132,7 +132,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
         </div>
       </CardContent>
 
-      {address === walletAddress ? <CardFooterReferral hasDeposit={!!userData?.balances} /> : null}
+      {address === walletAddress ? <CardFooterReferral hasDeposit={!!userData?.balances} query="?r=p" /> : null}
     </Card >
   )
 }
