@@ -1,83 +1,81 @@
 import { NextRequest } from 'next/server';
 
+import { appConfig } from '@/app-config';
+import { STORE_EVENTS } from '@/constants';
+import { createSSEHandler } from 'use-next-sse';
+
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-import { STORE_EVENTS } from '@/constants';
+const SSE_HEARTBEAT_MS = 15_000; // keep-alive to prevent idle disconnects
 
-function formatSse(data: unknown) {
-  return `data: ${JSON.stringify(data)}\n\n`;
-}
+const EMPTY_SNAPSHOT: IClientSnapshot = {
+  state: {},
+  governanceState: {},
+  tokens: {},
+  params: appConfig.initialParamsVariables,
+};
 
-const SSE_HEARTBEAT_MS = 15_000; // clients should reconnect if no messages within this window
-
-export async function GET(_req: NextRequest) {
-  const encoder = new TextEncoder();
-
+const sseHandler = createSSEHandler((send, _close, { onClose }) => {
+  const store = globalThis.__GLOBAL_STORE__;
   let heartbeat: ReturnType<typeof setInterval> | null = null;
-  let closed = false;
+  const listeners: Array<[STORE_EVENTS, (...args: any[]) => void]> = [];
 
-  let onSnapshot: ((payload: IClientSnapshot) => void) | null = null;
-  let onStateUpdate: ((payload: IAaState) => void) | null = null;
+  const push = (event: STORE_EVENTS | string, payload: unknown) => {
+    try {
+      send({ event, data: payload });
+    } catch (err) {
+      // if (process.env.NODE_ENV !== 'production') {
+        console.warn('[SSE] send error', err);
+      // }
+    }
+  };
 
-  const stream = new ReadableStream<Uint8Array>({
-    start(controller) {
-      const safeEnqueue = (text: string) => {
-        if (closed) return;
-        try {
-          controller.enqueue(encoder.encode(text));
-        } catch {
-          // controller likely closed; stop further writes
-          closed = true;
-          if (heartbeat) clearInterval(heartbeat);
+  const cleanup = () => {
+    if (heartbeat) {
+      clearInterval(heartbeat);
+      heartbeat = null;
+    }
+
+    if (store) {
+      for (const [event, handler] of listeners) {
+        if (typeof store.off === 'function') {
+          store.off(event, handler);
+        } else if (typeof store.removeListener === 'function') {
+          store.removeListener(event, handler);
         }
-      };
-
-      const sendToClient = (data: unknown) => safeEnqueue(formatSse(data));
-
-      heartbeat = setInterval(() => safeEnqueue(': keepalive\n\n'), SSE_HEARTBEAT_MS);
-
-      // Instruct EventSource clients to wait before reconnecting (in ms)
-      const sendRetry = (ms: number) => safeEnqueue(`retry: ${ms}\n\n`);
-      sendRetry(5000);
-
-      const initialSnapshot = globalThis.__GLOBAL_STORE__?.getSnapshot() || { state: {}, tokens: {} };
-
-      sendToClient({ event: STORE_EVENTS.SNAPSHOT, data: initialSnapshot }); // send initial snapshot
-
-      onSnapshot = (payload: IClientSnapshot) => {
-        sendToClient({ event: STORE_EVENTS.SNAPSHOT, data: payload });
       }
+    }
+  };
 
-      onStateUpdate = (payload: IAaState) => {
-        sendToClient({ event: STORE_EVENTS.STATE_UPDATE, data: payload });
-      }
+  onClose(cleanup);
 
-      try {
-        globalThis.__GLOBAL_STORE__?.on(STORE_EVENTS.SNAPSHOT, onSnapshot);
-        globalThis.__GLOBAL_STORE__?.on(STORE_EVENTS.STATE_UPDATE, onStateUpdate);
-      } catch { }
-    },
-    cancel() {
-      closed = true;
-      if (heartbeat) {
-        clearInterval(heartbeat);
-        heartbeat = null;
-      }
-      try {
-        if (onSnapshot) globalThis.__GLOBAL_STORE__?.off(STORE_EVENTS.SNAPSHOT, onSnapshot);
-        if (onStateUpdate) globalThis.__GLOBAL_STORE__?.off(STORE_EVENTS.STATE_UPDATE, onStateUpdate);
-      } catch { }
-    },
-  });
+  const snapshot = store?.getSnapshot?.() ?? EMPTY_SNAPSHOT;
+  push(STORE_EVENTS.SNAPSHOT, snapshot);
 
-  return new Response(stream, {
-    headers: {
-      'Content-Type': 'text/event-stream; charset=utf-8',
-      'Cache-Control': 'no-cache, no-transform',
-      Connection: 'keep-alive',
-      // Allow browser to keep connection open in modern proxies/CDNs
-      'X-Accel-Buffering': 'no',
-    },
-  });
+  if (store) {
+    const snapshotListener = (payload: IClientSnapshot) => push(STORE_EVENTS.SNAPSHOT, payload);
+    const stateListener = (payload: IAaState) => push(STORE_EVENTS.STATE_UPDATE, payload);
+    const governanceListener = (payload: Record<string, any>) => push(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, payload);
+
+    store.on(STORE_EVENTS.SNAPSHOT, snapshotListener);
+    store.on(STORE_EVENTS.STATE_UPDATE, stateListener);
+    store.on(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, governanceListener);
+
+    listeners.push([STORE_EVENTS.SNAPSHOT, snapshotListener]);
+    listeners.push([STORE_EVENTS.STATE_UPDATE, stateListener]);
+    listeners.push([STORE_EVENTS.GOVERNANCE_STATE_UPDATE, governanceListener]);
+  }
+
+  heartbeat = setInterval(() => {
+    push('HEARTBEAT', { ts: Date.now() });
+  }, SSE_HEARTBEAT_MS);
+
+  return cleanup;
+});
+
+export async function GET(request: NextRequest) {
+  const response = await sseHandler(request);
+  response.headers.set('X-Accel-Buffering', 'no');
+  return response;
 }
