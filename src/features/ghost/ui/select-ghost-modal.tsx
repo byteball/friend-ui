@@ -50,19 +50,19 @@ export const SelectGhostModal: FC<ISelectGhostModalProps> = ({ children, address
           <div>Current selection: {ghostName}</div>
           <div>
             <Select
-              value={selectedGhostIndex ? String(selectedGhostIndex) : String(currentGhostId)}
+              value={selectedGhostIndex !== null ? String(selectedGhostIndex) : String(currentGhostId)}
               onValueChange={(v) => setSelectedGhostIndex(+v)}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select ghost" />
-                <SelectContent>
-                  {allGhosts.map((g, index) => (
-                    <SelectItem key={g.name} value={String(index)} disabled={ghostFriendIds.includes(index)}>
-                      {g.name} {ghostFriendIds.includes(index) ? "(already a friend)" : ""}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
               </SelectTrigger>
+              <SelectContent>
+                {allGhosts.map((g, index) => (
+                  <SelectItem key={g.name} value={String(index)} disabled={ghostFriendIds.includes(index)}>
+                    {g.name} {ghostFriendIds.includes(index) ? "(already a friend)" : ""}
+                  </SelectItem>
+                ))}
+              </SelectContent>
             </Select>
           </div>
 

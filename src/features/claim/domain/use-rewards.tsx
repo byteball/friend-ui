@@ -21,35 +21,46 @@ export const useRewards = () => {
   const { state, getUserData } = useData();
 
   useEffect(() => {
+    let cancelled = false;
+
     (async () => {
-
-      if (isValidFriendWallet) {
-        const userData1 = walletAddress ? getUserData(walletAddress) : null;
-        const userData2 = isValidFriendWallet ? getUserData(friendWallet!) : null;
-
-        if (!userData2) {
-          setError("Both you and your friend must have deposited before claiming rewards");
-          setRewards(null);
-          return;
-        }
-
-        if (userData2.last_date) {
-          if (isSameDayUTC(new Date(userData2.last_date), new Date())) {
-            setError("Your friend has already claimed today.");
-            setRewards(null);
-            return;
-          }
-        }
-
-        const rewards = await getRewards(userData1, userData2, state.constants);
-        setRewards(walletAddress ? rewards : null);
+      if (!friendWallet) {
         setError(null);
-      } else {
-        setError("Invalid address");
         setRewards(null);
+        return;
       }
 
+      if (!isValidFriendWallet) {
+        setError("Invalid address");
+        setRewards(null);
+        return;
+      }
+
+      const userData1 = walletAddress ? getUserData(walletAddress) : null;
+      const userData2 = getUserData(friendWallet);
+
+      if (!userData2) {
+        setError("Both you and your friend must have deposited before claiming rewards");
+        setRewards(null);
+        return;
+      }
+
+      if (userData2.last_date && isSameDayUTC(new Date(userData2.last_date), new Date())) {
+        setError("Your friend has already claimed today.");
+        setRewards(null);
+        return;
+      }
+
+      const rewards = await getRewards(userData1, userData2, state.constants);
+      if (!cancelled) {
+        setRewards(walletAddress ? rewards : null);
+        setError(null);
+      }
     })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [state, walletAddress, friendWallet, isValidFriendWallet, getUserData]);
 
   return { error, rewards, friendWallet, isValidFriendWallet, changeFriendWallet: setFriendWallet };

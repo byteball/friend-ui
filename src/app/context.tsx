@@ -2,7 +2,7 @@
 import { appConfig } from "@/app-config";
 import { STORE_EVENTS } from "@/constants";
 import "client-only";
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 /**
  * Types you already have in your codebase; keep these placeholders if needed.
@@ -23,19 +23,25 @@ export function useData() {
   const data = useContext(DataContext);
   if (!data) throw new Error("useData must be used within a DataProvider");
 
-  return {
+  const getFrdToken = useCallback((): TokenMeta => {
+    const asset = data.state?.constants?.asset;
+    return data.tokens?.[asset] ?? {};
+  }, [data]);
+
+  const getGovernanceAA = useCallback((): string => {
+    return data.state?.constants?.governance_aa;
+  }, [data]);
+
+  const getUserData = useCallback((address: string): IUserData | null => {
+    return (data.state?.[`user_${address}`] || null) as IUserData | null;
+  }, [data]);
+
+  return useMemo(() => ({
     ...data,
-    getFrdToken: (): TokenMeta => {
-      const asset = data.state?.constants?.asset;
-      return data.tokens?.[asset] ?? {};
-    },
-    getGovernanceAA: (): string => {
-      return data.state?.constants?.governance_aa;
-    },
-    getUserData: (address: string): IUserData | null => {
-      return (data.state?.[`user_${address}`] || null) as IUserData | null;
-    }
-  };
+    getFrdToken,
+    getGovernanceAA,
+    getUserData,
+  }), [data, getFrdToken, getGovernanceAA, getUserData]);
 }
 
 type DataProviderProps = {
@@ -157,9 +163,12 @@ export function DataProvider({
     if (!ev) return;
 
     if (ev === STORE_EVENTS.SNAPSHOT) {
+      const snapshot = (incoming.data ?? {}) as Partial<IClientSnapshot>;
       setData({
-        ...incoming.data,
-        params: incoming.state?.variables ?? appConfig.initialParamsVariables
+        state: snapshot.state ?? {},
+        governanceState: snapshot.governanceState ?? {},
+        tokens: snapshot.tokens ?? {},
+        params: snapshot.params ?? snapshot.state?.variables ?? appConfig.initialParamsVariables,
       } as IClientSnapshot);
     } else if (ev === STORE_EVENTS.STATE_UPDATE) {
       setData((prev) => ({
