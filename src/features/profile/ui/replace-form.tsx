@@ -99,41 +99,7 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
 
   return <FieldGroup>
     <Field>
-      <Label htmlFor={input1Key}>From</Label>
-      <InputGroup>
-        <NumericFormat
-          customInput={InputGroupInput}
-          id={input1Key}
-          placeholder="1000"
-          onChange={handleInputAmountChange}
-          onKeyDown={handleKeyDown}
-          value={inputAmount2 || ""}
-          disabled={!!error || isLoading || isValidating}
-          decimalScale={inputTokenMeta.decimals}
-          required
-        />
-
-        <InputGroupAddon align="inline-end">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <InputGroupButton variant="ghost" className="!pr-1.5 text-xs">
-                {inputTokenMeta.symbol} <ChevronDownIcon className="ml-1 size-4" />
-              </InputGroupButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="[--radius:0.95rem]">
-              {allInputTokens.map(pair => (
-                <DropdownMenuItem disabled={isLoading || isValidating || !!error} key={pair.asset} onSelect={() => setInputAsset(pair.asset)}>
-                  {pair.symbol}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </InputGroupAddon>
-      </InputGroup>
-    </Field>
-
-    <Field>
-      <Label htmlFor={input2Key}>To</Label>
+      <Label htmlFor={input2Key}>Existing locked asset</Label>
       <InputGroup>
         <NumericFormat
           customInput={InputGroupInput}
@@ -168,6 +134,41 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
         </InputGroupAddon>
       </InputGroup>
     </Field>
+
+    <Field>
+      <Label htmlFor={input1Key}>Replace with</Label>
+      <InputGroup>
+        <NumericFormat
+          customInput={InputGroupInput}
+          id={input1Key}
+          placeholder="1000"
+          onChange={handleInputAmountChange}
+          onKeyDown={handleKeyDown}
+          value={inputAmount2 || ""}
+          disabled={!!error || isLoading || isValidating}
+          decimalScale={inputTokenMeta.decimals}
+          required
+        />
+
+        <InputGroupAddon align="inline-end">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <InputGroupButton variant="ghost" className="!pr-1.5 text-xs">
+                {inputTokenMeta.symbol} <ChevronDownIcon className="ml-1 size-4" />
+              </InputGroupButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="[--radius:0.95rem]">
+              {allInputTokens.map(pair => (
+                <DropdownMenuItem disabled={isLoading || isValidating || !!error} key={pair.asset} onSelect={() => setInputAsset(pair.asset)}>
+                  {pair.symbol}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </InputGroupAddon>
+      </InputGroup>
+    </Field>
+
     <Field>
       {isLoading || isValidating
         ? <Skeleton className="w-full h-6" />
