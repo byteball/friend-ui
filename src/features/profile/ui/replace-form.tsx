@@ -151,20 +151,9 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
         />
 
         <InputGroupAddon align="inline-end">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <InputGroupButton variant="ghost" className="!pr-1.5 text-xs">
-                {inputTokenMeta.symbol} <ChevronDownIcon className="ml-1 size-4" />
-              </InputGroupButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="[--radius:0.95rem]">
-              {allInputTokens.map(pair => (
-                <DropdownMenuItem disabled={isLoading || isValidating || !!error} key={pair.asset} onSelect={() => setInputAsset(pair.asset)}>
-                  {pair.symbol}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <span className="text-xs">
+            {inputTokenMeta.symbol}
+          </span>
         </InputGroupAddon>
       </InputGroup>
     </Field>
