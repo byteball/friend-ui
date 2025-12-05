@@ -81,9 +81,13 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
         <div className="mt-2 text-3xl">
           {toLocalString((totalRewards / 10 ** frdDecimals).toPrecision(frdDecimals))} <small>{frdSymbol}</small>
         </div>
-        {userData?.last_date
+        {userData?.liquid_rewards
           ? <div className="mt-2 text-sm text-muted-foreground">
             including {toLocalString((liquidRewards / 10 ** frdDecimals).toPrecision(frdDecimals))} {frdSymbol} liquid</div>
+          : null}
+        {userData?.new_user_rewards
+          ? <div className="mt-2 text-sm text-muted-foreground">
+            including {toLocalString(((userData.new_user_rewards ?? 0) / 10 ** frdDecimals).toPrecision(frdDecimals))} {frdSymbol} for new users</div>
           : null}
       </CardContent>
     </Card>
@@ -92,6 +96,12 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       <CardContent>
         <CardTitle>Total friends</CardTitle>
         <div className="mt-2 text-3xl">{toLocalString(friends.length)}</div>
+
+        {userData?.new_users
+          ? <div className="mt-2 text-sm text-muted-foreground">
+            including {toLocalString(userData.new_users)} new user{userData.new_users !== 1 ? "s" : ""}</div>
+          : null}
+
         {userData?.last_date
           ? <div className="mt-2 text-sm text-muted-foreground">
             Last: {" "}

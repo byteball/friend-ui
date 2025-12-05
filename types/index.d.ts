@@ -47,6 +47,7 @@ type IUserData = {
   total_streak?: number; // total connect streak
   new_user_rewards?: number; // new user rewards amount
   current_streak?: false | number; // current connect streak
+  new_users?: number; // number of new users referred
   [key: string]: any; // allow additional properties
 }
 
