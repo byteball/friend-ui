@@ -111,7 +111,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
     {walletAddress === address && locked ? <Card className="col-span-6 md:col-span-3">
       <CardContent>
         <CardTitle>Replace</CardTitle>
-        <CardDescription className="mt-2">You can replace your locked GBYTE/USDC/ETH for FRD</CardDescription>
+        <CardDescription className="mt-2">You can replace your locked GBYTE/USDC/ETH with FRD</CardDescription>
         <div className="mt-4">
           <ReplaceForm
             address={address}

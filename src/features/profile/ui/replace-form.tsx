@@ -184,7 +184,7 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
         href={url}
         className="w-full"
         disabled={!!error || isLoading || isValidating || userOutputBalance < outputAmountInSmall || userOutputBalance === 0 || inputAmount2 === 0 || outputAmount2 === 0}>
-        {isLoading || isValidating ? <Spinner /> : null}Change
+        {isLoading || isValidating ? <Spinner /> : null}Replace
       </QRButton>
     </Field>
   </FieldGroup>
