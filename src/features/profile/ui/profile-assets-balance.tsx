@@ -12,13 +12,14 @@ interface ProfileAssetsBalanceProps {
 }
 
 export const ProfileAssetsBalance: FC<ProfileAssetsBalanceProps> = ({ address, balances }) => (<div className="grid gap-4">
-  {Object.keys(balances).map((asset) => {
+  {Object.entries(balances).map(([asset, balance]) => {
     return <Suspense
       key={asset}
       fallback={<Skeleton className="w-full mt-4 rounded-md h-11" />}
     >
       <ProfileAssetBalanceItem
         asset={asset}
+        balance={balance ?? 0}
         address={address}
         rateGetter={asset === "base" || asset === "frd" ? new Promise(r => r({ min: 0, max: 0 })) : executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rates', [asset]) as Promise<{ min: number; max: number }>}
       />

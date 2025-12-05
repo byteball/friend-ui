@@ -11,15 +11,18 @@ import { useData } from "@/app/context";
 interface ProfileAssetBalanceItemProps {
   address: string;
   asset: string;
+  balance: number;
   rateGetter: Promise<{ min: number; max: number }>;
 }
 
-export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({ address, asset, rateGetter }) => {
+export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
+  asset,
+  rateGetter,
+  balance
+}) => {
   const data = useData();
   const frdToken = data.getFrdToken();
 
-  const userData = data.state[`user_${address}`] as IUserData | undefined;
-  const balance = userData?.balances?.[asset] ?? 0;
   const rate = use(rateGetter);
   const ceilingPrice = getCeilingPrice(data.state.constants);
 
@@ -44,6 +47,16 @@ export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({ addr
 
   return <div key={asset} className="first:mt-2">
     <div>{toLocalString(balance / 10 ** tokenMeta.decimals)} {tokenMeta.symbol}</div>
-    <div className="text-sm text-muted-foreground">equivalent to {toLocalString(equivalentInFrd / 10 ** frdToken.decimals)} {frdToken.symbol}, {toLocalString(((equivalentInFrd - equivalentInFrd * appConfig.initialRewardsVariables.deposit_asset_reducer) / 10 ** frdToken.decimals))} {frdToken.symbol} for rewards</div>
+
+    {asset !== "frd" ?
+      <>
+        <div className="text-sm text-muted-foreground">equivalent to {toLocalString(equivalentInFrd / 10 ** frdToken.decimals)} {frdToken.symbol}
+
+          <span>
+            , {toLocalString(((equivalentInFrd * appConfig.initialRewardsVariables.deposit_asset_reducer) / 10 ** frdToken.decimals))} {frdToken.symbol} for rewards
+          </span>
+
+        </div>
+      </> : null}
   </div>
 }
