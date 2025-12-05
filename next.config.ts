@@ -13,6 +13,18 @@ const nextConfig: NextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: '/:id/chart',
+        destination: '/:id?r=c',
+      },
+      {
+        source: '/:id/streak',
+        destination: '/:id?r=p',
+      },
+    ];
+  },
   webpack: (config, { isServer }) => {
     if (isServer) {
       config.externals = config.externals || [];

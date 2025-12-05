@@ -160,7 +160,9 @@ export function TotalBalanceChartCard({ address }: TotalBalanceChartCardProps) {
 
       {address === walletAddress ? <CardFooterReferral
         hasDeposit={true}
-        query={`?r=c`} /> : null}
+        type="chart"
+        query="" />
+        : null}
     </Card>
   )
 }

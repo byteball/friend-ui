@@ -14,9 +14,10 @@ import { Skeleton } from "../ui/skeleton";
 interface CardFooterReferralProps {
   query?: string;
   hasDeposit?: boolean;
+  type: "chart" | "streak";
 }
 
-export const CardFooterReferral: FC<CardFooterReferralProps> = ({ hasDeposit = false, query = "" }) => {
+export const CardFooterReferral: FC<CardFooterReferralProps> = ({ hasDeposit = false, query = "", type }) => {
   const pathname = usePathname();
   const { copied, copy } = useClipboard({
     copiedTimeout: 1000, // timeout duration in milliseconds
@@ -32,7 +33,11 @@ export const CardFooterReferral: FC<CardFooterReferralProps> = ({ hasDeposit = f
     setHost(window.location.host);
   }, []);
 
-  const referralUrl = host && pathname ? `https://${host + pathname}${query}` : "";
+  const cleanedPathname = pathname?.replaceAll("chart", "").replace("streak", "");
+
+  const referralUrl = host && pathname
+    ? `https://${host + cleanedPathname + (cleanedPathname.endsWith("/") ? type : `/${type}`)}${query}`
+    : "";
   const canShare = Boolean(referralUrl);
 
   return <>
