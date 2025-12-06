@@ -34,7 +34,7 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
   const input1Key = useId();
   const input2Key = useId();
 
-  const [inputAsset, setInputAsset] = useState<string>(state.constants.asset);
+  const [inputAsset] = useState<string>(state.constants.asset);
   const [outputAsset, setOutputAsset] = useState<null | string>("base");
 
   const [inputAmount, setInputAmount] = useState<number | null>(0.01);
@@ -105,6 +105,7 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
           customInput={InputGroupInput}
           onChange={handleOutputAmountChange}
           onKeyDown={handleKeyDown}
+          allowNegative={false}
           value={outputAmount2 || ""}
           decimalScale={outputTokenMeta?.decimals ?? 0}
           id={input2Key}
@@ -142,6 +143,7 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
           customInput={InputGroupInput}
           id={input1Key}
           placeholder="1000"
+          allowNegative={false}
           onChange={handleInputAmountChange}
           onKeyDown={handleKeyDown}
           value={inputAmount2 || ""}
