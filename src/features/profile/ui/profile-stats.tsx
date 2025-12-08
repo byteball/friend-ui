@@ -25,7 +25,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { generateLink } from "@/lib/generate-link";
 import { executeGetter } from "@/lib/http-client";
 import cn from "classnames";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
+import Link from "next/link";
 import { sortBalancesByPriority } from "../utils/sort-balances-by-priority";
 import { ProfileAssetBalanceItem } from "./profile-assets-balance-item";
 
@@ -75,6 +76,11 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
   const showCollapse = Object.keys(userData?.balances || {}).length > 1;
 
   return <div className="grid grid-cols-6 gap-8 mt-10">
+    <Link href="/" className="col-span-6 text-lg">
+      Become my friend and make {toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% a day by making friends every day {" "}
+      <ChevronRight className="inline" />
+    </Link>
+
     <Card className="col-span-6 md:col-span-2">
       <CardContent>
         <CardTitle>Total balance</CardTitle>
