@@ -12,11 +12,15 @@ interface ProfileAssetsBalanceProps {
   balances: Record<string, number>;
 }
 
-export const ProfileAssetsBalance: FC<ProfileAssetsBalanceProps> = ({ address, balances }) => (<div className="grid gap-4">
+export const ProfileAssetsBalance: FC<ProfileAssetsBalanceProps> = ({ address, balances }) => (<div
+  className="grid gap-4"
+>
   {Object.entries(balances).sort(sortBalancesByPriority).map(([asset, balance]) => {
     return <Suspense
       key={asset}
-      fallback={<Skeleton className="w-full mt-4 rounded-md h-11" />}
+      fallback={<Skeleton
+        className="w-full mt-4 rounded-md h-11"
+      />}
     >
       <ProfileAssetBalanceItem
         asset={asset}
