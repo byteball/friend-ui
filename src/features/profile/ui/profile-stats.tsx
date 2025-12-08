@@ -3,7 +3,7 @@
 import { useGetCookie } from "cookies-next";
 import { isAfter, parseISO } from "date-fns";
 import { toZonedTime } from 'date-fns-tz';
-import { FC } from "react";
+import { FC, useState } from "react";
 
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { WALLET_COOKIE_NAME } from "@/constants";
@@ -18,8 +18,12 @@ import { TotalBalanceChartCard } from "./total-balance-chart-card";
 
 import { appConfig } from "@/app-config";
 import { useData } from "@/app/context";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { QRButton } from "@/components/ui/qr-button";
 import { generateLink } from "@/lib/generate-link";
+import cn from "classnames";
+import { ChevronDown } from "lucide-react";
+import { sortBalancesByPriority } from "../utils/sort-balances-by-priority";
 
 interface ProfileStatsProps {
   address: string;
@@ -28,6 +32,8 @@ interface ProfileStatsProps {
 
 export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) => {
   const { state, getFrdToken, tokens } = useData();
+  const [collapsedTotalBalance, setCollapsedTotalBalance] = useState(false);
+
   const getCookie = useGetCookie();
 
   const walletAddress = getCookie(WALLET_COOKIE_NAME);
@@ -63,11 +69,38 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
 
   const depositAssetList = Object.keys(userData?.balances || {}).filter(asset => asset !== "frd").map(asset => tokens[asset].symbol).join("/") || "GBYTE";
 
+  const showCollapse = Object.keys(userData?.balances || {}).length > 1;
+
   return <div className="grid grid-cols-6 gap-8 mt-10">
     <Card className="col-span-6 md:col-span-2">
       <CardContent>
         <CardTitle>Total balance</CardTitle>
-        <div className="mt-2 text-3xl">{toLocalString(Number(totalBalance / 10 ** frdDecimals).toPrecision(frdDecimals))} <small>{frdSymbol}</small></div>
+        <Collapsible open={!collapsedTotalBalance} onOpenChange={() => setCollapsedTotalBalance(!collapsedTotalBalance)}>
+          <CollapsibleTrigger asChild className="mt-2 text-3xl">
+            <div className={cn(showCollapse ? "cursor-pointer select-none" : "")}>
+              {toLocalString(Number(totalBalance / 10 ** frdDecimals).toPrecision(frdDecimals))} <small>{frdSymbol}</small>
+              {showCollapse ? <>
+                {collapsedTotalBalance
+                  ? <ChevronDown className="inline-block ml-2 rotate-0 transition-transform duration-200" size={24} />
+                  : <ChevronDown className="inline-block ml-2 -rotate-180 transition-transform duration-200" size={24} />}
+              </> : null}
+            </div>
+
+          </CollapsibleTrigger>
+
+          <CollapsibleContent className="CollapsibleContent mt-2 grid text-sm gap-1">
+            {Object.entries(userData?.balances || [])
+              .sort(sortBalancesByPriority)
+              .map(([asset, balance]) => {
+
+                const tokenMeta = asset in tokens ? tokens[asset] : asset === "frd" ? { symbol: frdSymbol, decimals: frdDecimals } : null;
+
+                return <div key={asset}>
+                  {toLocalString(balance / 10 ** (tokenMeta?.decimals ?? 0))} {tokenMeta?.symbol}
+                </div>
+              })}
+          </CollapsibleContent>
+        </Collapsible>
 
         {userData?.unlock_date ? <div className="mt-2 text-sm text-muted-foreground">
           Unlock date: {formatDateAsUTC(parseDateFromAA(userData.unlock_date))}
