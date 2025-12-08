@@ -1,5 +1,5 @@
 import { ChevronDownIcon } from "lucide-react";
-import { ChangeEvent, FC, useId, useRef, useState } from "react";
+import { ChangeEvent, FC, useEffect, useId, useMemo, useRef, useState } from "react";
 import { NumericFormat } from "react-number-format";
 
 import { useData } from "@/app/context";
@@ -29,7 +29,11 @@ interface ReplaceFormProps {
 export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
   const { tokens, state } = useData();
 
+  const [inited, setInited] = useState(false);
+
   const refBtn = useRef<HTMLButtonElement>(null);
+  const userData = state[`user_${address}`] as IUserData | null;
+  const balances = useMemo(() => userData?.balances || {}, [userData]);
 
   const input1Key = useId();
   const input2Key = useId();
@@ -37,18 +41,43 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
   const [inputAsset] = useState<string>(state.constants.asset);
   const [outputAsset, setOutputAsset] = useState<null | string>("base");
 
-  const [inputAmount, setInputAmount] = useState<number | null>(0.01);
+  const [inputAmount, setInputAmount] = useState<number | null>(null);
   const [outputAmount, setOutputAmount] = useState<number | null>(null);
 
-  const userData = state[`user_${address}`] as IUserData | null;
-  const balances = userData?.balances || {};
-
   const inputTokenMeta = tokens[inputAsset];
+
+  useEffect(() => {
+    if (inited) return; // already inited
+
+    if (balances.base && balances.base > 1 / 1e9) {
+      setOutputAmount(balances.base / 10 ** 9);
+      setInputAmount(null);
+      setOutputAsset("base");
+    } else {
+      const activeBalance = Object.entries(balances).find(([asset, balance]) => balance > 0 && asset in tokens);
+
+      if (activeBalance) {
+        const asset = activeBalance[0];
+        const decimals = tokens[asset]?.decimals || 0;
+
+        setOutputAsset(asset);
+        setOutputAmount(balances[asset] / 10 ** decimals);
+
+        setInputAmount(null);
+      } else {
+        setOutputAsset("base");
+
+        setOutputAmount(null);
+        setInputAmount(null);
+      }
+    }
+
+    setInited(true);
+  }, [balances, outputAsset, tokens, inited]);
 
   const allAllowedTokens = Object.values(tokens);
   const allPairs = getExchangePairs(allAllowedTokens, state.constants.asset);
   const allPairingTokens = allPairs[inputAsset] || [];
-  const allInputTokens = Object.keys(allPairs).map(asset => tokens[asset]) || [];
 
   const outputTokenAsset = outputAsset && (allPairingTokens.find(p => p.asset === outputAsset)) ? outputAsset : allPairingTokens[0]?.asset;
 
@@ -130,7 +159,11 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
             <DropdownMenuContent align="end" className="[--radius:0.95rem]">
               {allPairingTokens.map(pair => (
                 <DropdownMenuItem disabled={isLoading || isValidating || !!error} key={pair.asset}
-                  onSelect={() => setOutputAsset(pair.asset)}
+                  onSelect={() => {
+                    setOutputAsset(pair.asset);
+                    setOutputAmount((balances[pair.asset] / (10 ** tokens[pair.asset].decimals)) || 0);
+                    setInputAmount(null);
+                  }}
                 >
                   {pair.symbol}
                 </DropdownMenuItem>
