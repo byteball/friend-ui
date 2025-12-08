@@ -19,6 +19,7 @@ import { appConfig } from "@/app-config";
 import { useData } from "@/app/context";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { QRButton } from "@/components/ui/qr-button";
+import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { generateLink } from "@/lib/generate-link";
 import { executeGetter } from "@/lib/http-client";
@@ -91,6 +92,8 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
           </CollapsibleTrigger>
 
           <CollapsibleContent className="CollapsibleContent mt-2 grid text-sm gap-3">
+            <Separator orientation="horizontal" className="mt-2 w-full" />
+
             {Object.entries(userData?.balances || [])
               .sort(sortBalancesByPriority)
               .map(([asset, balance]) => (
