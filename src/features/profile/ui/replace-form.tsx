@@ -14,7 +14,6 @@ import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "
 import { Label } from "@/components/ui/label";
 import { QRButton } from "@/components/ui/qr-button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Spinner } from "@/components/ui/spinner";
 import { useExchangeRate } from "@/hooks/use-exchange-rate";
 import { generateLink } from "@/lib/generate-link";
 import { getExchangePairs } from "@/lib/get-exchange-pairs";
@@ -94,7 +93,7 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
     depositAsset = outputTokenMeta.asset;
   }
 
-  const url = generateLink({
+  const url = isLoading || isValidating ? "#" : generateLink({
     aa: appConfig.AA_ADDRESS,
     amount: inputAmount ? inputAmount * 10 ** (inputTokenMeta?.decimals ?? 0) : 0,
     asset: inputAsset,
@@ -218,8 +217,8 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
         ref={refBtn}
         href={url}
         className="w-full"
-        disabled={!!error || isLoading || isValidating || userOutputBalance < outputAmountInSmall || userOutputBalance === 0 || inputAmount2 === 0 || outputAmount2 === 0}>
-        {isLoading || isValidating ? <Spinner /> : null}Replace
+        disabled={!!error || userOutputBalance < outputAmountInSmall || userOutputBalance === 0 || inputAmount2 === 0 || outputAmount2 === 0}>
+        Replace
       </QRButton>
     </Field>
   </FieldGroup>
