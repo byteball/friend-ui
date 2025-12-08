@@ -30,10 +30,13 @@ export const appConfig = {
   initialRewardsVariables: { // variables from rewards AA
     locked_reward_share: 0.01,
     liquid_reward_share: 0.001,
+
     deposit_asset_reducer: 0.5,
     bytes_reducer: 0.75,
+
     new_user_reward: 10e9,
     referral_reward: 10e9,
+
     balance_cap: 200e9,
   }
 } as const;

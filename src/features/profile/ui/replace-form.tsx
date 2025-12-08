@@ -88,6 +88,7 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
 
   const inputAmount2 = inputAmount || (outputAmount || 0) / rate
   const outputAmount2 = outputAmount || rate * (inputAmount || 0)
+
   const outputAmountInSmall = outputAmount2 * 10 ** (outputTokenMeta?.decimals ?? 0);
 
   const handleKeyDown = (ev: React.KeyboardEvent) => {
@@ -96,6 +97,10 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
       refBtn.current?.click();
     }
   }
+
+  const reducer = outputAsset === "base" ? appConfig.initialRewardsVariables.bytes_reducer : appConfig.initialRewardsVariables.deposit_asset_reducer;
+
+  const effectiveBalanceDiff = inputAmount2 * (1 - reducer);
 
   return <FieldGroup>
     <Field>
@@ -163,8 +168,13 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
     <Field>
       {isLoading || isValidating
         ? <Skeleton className="w-full h-6" />
-        : <div className="text-sm">
-          <span>Rate</span>: 1 {inputTokenMeta.symbol} = {toLocalString(rate)} {outputTokenMeta.symbol}
+        : <div className="text-sm space-y-2">
+
+          <div>
+            <span>Rate</span>: 1 {inputTokenMeta.symbol} = {toLocalString(rate)} {outputTokenMeta.symbol}
+          </div>
+
+          <div>Total effective balance will increase by {toLocalString(effectiveBalanceDiff)} {inputTokenMeta.symbol} ({reducer} reducer is applied to {outputTokenMeta.symbol} balances)</div>
         </div>
       }
     </Field>
