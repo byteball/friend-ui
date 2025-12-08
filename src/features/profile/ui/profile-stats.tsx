@@ -21,6 +21,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { QRButton } from "@/components/ui/qr-button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { generateLink } from "@/lib/generate-link";
 import { executeGetter } from "@/lib/http-client";
 import cn from "classnames";
@@ -44,7 +45,6 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
   const userData: IUserData | undefined = state?.[`user_${address}`];
 
   const { decimals: frdDecimals, symbol: frdSymbol } = getFrdToken();
-
 
   const liquidRewards = userData?.liquid_rewards ?? 0;
   const lockedRewards = userData?.locked_rewards ?? 0;
@@ -118,7 +118,16 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
           </div>
 
           {walletAddress === address && userData && userData.balances ? <div>
-            <QRButton disabled={locked} href={withdrawUrl} variant="link">Withdraw</QRButton>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <QRButton disabled={locked} href={withdrawUrl} variant="link">Withdraw</QRButton>
+                </TooltipTrigger>
+                <TooltipContent className="max-w-[350px]">
+                  <p>Will become available on the unlock date</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div> : null}
         </div> : null}
       </CardContent>
