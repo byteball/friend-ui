@@ -5,6 +5,7 @@ import { executeGetter } from "@/lib/http-client";
 import { ProfileAssetBalanceItem } from "./profile-assets-balance-item";
 
 import { appConfig } from "@/app-config";
+import { sortBalancesByPriority } from "../utils/sort-balances-by-priority";
 
 interface ProfileAssetsBalanceProps {
   address: string;
@@ -12,7 +13,7 @@ interface ProfileAssetsBalanceProps {
 }
 
 export const ProfileAssetsBalance: FC<ProfileAssetsBalanceProps> = ({ address, balances }) => (<div className="grid gap-4">
-  {Object.entries(balances).map(([asset, balance]) => {
+  {Object.entries(balances).sort(sortBalancesByPriority).map(([asset, balance]) => {
     return <Suspense
       key={asset}
       fallback={<Skeleton className="w-full mt-4 rounded-md h-11" />}
