@@ -46,7 +46,7 @@ export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
   if (!tokenMeta) throw new Error("Token meta not found");
 
   return <div key={asset} className="first:mt-2">
-    <div>{toLocalString(balance / 10 ** tokenMeta.decimals)} {tokenMeta.symbol}</div>
+    <div className="font-semibold">{toLocalString(balance / 10 ** tokenMeta.decimals)} {tokenMeta.symbol}</div>
 
     {asset !== "frd" ?
       <>

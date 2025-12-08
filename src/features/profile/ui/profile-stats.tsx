@@ -109,8 +109,8 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
           </CollapsibleContent>
         </Collapsible>
 
-        {userData?.unlock_date ? <div className="flex justify-between">
-          <div className="mt-2 text-sm text-muted-foreground">
+        {userData?.unlock_date ? <div className="mt-2 flex justify-between items-center">
+          <div className="text-sm text-muted-foreground">
             Unlock date: {formatDateAsUTC(parseDateFromAA(userData.unlock_date))}
           </div>
 
