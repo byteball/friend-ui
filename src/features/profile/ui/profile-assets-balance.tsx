@@ -22,7 +22,7 @@ export const ProfileAssetsBalance: FC<ProfileAssetsBalanceProps> = ({ address, b
         asset={asset}
         balance={balance ?? 0}
         address={address}
-        rateGetter={asset === "base" || asset === "frd" ? new Promise(r => r({ min: 0, max: 0 })) : executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rates', [asset]) as Promise<{ min: number; max: number }>}
+        rateGetter={(asset === "base" || asset === "frd") ? new Promise(r => r({ min: 0, max: 0 })) : executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rates', [asset]) as Promise<{ min: number; max: number }>}
       />
     </Suspense>
   })}
