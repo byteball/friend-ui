@@ -76,10 +76,12 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
   const showCollapse = Object.keys(userData?.balances || {}).length > 1;
 
   return <div className="grid grid-cols-6 gap-8 mt-10">
-    <Link href="/" className="col-span-6 text-lg">
-      Become my friend and make {toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% a day by making friends every day {" "}
-      <ChevronRight className="inline" />
-    </Link>
+    <div className="col-span-6 ">
+      <Link href="/" className="text-lg">
+        Become my friend and make {toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% a day by making friends every day {" "}
+        <ChevronRight className="inline" />
+      </Link>
+    </div>
 
     <Card className="col-span-6 md:col-span-2">
       <CardContent>
