@@ -2,7 +2,7 @@ import { Highlighter } from "@/components/magicui/highlighter";
 
 export const HeroBlock = () => (
   <div className="w-full overflow-hidden">
-    <svg
+    {/* <svg
       aria-hidden="true"
       className="absolute inset-0 -z-10 size-full stroke-gray-200 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]"
     >
@@ -25,7 +25,7 @@ export const HeroBlock = () => (
         />
       </svg>
       <rect fill="url(#983e3e4c-de6d-4c3f-8d64-b9761d1534cc)" width="100%" height="100%" strokeWidth={0} />
-    </svg>
+    </svg> */}
 
     <div className="px-6 pb-18 pt-4 sm:pb-18 lg:flex lg:justify-center lg:px-8 lg:pb-18">
       <div>
