@@ -32,7 +32,7 @@ interface ProfileStatsProps {
 
 export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) => {
   const { state, getFrdToken, tokens } = useData();
-  const [collapsedTotalBalance, setCollapsedTotalBalance] = useState(false);
+  const [collapsedTotalBalance, setCollapsedTotalBalance] = useState(true);
 
   const getCookie = useGetCookie();
 
