@@ -163,7 +163,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
             />
           </div>
 
-          <div suppressHydrationWarning>Locking term: {formatDays(selectedTerm)} — until {formatInTimeZone(until, "UTC", "MMMM do, yyyy")}
+          <div suppressHydrationWarning>Locking term: {formatDays(selectedTerm)} — until {formatInTimeZone(until, "UTC", "MMMM do, yyyy")} <span className="text-muted-foreground">(applies to your entire balance)</span>
           </div>
         </div>
 
