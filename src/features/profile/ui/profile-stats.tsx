@@ -3,7 +3,7 @@
 import { useGetCookie } from "cookies-next";
 import { isAfter, parseISO } from "date-fns";
 import { toZonedTime } from 'date-fns-tz';
-import { FC, useState } from "react";
+import { FC, Suspense, useState } from "react";
 
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { WALLET_COOKIE_NAME } from "@/constants";
@@ -12,7 +12,6 @@ import { formatDateAsUTC } from "@/lib/format-date-as-utc";
 import { parseDateFromAA } from "@/lib/parse-date-from-aa";
 import { toLocalString } from "@/lib/to-local-string";
 import { GhostFriendsCard } from "../../ghost/ui/ghost-friends-card";
-import { ProfileAssetsBalance } from "./profile-assets-balance";
 import { ReplaceForm } from "./replace-form";
 import { TotalBalanceChartCard } from "./total-balance-chart-card";
 
@@ -20,10 +19,13 @@ import { appConfig } from "@/app-config";
 import { useData } from "@/app/context";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { QRButton } from "@/components/ui/qr-button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { generateLink } from "@/lib/generate-link";
+import { executeGetter } from "@/lib/http-client";
 import cn from "classnames";
 import { ChevronDown } from "lucide-react";
 import { sortBalancesByPriority } from "../utils/sort-balances-by-priority";
+import { ProfileAssetBalanceItem } from "./profile-assets-balance-item";
 
 interface ProfileStatsProps {
   address: string;
@@ -88,22 +90,33 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
 
           </CollapsibleTrigger>
 
-          <CollapsibleContent className="CollapsibleContent mt-2 grid text-sm gap-1">
+          <CollapsibleContent className="CollapsibleContent mt-2 grid text-sm gap-3">
             {Object.entries(userData?.balances || [])
               .sort(sortBalancesByPriority)
-              .map(([asset, balance]) => {
-
-                const tokenMeta = asset in tokens ? tokens[asset] : asset === "frd" ? { symbol: frdSymbol, decimals: frdDecimals } : null;
-
-                return <div key={asset}>
-                  {toLocalString(balance / 10 ** (tokenMeta?.decimals ?? 0))} {tokenMeta?.symbol}
-                </div>
-              })}
+              .map(([asset, balance]) => (
+                <Suspense fallback={<div className="grid gap-1">
+                  <Skeleton className="h-6 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                </div>} key={asset}>
+                  <ProfileAssetBalanceItem
+                    asset={asset}
+                    balance={balance ?? 0}
+                    address={address}
+                    rateGetter={asset === "base" || asset === "frd" ? new Promise(r => r({ min: 0, max: 0 })) : executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rates', [asset]) as Promise<{ min: number; max: number }>}
+                  />
+                </Suspense>
+              ))}
           </CollapsibleContent>
         </Collapsible>
 
-        {userData?.unlock_date ? <div className="mt-2 text-sm text-muted-foreground">
-          Unlock date: {formatDateAsUTC(parseDateFromAA(userData.unlock_date))}
+        {userData?.unlock_date ? <div className="flex justify-between">
+          <div className="mt-2 text-sm text-muted-foreground">
+            Unlock date: {formatDateAsUTC(parseDateFromAA(userData.unlock_date))}
+          </div>
+
+          {walletAddress === address && userData && userData.balances ? <div>
+            <QRButton disabled={locked} href={withdrawUrl} variant="link">Withdraw</QRButton>
+          </div> : null}
         </div> : null}
       </CardContent>
     </Card>
@@ -165,7 +178,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       </CardContent>
     </Card> : null}
 
-    {walletAddress === address && userData && userData.balances ? <Card className="col-span-6 md:col-span-3">
+    {/* {walletAddress === address && userData && userData.balances ? <Card className="col-span-6 md:col-span-3">
       <CardContent className="h-full grow-0">
         <CardTitle>Balances</CardTitle>
 
@@ -189,7 +202,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
         </div>
 
       </CardContent>
-    </Card> : null}
+    </Card> : null} */}
 
   </div>
 }
