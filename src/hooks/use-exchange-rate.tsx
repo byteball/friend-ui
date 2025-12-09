@@ -21,26 +21,36 @@ export const useExchangeRate = (inputAsset: string, outputAsset: string | null) 
     if (inputAsset === outputAsset) return 1;
 
     if (inputAsset !== "base" && outputAsset !== "base") {
+      // both are deposit tokens
+
       const asset = inputAsset === frdToken.asset ? outputAsset : inputAsset;
       const ceilingPrice = getCeilingPrice(aaData.state.constants);
 
       const d1 = await executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rates', [asset]) as { min: number; max: number };
 
-      if (inputAsset === frdToken.asset) {
+      if (inputAsset === frdToken.asset) { // FRD to other asset (not GBYTE)
         return ceilingPrice / d1.max;
-      } else if (outputAsset === frdToken.asset) {
+      } else if (outputAsset === frdToken.asset) { // other asset (not GBYTE) to FRD
         return d1.min / ceilingPrice;
       } else {
         throw new Error('Invalid asset combination');
       }
-    } else if (inputAsset === "base" || outputAsset === "base") {
+
+    } else if (
+      (inputAsset === "base" || outputAsset === "base")
+      && (inputAsset === frdToken.asset || outputAsset === frdToken.asset)
+    ) {
+
       const ceilingPrice = getCeilingPrice(aaData.state.constants);
 
-      if (inputAsset === frdToken.asset) {
+      if (inputAsset === frdToken.asset) { // FRD to GBYTE 
         return ceilingPrice;
-      } else {
+      } else if (outputAsset === frdToken.asset) { // GBYTE to FRD
         return 1 / ceilingPrice;
+      } else {
+        throw new Error('Invalid asset combination');
       }
+
     } else {
       throw new Error('Invalid asset combination');
     }
