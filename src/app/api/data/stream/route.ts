@@ -21,13 +21,21 @@ const sseHandler = createSSEHandler((send, _close, { onClose }) => {
   let heartbeat: ReturnType<typeof setInterval> | null = null;
   const listeners: Array<[STORE_EVENTS, (...args: any[]) => void]> = [];
 
+  // --- SAFE WRAPPER FOR LISTENERS ---
+  const safe = <T extends (...args: any[]) => void>(fn: T): T =>
+  (((...args: any[]) => {
+    try {
+      fn(...args);
+    } catch (err) {
+      console.warn('[SSE listener error]', err);
+    }
+  }) as T);
+
   const push = (event: STORE_EVENTS | string, payload: unknown) => {
     try {
       send({ event, data: payload });
     } catch (err) {
-      // if (process.env.NODE_ENV !== 'production') {
-        console.warn('[SSE] send error', err);
-      // }
+      console.warn('[SSE] send error', err);
     }
   };
 
@@ -39,10 +47,11 @@ const sseHandler = createSSEHandler((send, _close, { onClose }) => {
 
     if (store) {
       for (const [event, handler] of listeners) {
-        if (typeof store.off === 'function') {
-          store.off(event, handler);
-        } else if (typeof store.removeListener === 'function') {
-          store.removeListener(event, handler);
+        try {
+          store.off?.(event, handler);
+          store.removeListener?.(event, handler);
+        } catch (err) {
+          console.warn('[SSE cleanup listener error]', err);
         }
       }
     }
@@ -54,9 +63,9 @@ const sseHandler = createSSEHandler((send, _close, { onClose }) => {
   push(STORE_EVENTS.SNAPSHOT, snapshot);
 
   if (store) {
-    const snapshotListener = (payload: IClientSnapshot) => push(STORE_EVENTS.SNAPSHOT, payload);
-    const stateListener = (payload: IAaState) => push(STORE_EVENTS.STATE_UPDATE, payload);
-    const governanceListener = (payload: Record<string, any>) => push(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, payload);
+    const snapshotListener = safe((payload: IClientSnapshot) => push(STORE_EVENTS.SNAPSHOT, payload));
+    const stateListener = safe((payload: IAaState) => push(STORE_EVENTS.STATE_UPDATE, payload));
+    const governanceListener = safe((payload: Record<string, any>) => push(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, payload));
 
     store.on(STORE_EVENTS.SNAPSHOT, snapshotListener);
     store.on(STORE_EVENTS.STATE_UPDATE, stateListener);

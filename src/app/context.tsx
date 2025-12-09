@@ -31,7 +31,7 @@ const DEFAULT_SNAPSHOT: IClientSnapshot = {
   tokens: {},
   params: appConfig.initialParamsVariables,
 };
-const IS_PRODUCTION =  true //process.env.NODE_ENV === "production";
+const IS_PRODUCTION = true //process.env.NODE_ENV === "production";
 
 const logWarn = (...args: unknown[]) => {
   if (!IS_PRODUCTION) console.warn("[SSE]", ...args);
@@ -80,6 +80,7 @@ export function DataProvider({
 }: DataProviderProps) {
   const resolvedInitialValue = useMemo(() => value ?? DEFAULT_SNAPSHOT, [value]);
   const [data, setData] = useState<IClientSnapshot>(resolvedInitialValue);
+  const lastEventRef = useRef<string | number>(null);
 
   useEffect(() => {
     setData(resolvedInitialValue);
@@ -91,36 +92,40 @@ export function DataProvider({
   }, [fetchSnapshot]);
 
   const applyIncoming = useCallback((incoming: StoreEventEnvelope) => {
-    if (!incoming?.event) return;
+    try {
+      if (!incoming?.event) return;
 
-    if (incoming.event === STORE_EVENTS.SNAPSHOT) {
-      const snapshot = (incoming.data ?? {}) as Partial<IClientSnapshot>;
-      setData({
-        state: snapshot.state ?? {},
-        governanceState: snapshot.governanceState ?? {},
-        tokens: snapshot.tokens ?? {},
-        params: snapshot.params ?? snapshot.state?.variables ?? appConfig.initialParamsVariables,
-      });
-      return;
-    }
+      if (incoming.event === STORE_EVENTS.SNAPSHOT) {
+        const snapshot = (incoming.data ?? {}) as Partial<IClientSnapshot>;
+        setData({
+          state: snapshot.state ?? {},
+          governanceState: snapshot.governanceState ?? {},
+          tokens: snapshot.tokens ?? {},
+          params: snapshot.params ?? snapshot.state?.variables ?? appConfig.initialParamsVariables,
+        });
+        return;
+      }
 
-    if (incoming.event === STORE_EVENTS.STATE_UPDATE) {
-      const update = (incoming.data ?? {}) as IAaState & { variables?: AgentParams };
-      setData((prev) => ({
-        state: { ...(prev?.state ?? {}), ...update },
-        governanceState: prev?.governanceState ?? {},
-        tokens: prev?.tokens ?? {},
-        params: update.variables ?? prev?.params ?? appConfig.initialParamsVariables,
-      }));
-      return;
-    }
+      if (incoming.event === STORE_EVENTS.STATE_UPDATE) {
+        const update = (incoming.data ?? {}) as IAaState & { variables?: AgentParams };
+        setData((prev) => ({
+          state: { ...(prev?.state ?? {}), ...update },
+          governanceState: prev?.governanceState ?? {},
+          tokens: prev?.tokens ?? {},
+          params: update.variables ?? prev?.params ?? appConfig.initialParamsVariables,
+        }));
+        return;
+      }
 
-    if (incoming.event === STORE_EVENTS.GOVERNANCE_STATE_UPDATE) {
-      const governanceUpdate = (incoming.data ?? {}) as Record<string, any>;
-      setData((prev) => ({
-        ...prev,
-        governanceState: { ...(prev?.governanceState ?? {}), ...governanceUpdate },
-      }));
+      if (incoming.event === STORE_EVENTS.GOVERNANCE_STATE_UPDATE) {
+        const governanceUpdate = (incoming.data ?? {}) as Record<string, any>;
+        setData((prev) => ({
+          ...prev,
+          governanceState: { ...(prev?.governanceState ?? {}), ...governanceUpdate },
+        }));
+      }
+    } catch (err) {
+      logWarn("applyIncoming error", err);
     }
   }, [setData]);
 
@@ -130,9 +135,19 @@ export function DataProvider({
   });
 
   useEffect(() => {
-    if (incomingMessage) {
-      applyIncoming(incomingMessage);
+    if (!incomingMessage) return;
+    console.error('incomingMessage.event', incomingMessage.event)
+    if (incomingMessage.event === "HEARTBEAT") {
+      return; // ignore heartbeats
     }
+
+
+    const hash = JSON.stringify(incomingMessage.data);
+    if (hash === lastEventRef.current) return;
+
+    lastEventRef.current = hash;
+
+    applyIncoming(incomingMessage);
   }, [incomingMessage, applyIncoming]);
 
   const triggerSnapshotSync = useCallback(async () => {
@@ -146,6 +161,7 @@ export function DataProvider({
   }, [setData]);
 
   const lastConnectionState = useRef(connectionState);
+
   useEffect(() => {
     if (connectionState === "open" && lastConnectionState.current !== "open") {
       triggerSnapshotSync();
@@ -155,8 +171,13 @@ export function DataProvider({
 
   useEffect(() => {
     if (error) {
-      logWarn("connection error", error);
-      triggerSnapshotSync();
+      logWarn("SSE connection error", error);
+
+      const t = setTimeout(() => {
+        triggerSnapshotSync();
+      }, 500);
+
+      return () => clearTimeout(t);
     }
   }, [error, triggerSnapshotSync]);
 
