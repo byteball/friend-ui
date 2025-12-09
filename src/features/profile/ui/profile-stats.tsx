@@ -76,12 +76,12 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
   const showCollapse = Object.keys(userData?.balances || {}).length > 1;
 
   return <div className="grid grid-cols-6 gap-8 mt-10">
-    <div className="col-span-6 ">
-      <Link href="/" className="text-lg">
+    {walletAddress !== address ? <div className="col-span-6 ">
+      <Link href="/" className="text-lg text-blue-700">
         Become my friend and make {toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% a day by making friends every day {" "}
         <ChevronRight className="inline" />
       </Link>
-    </div>
+    </div> : null}
 
     <Card className="col-span-6 md:col-span-2">
       <CardContent>
@@ -113,7 +113,10 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
                     asset={asset}
                     balance={balance ?? 0}
                     address={address}
-                    rateGetter={asset === "base" || asset === "frd" ? new Promise(r => r({ min: 0, max: 0 })) : executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rates', [asset]) as Promise<{ min: number; max: number }>}
+                    rateGetter={asset === "base" || asset === "frd"
+                      ? new Promise(r => r({ min: 0, max: 0 }))
+                      : executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rates', [asset]) as Promise<{ min: number; max: number }>
+                    }
                   />
                 </Suspense>
               ))}
