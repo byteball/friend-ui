@@ -78,9 +78,18 @@ export function DataProvider({
   streamUrl = STREAM_URL,
   fetchSnapshot,
 }: DataProviderProps) {
+
   const resolvedInitialValue = useMemo(() => value ?? DEFAULT_SNAPSHOT, [value]);
   const [data, setData] = useState<IClientSnapshot>(resolvedInitialValue);
   const lastEventRef = useRef<string | number>(null);
+
+  useEffect(() => {
+    console.log("%cDataProvider mounted", "color: green");
+
+    return () => {
+      console.log("%cDataProvider unmounted", "color: red");
+    };
+  }, []);
 
   useEffect(() => {
     setData(resolvedInitialValue);

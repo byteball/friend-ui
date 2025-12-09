@@ -1,10 +1,8 @@
 import { Inter } from "next/font/google";
 
 import Navbar from "@/components/layouts/main-navbar";
-import { NoDefineAsset } from "@/components/layouts/no-define-asset";
 
 import { ClientProviders } from "./client-providers";
-import { DataProvider } from "./context";
 
 import "./globals.css";
 
@@ -107,13 +105,11 @@ export default async function RootLayout({
       <body
         className={`${InterFont.className} antialiased`}
       >
-        {snapshot?.state?.constants ? <DataProvider value={snapshot ?? null}>
-          <ClientProviders>
-            <Navbar />
+        <ClientProviders initialSnapshot={snapshot ?? null}>
+          <Navbar />
 
-            <div className="container p-5 mx-auto min-h-[calc(100vh-14rem)]">{children}</div>
-          </ClientProviders>
-        </DataProvider> : <NoDefineAsset />}
+          <div className="container p-5 mx-auto min-h-[calc(100vh-14rem)]">{children}</div>
+        </ClientProviders>
 
         <footer className="p-4 pb-1 text-center">
           <div className="flex justify-center mb-3 space-x-2 md:space-x-6 md:order-2">
