@@ -45,6 +45,8 @@ export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
 
   if (!tokenMeta) throw new Error("Token meta not found");
 
+  const reducer = asset === "base" ? appConfig.initialRewardsVariables.bytes_reducer : appConfig.initialRewardsVariables.deposit_asset_reducer
+
   return <div key={asset} className="first:mt-2">
     <div className="font-semibold">{toLocalString(balance / 10 ** tokenMeta.decimals)} {tokenMeta.symbol}</div>
 
@@ -53,7 +55,7 @@ export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
         <div className="text-sm text-muted-foreground">equivalent to {toLocalString(equivalentInFrd / 10 ** frdToken.decimals)} {frdToken.symbol}
 
           <span>
-            , {toLocalString(((equivalentInFrd * appConfig.initialRewardsVariables.deposit_asset_reducer) / 10 ** frdToken.decimals))} {frdToken.symbol} for rewards
+            , {toLocalString(((equivalentInFrd * reducer) / 10 ** frdToken.decimals))} {frdToken.symbol} for rewards
           </span>
 
         </div>
