@@ -10,7 +10,8 @@ export const env = createEnv({
     NEXT_PUBLIC_TESTNET: z.boolean().default(false),
     NEXT_PUBLIC_SITE_URL: z.string().default("http://localhost:3000"),
     NEXT_PUBLIC_NOTIFY_URL: z.string().default("http://localhost:3050"),
-    NEXT_PUBLIC_NOTIFY_PAIRING_URL: z.string(),
+    // Default to empty string so Docker builds don't fail when the env var is missing; real deployments should override.
+    NEXT_PUBLIC_NOTIFY_PAIRING_URL: z.string().default(""),
     NEXT_PUBLIC_AA_ADDRESS: z.string().min(4).default("CURJWJ2TQ36NBHVYVPIXEKKN4QNI43BT"),
   },
   runtimeEnv: {
