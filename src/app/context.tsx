@@ -136,7 +136,7 @@ export function DataProvider({
 
   useEffect(() => {
     if (!incomingMessage) return;
-    console.error('incomingMessage.event', incomingMessage.event)
+
     if (incomingMessage.event === "HEARTBEAT") {
       return; // ignore heartbeats
     }
