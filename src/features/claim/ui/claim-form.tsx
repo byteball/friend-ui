@@ -17,6 +17,8 @@ import { generateLink } from "@/lib/generate-link";
 import { toLocalString } from "@/lib/to-local-string";
 
 import { appConfig } from "@/app-config";
+import { isValidAddress } from "@/lib/is-valid-address";
+import { useQueryState } from "nuqs";
 import { useRewards } from "../domain/use-rewards";
 
 interface ClaimFormProps { }
@@ -26,7 +28,17 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
   const getCookie = useGetCookie();
   const walletAddress = getCookie(WALLET_COOKIE_NAME);
 
-  const { rewards, error, changeFriendWallet, isValidFriendWallet, friendWallet } = useRewards();
+  const [friendAddress, setFriendAddress] = useQueryState("friend_address", {
+    parse: (v) => isValidAddress(v) ? v : '',
+    defaultValue: '',
+    clearOnDefault: true
+  });
+
+
+  const { rewards, error, changeFriendWallet, isValidFriendWallet, friendWallet } = useRewards({
+    defaultFriend: friendAddress || null
+  });
+
   const data = useData();
 
   const { symbol: frdSymbol, decimals: frdDecimals } = data.getFrdToken();
@@ -62,7 +74,10 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
             <Input
               id="address"
               value={friendWallet ?? ""}
-              onChange={(e) => changeFriendWallet(e.target.value)}
+              onChange={(e) => {
+                changeFriendWallet(e.target.value)
+                setFriendAddress('');
+              }}
               onKeyDown={handleKeyDown}
             />
           </div>

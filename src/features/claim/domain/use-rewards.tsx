@@ -11,11 +11,11 @@ import { isValidAddress } from "@/lib/is-valid-address";
 
 import { WALLET_COOKIE_NAME } from "@/constants";
 
-export const useRewards = () => {
+export const useRewards = ({ defaultFriend = null }: { defaultFriend?: string | null }) => {
   const [error, setError] = useState<string | null>(null);
   const [rewards, setRewards] = useState<IRewards | null>(null);
   const walletAddress = getCookie(WALLET_COOKIE_NAME);
-  const [friendWallet, setFriendWallet] = useState<string | null>(null);
+  const [friendWallet, setFriendWallet] = useState<string | null>(defaultFriend);
   const isValidFriendWallet = isValidAddress(friendWallet);
 
   const { state, getUserData } = useData();

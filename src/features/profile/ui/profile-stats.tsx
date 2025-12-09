@@ -77,7 +77,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
 
   return <div className="grid grid-cols-6 gap-8 mt-10">
     {walletAddress !== address ? <div className="col-span-6 ">
-      <Link href="/" className="text-lg text-blue-700">
+      <Link href={`/?friend_address=${address}&tab=befriend`} className="text-lg text-blue-700">
         Become my friend and make {toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% a day by making friends every day {" "}
         <ChevronRight className="inline" />
       </Link>
