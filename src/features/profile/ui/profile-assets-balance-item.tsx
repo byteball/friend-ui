@@ -52,10 +52,10 @@ export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
 
     {asset !== "frd" ?
       <>
-        <div className="text-sm text-muted-foreground">equivalent to {toLocalString(equivalentInFrd / 10 ** frdToken.decimals)} {frdToken.symbol}
+        <div className="text-sm text-muted-foreground">equivalent to {toLocalString(Number(equivalentInFrd / 10 ** frdToken.decimals).toPrecision(4))} {frdToken.symbol}
 
           <span>
-            , {toLocalString(((equivalentInFrd * reducer) / 10 ** frdToken.decimals))} {frdToken.symbol} for rewards
+            , {toLocalString(((equivalentInFrd * reducer) / 10 ** frdToken.decimals).toPrecision(4))} {frdToken.symbol} for rewards
           </span>
 
         </div>
