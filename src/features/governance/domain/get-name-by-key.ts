@@ -6,5 +6,6 @@ export const getNameByKey = (key: keyof AgentParams) => {
     + key.slice(1)
       .split("_")
       .join(" ")
-      .replaceAll("aa", "AA");
+      .replaceAll("aa", "AA")
+      .replaceAll("frd", "FRD");
 }
