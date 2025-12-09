@@ -93,15 +93,6 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
     depositAsset = outputTokenMeta.asset;
   }
 
-  const url = isLoading || isValidating ? "#" : generateLink({
-    aa: appConfig.AA_ADDRESS,
-    amount: inputAmount ? inputAmount * 10 ** (inputTokenMeta?.decimals ?? 0) : 0,
-    asset: inputAsset,
-    data: {
-      replace: "1",
-      deposit_asset: depositAsset
-    }
-  });
 
 
   const handleInputAmountChange = (ev: ChangeEvent<HTMLInputElement>) => {
@@ -129,6 +120,17 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
   const reducer = outputAsset === "base" ? appConfig.initialRewardsVariables.bytes_reducer : appConfig.initialRewardsVariables.deposit_asset_reducer;
 
   const effectiveBalanceDiff = inputAmount2 * (1 - reducer);
+
+  const url = isLoading || isValidating ? "#" : generateLink({
+    aa: appConfig.AA_ADDRESS,
+    amount: inputAmount2 ? inputAmount2 * 10 ** (inputTokenMeta?.decimals ?? 0) : 0,
+    asset: inputAsset,
+    data: {
+      replace: "1",
+      deposit_asset: depositAsset
+    }
+  });
+
 
   return <FieldGroup>
     <Field>

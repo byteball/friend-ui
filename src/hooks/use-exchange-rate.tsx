@@ -18,6 +18,7 @@ export const useExchangeRate = (inputAsset: string, outputAsset: string | null) 
   const { data, isLoading, error, isValidating, } = useSWR([inputAsset, outputAsset], async ([inputAsset, outputAsset]: [string, string, string]) => {
 
     if (!inputAsset || !outputAsset) return 0;
+    if (inputAsset === outputAsset) return 1;
 
     if (inputAsset !== "base" && outputAsset !== "base") {
       const asset = inputAsset === frdToken.asset ? outputAsset : inputAsset;
