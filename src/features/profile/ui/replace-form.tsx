@@ -93,8 +93,6 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
     depositAsset = outputTokenMeta.asset;
   }
 
-
-
   const handleInputAmountChange = (ev: ChangeEvent<HTMLInputElement>) => {
     setInputAmount(ev.target.value ? Number(ev.target.value) : null);
     setOutputAmount(null);
@@ -152,7 +150,7 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
         <InputGroupAddon align="inline-end">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <InputGroupButton variant="ghost" className="!pr-1.5 text-xs">
+              <InputGroupButton variant="ghost" className="pr-1.5! text-xs">
                 {outputTokenMeta.symbol} <ChevronDownIcon className="ml-1 size-4" />
               </InputGroupButton>
             </DropdownMenuTrigger>
