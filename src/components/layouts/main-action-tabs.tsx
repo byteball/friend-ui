@@ -2,10 +2,7 @@
 
 import { ClaimWidget } from "@/features/claim";
 import { DepositWidget } from "@/features/deposit";
-import { useSearchParams } from "next/navigation";
 import { useQueryState } from "nuqs";
-import { useEffect } from "react";
-import { scroller } from "react-scroll";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 export const MainActionTabs = () => {
@@ -14,18 +11,6 @@ export const MainActionTabs = () => {
     clearOnDefault: true,
     parse: (value: string) => (value === 'deposit' || value === 'befriend' ? value : 'deposit'),
   });
-
-  const searchParams = useSearchParams()
-
-  useEffect(() => {
-    if (searchParams.get('friend_address') && searchParams.get('tab') === 'befriend') {
-      scroller.scrollTo("befriend", {
-        duration: 600,
-        smooth: true,
-        offset: 0
-      });
-    }
-  }, [searchParams]);
 
   return <Tabs value={tab} onValueChange={setTab} className="items-center">
     <TabsList className="gap-1 bg-transparent">
