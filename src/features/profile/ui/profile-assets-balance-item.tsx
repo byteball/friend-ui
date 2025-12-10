@@ -7,6 +7,8 @@ import { toLocalString } from "@/lib/to-local-string";
 
 import { appConfig } from "@/app-config";
 import { useData } from "@/app/context";
+import { useRouter } from "next/navigation";
+import { scroller } from "react-scroll";
 
 interface ProfileAssetBalanceItemProps {
   address: string;
@@ -18,10 +20,12 @@ interface ProfileAssetBalanceItemProps {
 export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
   asset,
   rateGetter,
-  balance
+  balance,
+  address,
 }) => {
   const data = useData();
   const frdToken = data.getFrdToken();
+  const router = useRouter();
 
   const rate = use(rateGetter);
   const ceilingPrice = getCeilingPrice(data.state.constants);
@@ -45,10 +49,22 @@ export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
 
   if (!tokenMeta) throw new Error("Token meta not found");
 
-  const reducer = asset === "base" ? appConfig.initialRewardsVariables.bytes_reducer : appConfig.initialRewardsVariables.deposit_asset_reducer
+  const reducer = asset === "base" ? appConfig.initialRewardsVariables.bytes_reducer : appConfig.initialRewardsVariables.deposit_asset_reducer;
+
+  const replace = () => {
+    if (asset === "frd") return; // cannot replace frd
+
+    router.replace(`/${address}?replace=${encodeURIComponent(asset)}`);
+
+    scroller.scrollTo('replace-form', {
+      duration: 800,
+      delay: 0,
+      smooth: 'easeInOutQuart'
+    });
+  }
 
   return <div key={asset} className="first:mt-2">
-    <div className="font-semibold">{toLocalString(balance / 10 ** tokenMeta.decimals)} {tokenMeta.symbol}</div>
+    <div className="font-semibold">{toLocalString(balance / 10 ** tokenMeta.decimals)} {tokenMeta.symbol} {asset !== "frd" ? <span className="text-blue-700 cursor-pointer" onClick={replace}>replace</span> : null}</div>
 
     {asset !== "frd" ?
       <>

@@ -20,6 +20,7 @@ import { getExchangePairs } from "@/lib/get-exchange-pairs";
 import { toLocalString } from "@/lib/to-local-string";
 
 import { appConfig } from "@/app-config";
+import { useQueryState } from "nuqs";
 
 interface ReplaceFormProps {
   address: string;
@@ -29,6 +30,9 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
   const { tokens, state } = useData();
 
   const [inited, setInited] = useState(false);
+  const [assetFromQuery] = useQueryState("replace", {
+    parse: (value) => decodeURIComponent(value) || null
+  });
 
   const refBtn = useRef<HTMLButtonElement>(null);
   const userData = state[`user_${address}`] as IUserData | null;
@@ -44,6 +48,14 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
   const [outputAmount, setOutputAmount] = useState<number | null>(null);
 
   const inputTokenMeta = tokens[inputAsset];
+
+  useEffect(() => {
+    if (assetFromQuery && (assetFromQuery !== state.constants.asset)) {
+      setOutputAsset(assetFromQuery);
+      setOutputAmount((balances[assetFromQuery] / (10 ** tokens[assetFromQuery].decimals)) || 0);
+      setInputAmount(null);
+    }
+  }, [assetFromQuery]);
 
   useEffect(() => {
     if (inited) return; // already inited
@@ -130,7 +142,7 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
   });
 
 
-  return <FieldGroup>
+  return <FieldGroup id="replace-form">
     <Field>
       <Label htmlFor={input2Key}>Existing locked asset</Label>
       <InputGroup>
