@@ -210,7 +210,7 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
     </Field>
 
     <Field>
-      {isLoading || isValidating
+      {(isLoading || isValidating) && !rate
         ? <Skeleton className="w-full h-6" />
         : <div className="text-sm space-y-2">
 
