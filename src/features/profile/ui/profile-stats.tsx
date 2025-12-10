@@ -154,10 +154,12 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
         <div className="mt-2 text-3xl">
           {toLocalString((totalRewards / 10 ** frdDecimals).toPrecision(frdDecimals))} <small>{frdSymbol}</small>
         </div>
+
         {userData?.liquid_rewards
           ? <div className="mt-2 text-sm text-muted-foreground">
             including {toLocalString((liquidRewards / 10 ** frdDecimals).toPrecision(frdDecimals))} {frdSymbol} liquid</div>
           : null}
+
         {userData?.new_user_rewards
           ? <div className="mt-2 text-sm text-muted-foreground">
             including {toLocalString(((userData.new_user_rewards ?? 0) / 10 ** frdDecimals).toPrecision(frdDecimals))} {frdSymbol} for new users</div>
