@@ -41,7 +41,6 @@ const DataContext = createContext<IClientSnapshot | null>(null);
 
 export function useData() {
   const data = useContext(DataContext);
-  console.log('data', data)
   if (!data) throw new Error("useData must be used within a DataProvider");
 
   const getFrdToken = useCallback((): TokenMeta => {

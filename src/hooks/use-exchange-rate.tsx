@@ -14,6 +14,10 @@ const REQUEST_CONFIG = {
 export const useExchangeRate = (inputAsset: string, outputAsset: string | null) => {
   const aaData = useData();
   const frdToken = aaData.getFrdToken();
+  const tokens = aaData.tokens;
+
+  const tInput = tokens[inputAsset];
+  const tOutput = outputAsset ? tokens[outputAsset] : null;
 
   const { data, isLoading, error, isValidating, } = useSWR([inputAsset, outputAsset], async ([inputAsset, outputAsset]: [string, string, string]) => {
 
@@ -26,12 +30,17 @@ export const useExchangeRate = (inputAsset: string, outputAsset: string | null) 
       const asset = inputAsset === frdToken.asset ? outputAsset : inputAsset;
       const ceilingPrice = getCeilingPrice(aaData.state.constants);
 
-      const d1 = await executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rates', [asset]) as { min: number; max: number };
+      const depositAssetRateRange = await executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rates', [asset]) as { min: number; max: number };
+
+      const depositAssetRate = depositAssetRateRange.max;
+
+      const decimals = 10 ** (tInput.decimals - tOutput.decimals);
 
       if (inputAsset === frdToken.asset) { // FRD to other asset (not GBYTE)
-        return ceilingPrice / d1.max;
+        return (ceilingPrice / depositAssetRate) * decimals;
       } else if (outputAsset === frdToken.asset) { // other asset (not GBYTE) to FRD
-        return d1.min / ceilingPrice;
+        return (depositAssetRate / ceilingPrice) * decimals;
+
       } else {
         throw new Error('Invalid asset combination');
       }

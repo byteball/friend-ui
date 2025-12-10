@@ -26,7 +26,7 @@ export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
   const rate = use(rateGetter);
   const ceilingPrice = getCeilingPrice(data.state.constants);
 
-  const assetRate = (rate.min ?? 0) / 0.9; // use min rate for calculations
+  const assetRate = rate.max ?? 0;
   const balanceInBytes = asset === "base" ? balance : asset === "frd" ? balance * ceilingPrice : balance * assetRate;
 
   const equivalentInFrd = balanceInBytes / ceilingPrice;
