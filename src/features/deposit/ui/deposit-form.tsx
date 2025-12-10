@@ -3,7 +3,7 @@
 import { useGetCookie } from "cookies-next";
 import { addDays, differenceInDays, parse } from "date-fns";
 import { formatInTimeZone, } from 'date-fns-tz';
-import { FC, useCallback, useRef, useState } from "react";
+import { Activity, FC, useCallback, useRef, useState } from "react";
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
 import { appConfig } from "@/app-config";
@@ -17,8 +17,9 @@ import { toLocalString } from "@/lib/to-local-string";
 import { Input } from "@/components/ui/input";
 import { QRButton } from "@/components/ui/qr-button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
-import { getCeilingPrice } from "@/lib/calculations/get-rewards";
+import { useExchangeRate } from "@/hooks/use-exchange-rate";
 
 const MAX_LOCKED_TERM_DAYS = 365 * 5;
 const now = formatInTimeZone(new Date(), "UTC", "yyyy-MM-dd HH:mm:ssXXX");
@@ -32,6 +33,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
   const [term, setTerm] = useState<number>(0);
   const data = useData();
   const getCookie = useGetCookie();
+  const { data: rate, isLoading: isRateLoading } = useExchangeRate(currency.asset, data.state.constants.asset);
 
   const walletAddress = getCookie(WALLET_COOKIE_NAME) as string | undefined;
   const referralAddress = getCookie(REF_COOKIE_NAME) as string | undefined;
@@ -42,7 +44,6 @@ export const DepositForm: FC<DepositFormProps> = () => {
   const frdAsset = state?.constants?.asset;
   const frdMeta: TokenMeta | undefined = frdAsset ? data?.tokens?.[frdAsset] : undefined;
   const userData = (walletAddress ? state[`user_${walletAddress}`] : undefined) as IUserData | undefined;
-  const ceilingPrice = getCeilingPrice(state.constants);
 
   const unlockDate = userData?.unlock_date
     ? formatInTimeZone(
@@ -92,7 +93,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
       term: selectedTerm,
       ref: (!userData || !walletAddress) ? referralAddress : undefined
     }
-  })
+  });
 
   return <div className="grid gap-4">
     <h2 className="text-3xl font-bold">New deposit</h2>
@@ -148,9 +149,11 @@ export const DepositForm: FC<DepositFormProps> = () => {
         </div>
 
         <div className="flex flex-col w-full gap-4">
-          {currency.asset === "base"
-            ? <div suppressHydrationWarning>{toLocalString(Number(amount) / ceilingPrice)} FRD (according to the current ceiling price 1 FRD = {toLocalString(ceilingPrice)} {currency.symbol})</div>
-            : null}
+          <Activity mode={currency.asset !== frdAsset ? "visible" : "hidden"}>
+            {isRateLoading
+              ? <Skeleton className="w-full h-6" />
+              : <div suppressHydrationWarning>{toLocalString(Number(amount) * (rate ?? 0))} FRD (according to the current ceiling price 1 FRD = {toLocalString(rate ? 1 / rate : 0)} {currency.symbol})</div>}
+          </Activity>
           <div>
             <Slider
               value={[selectedTerm]}
