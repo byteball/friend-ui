@@ -73,15 +73,14 @@ export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
     {asset !== "frd" ?
       <>
         <div className="text-sm text-muted-foreground">equivalent to {toLocalString(Number(equivalentInFrd / 10 ** frdToken.decimals).toPrecision(4))} {frdToken.symbol}
-          {asset !== "frd" && walletAddress === address
-            ? <span className="text-blue-700 cursor-pointer" onClick={replace}> (replace)</span>
-            : null}
           <span>
             , {toLocalString(((equivalentInFrd * reducer) / 10 ** frdToken.decimals).toPrecision(4))}
-
             {frdToken.symbol} for rewards
           </span>
 
+          {asset !== "frd" && walletAddress === address
+            ? <span className="text-blue-700 cursor-pointer" onClick={replace}> (replace)</span>
+            : null}
         </div>
       </> : null}
   </div>
