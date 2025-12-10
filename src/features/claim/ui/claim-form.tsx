@@ -94,9 +94,9 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
         {error && friendWallet ? <div className="text-red-700">{error}</div> : null}
 
         <div>
-          <div className="mb-2">
+          {rewards ? <div className="mb-2">
             You will receive:
-          </div>
+          </div> : null}
 
           {rewards ? <DescriptionList>
             <DescriptionGroup>
