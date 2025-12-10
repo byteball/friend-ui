@@ -1,7 +1,7 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowDownWideNarrow } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -34,10 +34,10 @@ export const columns: ColumnDef<UserRank>[] = [
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(true)}
         >
           Amount
-          <ArrowUpDown className="w-4 h-4 ml-2" />
+          <ArrowDownWideNarrow className="w-4 h-4 ml-2" />
         </Button>
       )
     },
@@ -55,10 +55,10 @@ export const columns: ColumnDef<UserRank>[] = [
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(true)}
         >
           Friends
-          <ArrowUpDown className="w-4 h-4 ml-2" />
+          <ArrowDownWideNarrow className="w-4 h-4 ml-2" />
         </Button>
       )
     },
@@ -70,10 +70,10 @@ export const columns: ColumnDef<UserRank>[] = [
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(true)}
         >
           New users
-          <ArrowUpDown className="w-4 h-4 ml-2" />
+          <ArrowDownWideNarrow className="w-4 h-4 ml-2" />
         </Button>
       )
     },
