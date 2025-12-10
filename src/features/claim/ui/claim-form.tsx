@@ -93,34 +93,35 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
 
         {error && friendWallet ? <div className="text-red-700">{error}</div> : null}
 
-        {rewards ? <DescriptionList>
-          <DescriptionGroup>
-            <DescriptionTerm>Locked rewards</DescriptionTerm>
-            <DescriptionDetail>
-              <div>
-                {toLocalString((rewards.user1.totalBalance * 0.01) / 10 ** frdDecimals)} <small>{frdSymbol}</small> (1% of your total balance {toLocalString(rewards.user1.totalBalance / 10 ** frdDecimals)} <small>{frdSymbol}</small>)</div>
-              <div>
-                {toLocalString((rewards?.user1?.new_user_reward ?? 0) / 10 ** frdDecimals)} <small>{frdSymbol}</small> (new user reward)
-              </div>
-            </DescriptionDetail>
-          </DescriptionGroup>
+        <div>
+          <div className="mb-2">
+            You will receive:
+          </div>
 
-          <DescriptionGroup horizontal>
-            <DescriptionTerm>Liquid rewards</DescriptionTerm>
-            <DescriptionDetail>
-              {toLocalString(rewards.user1.liquid / 10 ** frdDecimals)} <small>{frdSymbol}</small> (0.1% of your total balance {toLocalString(rewards.user1.totalBalance / 10 ** frdDecimals)} <small>{frdSymbol}</small>)
-            </DescriptionDetail>
-          </DescriptionGroup>
+          {rewards ? <DescriptionList>
+            <DescriptionGroup>
+              <DescriptionTerm>Locked rewards</DescriptionTerm>
+              <DescriptionDetail>
+                <div>
+                  {toLocalString((rewards.user1.totalBalance * 0.01) / 10 ** frdDecimals)} <small>{frdSymbol}</small> (1% of your total balance {toLocalString(rewards.user1.totalBalance / 10 ** frdDecimals)} <small>{frdSymbol}</small>)</div>
+                <div>
+                  {toLocalString((rewards?.user1?.new_user_reward ?? 0) / 10 ** frdDecimals)} <small>{frdSymbol}</small> (new user reward)
+                </div>
+              </DescriptionDetail>
+            </DescriptionGroup>
 
-          <DescriptionGroup horizontal>
-            <DescriptionTerm>Total rewards</DescriptionTerm>
-            <DescriptionDetail>{toLocalString((rewards.user1.locked + rewards.user1.liquid) / 10 ** frdDecimals)} <small>{frdSymbol}</small></DescriptionDetail>
-          </DescriptionGroup>
-        </DescriptionList> : (!walletAddress ? <div className="text-yellow-600">
-          <AddWalletModal>
-            <span className="underline cursor-pointer">Add your address</span>
-          </AddWalletModal> to see the rewards for this friendship
-        </div> : null)}
+            <DescriptionGroup horizontal>
+              <DescriptionTerm>Liquid rewards</DescriptionTerm>
+              <DescriptionDetail>
+                {toLocalString(rewards.user1.liquid / 10 ** frdDecimals)} <small>{frdSymbol}</small> (0.1% of your total balance {toLocalString(rewards.user1.totalBalance / 10 ** frdDecimals)} <small>{frdSymbol}</small>)
+              </DescriptionDetail>
+            </DescriptionGroup>
+          </DescriptionList> : (!walletAddress ? <div className="text-yellow-600">
+            <AddWalletModal>
+              <span className="underline cursor-pointer">Add your address</span>
+            </AddWalletModal> to see the rewards for this friendship
+          </div> : null)}
+        </div>
       </div>
     </div>
   </div>

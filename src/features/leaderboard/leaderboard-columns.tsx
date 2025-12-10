@@ -36,7 +36,7 @@ export const columns: ColumnDef<UserRank>[] = [
           size="sm"
           onClick={() => column.toggleSorting(true)}
         >
-          Amount
+          Total balance
           <ArrowDownWideNarrow className="w-4 h-4 ml-2" />
         </Button>
       )
