@@ -128,11 +128,15 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
             Unlock date: {formatDateAsUTC(parseDateFromAA(userData.unlock_date))}
           </div>
 
-          {walletAddress === address && userData && userData.balances ? <div>
+          {walletAddress === address && userData && userData?.balances ? <div>
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger>
-                  <QRButton disabled={locked} href={withdrawUrl} variant="link">Withdraw</QRButton>
+                <TooltipTrigger asChild>
+                  <span>
+                    <QRButton disabled={locked} href={withdrawUrl} className="p-0 m-0 text-sm" variant="link">
+                      Withdraw
+                    </QRButton>
+                  </span>
                 </TooltipTrigger>
                 <TooltipContent className="max-w-[350px]">
                   <p>Will become available on the unlock date</p>
