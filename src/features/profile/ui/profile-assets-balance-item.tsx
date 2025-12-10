@@ -7,6 +7,8 @@ import { toLocalString } from "@/lib/to-local-string";
 
 import { appConfig } from "@/app-config";
 import { useData } from "@/app/context";
+import { WALLET_COOKIE_NAME } from "@/constants";
+import { useReactiveGetCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { scroller } from "react-scroll";
 
@@ -26,6 +28,8 @@ export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
   const data = useData();
   const frdToken = data.getFrdToken();
   const router = useRouter();
+  const getCookie = useReactiveGetCookie();
+  const walletAddress = getCookie(WALLET_COOKIE_NAME);
 
   const rate = use(rateGetter);
   const ceilingPrice = getCeilingPrice(data.state.constants);
@@ -64,14 +68,18 @@ export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
   }
 
   return <div key={asset} className="first:mt-2">
-    <div className="font-semibold">{toLocalString(balance / 10 ** tokenMeta.decimals)} {tokenMeta.symbol} {asset !== "frd" ? <span className="text-blue-700 cursor-pointer" onClick={replace}>replace</span> : null}</div>
+    <div className="font-semibold">{toLocalString(balance / 10 ** tokenMeta.decimals)} {tokenMeta.symbol}</div>
 
     {asset !== "frd" ?
       <>
         <div className="text-sm text-muted-foreground">equivalent to {toLocalString(Number(equivalentInFrd / 10 ** frdToken.decimals).toPrecision(4))} {frdToken.symbol}
-
+          {asset !== "frd" && walletAddress === address
+            ? <span className="text-blue-700 cursor-pointer" onClick={replace}> (replace)</span>
+            : null}
           <span>
-            , {toLocalString(((equivalentInFrd * reducer) / 10 ** frdToken.decimals).toPrecision(4))} {frdToken.symbol} for rewards
+            , {toLocalString(((equivalentInFrd * reducer) / 10 ** frdToken.decimals).toPrecision(4))}
+
+            {frdToken.symbol} for rewards
           </span>
 
         </div>
