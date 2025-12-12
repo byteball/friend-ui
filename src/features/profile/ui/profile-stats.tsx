@@ -83,11 +83,11 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       </Link>
     </div> : null}
 
-    <Card className="col-span-6 md:col-span-2">
+    <Card className="col-span-6 md:col-span-3 lg:col-span-2">
       <CardContent>
         <CardTitle>Total balance</CardTitle>
         <Collapsible open={!collapsedTotalBalance} onOpenChange={() => setCollapsedTotalBalance(!collapsedTotalBalance)}>
-          <CollapsibleTrigger asChild className="mt-2 text-3xl">
+          <CollapsibleTrigger asChild className="mt-2 text-2xl lg:text-3xl">
             <div className={cn(showCollapse ? "cursor-pointer select-none" : "")}>
               {toLocalString(Number(totalBalance / 10 ** frdDecimals).toPrecision(frdDecimals))} <small>{frdSymbol}</small>
               {showCollapse ? <>
@@ -148,7 +148,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       </CardContent>
     </Card>
 
-    <Card className="col-span-6 md:col-span-2">
+    <Card className="col-span-6 md:col-span-3 lg:col-span-2">
       <CardContent>
         <CardTitle>Total rewards</CardTitle>
         <div className="mt-2 text-3xl">
@@ -167,7 +167,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       </CardContent>
     </Card>
 
-    <Card className="col-span-6 md:col-span-2">
+    <Card className="col-span-6 md:col-span-3 lg:col-span-2">
       <CardContent>
         <CardTitle>Total friends</CardTitle>
         <div className="mt-2 text-3xl">{toLocalString(friends.length)}</div>
