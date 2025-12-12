@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 import { useExchangeRate } from "@/hooks/use-exchange-rate";
+import Link from "next/link";
 
 const MAX_LOCKED_TERM_DAYS = 365 * 5;
 const now = formatInTimeZone(new Date(), "UTC", "yyyy-MM-dd HH:mm:ssXXX");
@@ -168,6 +169,8 @@ export const DepositForm: FC<DepositFormProps> = () => {
 
           <div suppressHydrationWarning>Locking term: {formatDays(selectedTerm)} — until {formatInTimeZone(until, "UTC", "MMMM do, yyyy")} <span className="text-muted-foreground">(applies to your entire balance)</span>
           </div>
+
+          {referralAddress ? <div>Using <Link href={`/${referralAddress}`}>{referralAddress}</Link> as referrer</div> : null}
         </div>
 
         <QRButton ref={btnRef} disabled={!amount || Number(amount) <= 0} href={url}>
