@@ -81,7 +81,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
 
     <div>
       <Link
-        href={`https://obyte.city/user/${address}`}
+        href={`https://city.obyte.org/user/${address}`}
         className="text-blue-700"
         target="_blank"
       >
