@@ -29,7 +29,7 @@ export const TweetCard = ({
   tweetText = "Help me complete my streak by becoming my next friend. And start making 1% a day by making friends every day.",
 }: TweetCardProps) => {
   return (
-    <div className="w-full max-w-[598px] bg-card px-4 pt-3 hover:bg-white/3 transition-colors">
+    <div className="w-full max-w-[598px] bg-gray-100 rounded-md mt-2 px-4 p-3 transition-colors ">
       <div className="flex gap-3">
 
         <Avatar className="h-10 w-10 flex-shrink-0">
