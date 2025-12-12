@@ -47,16 +47,16 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
   });
 
   return (
-    <Card className="col-span-6 md:col-span-3">
+    <Card className="col-span-6 lg:col-span-3">
       <CardHeader>
-        <CardTitle>
+        <CardTitle className="min-h-12">
           {isLoading
             ? <Skeleton className="w-[calc(100%-20px)] h-12" />
             : <div className="leading-6 max-w-lg">On {userData?.current_streak || 0} out of {requiredStreak} days streak to become friends with the ghost of {ghostName}</div>}
         </CardTitle>
       </CardHeader>
-      <CardContent className={cn({ "min-h-[268px]": address === walletAddress, "min-h-60": address !== walletAddress })}>
-        <div className="flex md:flex-row flex-col justify-between gap-4">
+      <CardContent className={cn({ "min-h-[270px]": address === walletAddress, "min-h-60": address !== walletAddress })}>
+        <div className="flex lg:flex-row flex-col justify-between gap-4">
           <div className="mt-2 flex flex-col">
 
             <TooltipProvider>
@@ -109,12 +109,12 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
           </div>
 
           {isLoading
-            ? <div>
-              <Skeleton className="w-[230px] h-[230px]" />
+            ? <div className="w-full lg:w-auto flex justify-center lg:justify-end">
+              <Skeleton className="w-full max-w-[230px] aspect-square" />
               {address === walletAddress ? <Skeleton className="w-full h-9" /> : null}
             </div>
-            : <div className="text-center">
-              <div className="w-[230px] h-[230px] relative bg-accent rounded-md overflow-hidden animate-pulse [&:has(img)]:animate-none">
+            : <div className="text-center w-full lg:w-auto flex flex-col items-center lg:items-end">
+              <div className="w-full max-w-[230px] aspect-square relative bg-accent rounded-md overflow-hidden animate-pulse [&:has(img)]:animate-none">
                 <Image
                   wrapperClassName="w-full h-full"
                   className="w-full h-full object-cover"
@@ -134,6 +134,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
 
       {address === walletAddress ? <CardFooterReferral
         hasDeposit={!!userData?.balances}
+        address={address}
         query=""
         type="streak"
       /> : null}

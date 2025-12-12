@@ -82,11 +82,11 @@ export function TotalBalanceChartCard({ address }: TotalBalanceChartCardProps) {
   const shouldShowSkeleton = isLoading || isError
 
   return (
-    <Card className="col-span-6 md:col-span-3">
+    <Card className="col-span-6 lg:col-span-3">
       <CardHeader>
-        <CardTitle>Locked balance</CardTitle>
+        <CardTitle className="min-h-12">Locked balance</CardTitle>
       </CardHeader>
-      <CardContent className={cn({ "min-h-[300px]": address === walletAddress, "min-h-60": address !== walletAddress })}>
+      <CardContent className={cn({ "min-h-[270px]": address === walletAddress, "min-h-60": address !== walletAddress })}>
         {shouldShowSkeleton ? (
           <Skeleton className="aspect-auto h-[260px] w-full" />
         ) : (
@@ -161,6 +161,7 @@ export function TotalBalanceChartCard({ address }: TotalBalanceChartCardProps) {
       {address === walletAddress ? <CardFooterReferral
         hasDeposit={true}
         type="chart"
+        address={address}
         query="" />
         : null}
     </Card>

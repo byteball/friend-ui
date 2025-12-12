@@ -195,7 +195,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
       address={address}
     /> : null}
 
-    {walletAddress === address && locked ? <Card className="col-span-6 md:col-span-3">
+    {walletAddress === address && locked ? <Card className="col-span-6 lg:col-span-3">
       <CardContent>
         <CardTitle>Replace</CardTitle>
         <CardDescription className="mt-2">You can replace your locked {depositAssetList} with {frdSymbol}</CardDescription>

@@ -13,14 +13,21 @@ import { Field, FieldGroup, FieldLabel } from "../ui/field";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "../ui/input-group";
 import { Separator } from "../ui/separator";
 import { Skeleton } from "../ui/skeleton";
+import { TweetCard } from "../ui/tweet-card";
 
 interface CardFooterReferralProps {
   query?: string;
   hasDeposit?: boolean;
+  address: string;
   type: "chart" | "streak";
 }
 
-export const CardFooterReferral: FC<CardFooterReferralProps> = ({ hasDeposit = false, query = "", type }) => {
+const tweetTextByType: Record<string, string> = {
+  chart: "I’m unstoppable, I’m unblockable, I’m uncensorable. Because I keep my money on Obyte. So do my friends. Join me.",
+  streak: "Help me complete my streak by becoming my next friend. And start making 1% a day by making friends every day.",
+};
+
+export const CardFooterReferral: FC<CardFooterReferralProps> = ({ hasDeposit = false, query = "", type, address }) => {
   const pathname = usePathname();
   const { copied, copy } = useClipboard({
     copiedTimeout: 1000, // timeout duration in milliseconds
@@ -74,6 +81,18 @@ export const CardFooterReferral: FC<CardFooterReferralProps> = ({ hasDeposit = f
           </InputGroup>
           <small className="text-xs text-muted-foreground">You&apos;ll receive {toLocalString(params.referrer_frd_deposit_reward_share * 100)}% of their deposits in {symbol}, {toLocalString(params.referrer_bytes_deposit_reward_share * 100)}% of their deposits in GBYTE, {toLocalString(params.referrer_deposit_asset_deposit_reward_share * 100)}% of all other deposits, and a {appConfig.initialRewardsVariables.new_user_reward / 10 ** decimals} {symbol} reward when they make their first friend
           </small>
+          <div className="mt-2">
+            <FieldLabel>Example</FieldLabel>
+            <TweetCard
+              username="friendOfObyte"
+              displayName="Friend"
+              timeAgo="Just now"
+              avatarUrl="/logo.svg"
+              ogTitle="Obyte friends"
+              ogImageUrl={`/api/og/${type === "streak" ? "puzzle" : type}/${address}`}
+              tweetText={tweetTextByType[type]}
+            />
+          </div>
         </Field> : <Field>
           <FieldLabel className="text-yellow-600">To be able to find new friends and referrals, make a deposit</FieldLabel>
         </Field>}

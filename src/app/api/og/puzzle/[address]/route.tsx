@@ -92,10 +92,6 @@ export async function GET(
         <!-- Background -->
         <rect width="1200" height="630" fill="url(#bgGradient)" />
 
-        <!-- Decorative circles -->
-        <circle cx="100" cy="100" r="80" fill="rgba(29, 78, 184, 0.05)" />
-        <circle cx="1100" cy="530" r="100" fill="rgba(37, 99, 235, 0.05)" />
-
         <!-- Logo and Title Group (centered) -->
         <g transform="translate(-15, 10)">
           <!-- Logo -->
