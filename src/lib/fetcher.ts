@@ -2,7 +2,7 @@ export const fetcher = async <T = unknown>(url: string): Promise<T[]> => {
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch reward history: ${response.status}`);
+    throw new Error(`Failed to fetch: ${response.status}`);
   }
 
   const payload = await response.json().catch(() => null);
