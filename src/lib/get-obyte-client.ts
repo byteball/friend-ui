@@ -35,6 +35,16 @@ const getObyteClient = async () => {
       const { subject } = result[1];
 
       switch (subject) {
+        case "exchange_rates": {
+          const rates = result[1].body;
+
+          if (globalThis.__GLOBAL_STORE__ && rates) {
+            globalThis.__GLOBAL_STORE__.gbytePriceUSD = rates['GBYTE_USD'] || 0;
+            console.error('log(bootstrap): updated GBYTE price', globalThis.__GLOBAL_STORE__.gbytePriceUSD);
+          }
+
+          break;
+        }
         case "light/aa_request":
           console.error("warn(bootstrap): aa_request not handled");
           // aaRequestHandler(err, result);

@@ -14,6 +14,7 @@ const EMPTY_SNAPSHOT: IClientSnapshot = {
   governanceState: {},
   tokens: {},
   params: appConfig.initialParamsVariables,
+  gbytePriceUSD: 0,
 };
 
 const sseHandler = createSSEHandler((send, _close, { onClose }) => {

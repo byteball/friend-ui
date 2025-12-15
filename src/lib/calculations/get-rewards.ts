@@ -58,6 +58,7 @@ export const getTotalBalance = async (balances: Balances, ceilingPrice: number) 
 
 export const getRewards = async (user1: IUserData | null, user2: IUserData | null, constants: IConstants) => {
   const ceilingPrice = getCeilingPrice(constants);
+
   const totalBalance1 = await getTotalBalanceWithAssetReducer(user1?.balances ?? {}, ceilingPrice);
   const totalBalance2 = await getTotalBalanceWithAssetReducer(user2?.balances ?? {}, ceilingPrice);
 

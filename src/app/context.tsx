@@ -11,7 +11,7 @@ import { useSSE } from "use-next-sse";
  * Types you already have in your codebase; keep these placeholders if needed.
  */
 type IAaState = Record<string, any>;
-type IClientSnapshot = { state: IAaState; tokens: Record<string, any>; governanceState: Record<string, any>; params: AgentParams };
+type IClientSnapshot = { state: IAaState; tokens: Record<string, any>; governanceState: Record<string, any>; params: AgentParams; gbytePriceUSD: number; };
 
 type StoreEventEnvelope =
   | { event: typeof STORE_EVENTS.SNAPSHOT; data: Partial<IClientSnapshot> }
@@ -30,6 +30,7 @@ const DEFAULT_SNAPSHOT: IClientSnapshot = {
   governanceState: {},
   tokens: {},
   params: appConfig.initialParamsVariables,
+  gbytePriceUSD: 0,
 };
 const IS_PRODUCTION = true //process.env.NODE_ENV === "production";
 
@@ -109,6 +110,7 @@ export function DataProvider({
           state: snapshot.state ?? {},
           governanceState: snapshot.governanceState ?? {},
           tokens: snapshot.tokens ?? {},
+          gbytePriceUSD: snapshot.gbytePriceUSD ?? 0,
           params: snapshot.params ?? snapshot.state?.variables ?? appConfig.initialParamsVariables,
         });
         return;
@@ -120,6 +122,7 @@ export function DataProvider({
           state: { ...(prev?.state ?? {}), ...update },
           governanceState: prev?.governanceState ?? {},
           tokens: prev?.tokens ?? {},
+          gbytePriceUSD: prev?.gbytePriceUSD ?? 0,
           params: update.variables ?? prev?.params ?? appConfig.initialParamsVariables,
         }));
         return;

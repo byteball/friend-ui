@@ -36,6 +36,7 @@ export class GlobalStore extends EventEmitter {
 
   ready: boolean = false;
   stateUpdateId: number;
+  gbytePriceUSD: number = 0;
 
   constructor({ initState, initTokens, initGovernanceState }: GlobalStoreOptions = { initState: {}, initTokens: {}, initGovernanceState: {} }) {
     super();
@@ -80,6 +81,8 @@ export class GlobalStore extends EventEmitter {
 
     this.ready = true;
     this.stateUpdateId = 0;
+
+    this.gbytePriceUSD = 0;
   }
 
   initializeState(initState: IAaState) {
@@ -119,8 +122,25 @@ export class GlobalStore extends EventEmitter {
       state: this.getState(),
       governanceState: this.getGovernanceState(),
       tokens: this.getTokens(),
+      gbytePriceUSD: this.gbytePriceUSD,
       params: this.state.get("variables") as AgentParams ?? appConfig.initialParamsVariables,
     }
+  }
+
+  getGbytePriceUSD(): number {
+    return this.gbytePriceUSD;
+  }
+
+  getFrdPriceUSD(): number {
+    const constants = this.state.get('constants') as IConstants | undefined;
+    if (!constants) return 0;
+
+    const frdToken = this.tokens.get(constants.asset);
+    if (!frdToken) return 0;
+
+    const ceilPrice = getCeilingPrice(constants);
+
+    return ceilPrice * this.gbytePriceUSD;
   }
 
   sendSnapshot() {
