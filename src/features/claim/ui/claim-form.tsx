@@ -113,7 +113,7 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
             <DescriptionGroup horizontal>
               <DescriptionTerm>Liquid rewards</DescriptionTerm>
               <DescriptionDetail>
-                {toLocalString(rewards.user1.liquid / 10 ** frdDecimals)} <small>{frdSymbol}</small> (0.1% of your total balance {toLocalString(rewards.user1.totalBalance / 10 ** frdDecimals)} <small>{frdSymbol}</small>)
+                {toLocalString(rewards.user1.liquid / 10 ** frdDecimals)} <small>{frdSymbol}</small> ({toLocalString(appConfig.initialRewardsVariables.liquid_reward_share * 100)}% of your total effective balance {toLocalString(rewards.user1.totalBalance / 10 ** frdDecimals)} <small>{frdSymbol}</small>)
               </DescriptionDetail>
             </DescriptionGroup>
           </DescriptionList> : (!walletAddress ? <div className="text-yellow-600">
