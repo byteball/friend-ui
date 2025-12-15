@@ -79,7 +79,7 @@ export const SelectGhostModal: FC<ISelectGhostModalProps> = ({ children, address
               Change
             </QRButton>
             <p className="text-muted-foreground text-xs mt-2">
-              By clicking the button or scanning the QR code, the Obyte wallet will open, where you’ll need to confirm the action.
+              By clicking the button or scanning the QR code, the Obyte wallet will open, where you&apos;ll need to confirm the action.
             </p>
           </div>
         </div>
