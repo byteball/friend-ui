@@ -28,8 +28,8 @@ export const appConfig = {
   } as AgentParams,
 
   initialRewardsVariables: { // variables from rewards AA
-    locked_reward_share: 0.02,
-    liquid_reward_share: 0.002,
+    locked_reward_share: 0.01,
+    liquid_reward_share: 0.001,
 
     deposit_asset_reducer: 0.5,
     bytes_reducer: 0.75,
