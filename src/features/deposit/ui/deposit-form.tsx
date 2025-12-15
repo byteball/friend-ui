@@ -48,6 +48,8 @@ export const DepositForm: FC<DepositFormProps> = () => {
   const frdMeta: TokenMeta | undefined = frdAsset ? data?.tokens?.[frdAsset] : undefined;
   const userData = (walletAddress ? state[`user_${walletAddress}`] : undefined) as IUserData | undefined;
 
+  const addReferralAsData = referralAddress && (!userData || !walletAddress);
+
   const unlockDate = userData?.unlock_date
     ? formatInTimeZone(
       parse(
@@ -94,7 +96,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
       deposit: 1,
       deposit_asset: currency?.asset === 'base' ? undefined : currency?.asset,
       term: selectedTerm,
-      ref: (!userData || !walletAddress) ? referralAddress : undefined
+      ref: addReferralAsData ? referralAddress : undefined
     }
   });
 
@@ -172,7 +174,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
           <div suppressHydrationWarning>Locking term: {formatDays(selectedTerm)} — until {formatInTimeZone(until, "UTC", "MMMM do, yyyy")} <span className="text-muted-foreground">(applies to your entire balance)</span>
           </div>
 
-          {referralAddress ? <div>Using <Link href={`/${referralAddress}`} className="text-blue-700">{referralAddress}</Link> as referrer</div> : null}
+          {(addReferralAsData) ? <div>Using <Link href={`/${referralAddress}`} className="text-blue-700">{referralAddress}</Link> as referrer</div> : null}
         </div>
 
         <QRButton ref={btnRef} disabled={!amount || Number(amount) <= 0} href={url}>

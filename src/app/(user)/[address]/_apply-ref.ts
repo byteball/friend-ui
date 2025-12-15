@@ -1,8 +1,9 @@
 "use server";
 
+import { cookies, headers } from "next/headers";
+
 import { REF_COOKIE_NAME, WALLET_COOKIE_NAME } from "@/constants";
 import { isValidAddress } from "@/lib/is-valid-address";
-import { cookies, headers } from "next/headers";
 
 export const applyRef = async (ref: string) => {
   if (!isValidAddress(ref)) return;
@@ -27,8 +28,10 @@ export const applyRef = async (ref: string) => {
   const hasReferralCookie = Boolean(referralAddressCookie);
   const isSelfReferral = walletAddressCookie ? ref === walletAddressCookie : false;
 
-  // If user already has referral cookie or attempts to refer themselves
-  if (hasReferralCookie || isSelfReferral) {
+  if (isSelfReferral) return;
+
+  // If user already has referral cookie
+  if (hasReferralCookie) {
     if (walletAddressCookie && referralAddressCookie && (walletAddressCookie === referralAddressCookie)) {
       userCookies.delete(REF_COOKIE_NAME);
     }
