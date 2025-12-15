@@ -103,7 +103,7 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
               <DescriptionTerm>Locked rewards</DescriptionTerm>
               <DescriptionDetail>
                 <div>
-                  {toLocalString((rewards.user1.totalBalance * 0.01) / 10 ** frdDecimals)} <small>{frdSymbol}</small> (1% of your total balance {toLocalString(rewards.user1.totalBalance / 10 ** frdDecimals)} <small>{frdSymbol}</small>)</div>
+                  {toLocalString((rewards.user1.totalBalance * appConfig.initialRewardsVariables.locked_reward_share) / 10 ** frdDecimals)} <small>{frdSymbol}</small> ({toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% of your total balance {toLocalString(rewards.user1.totalBalance / 10 ** frdDecimals)} <small>{frdSymbol}</small>)</div>
                 <div>
                   {toLocalString((rewards?.user1?.new_user_reward ?? 0) / 10 ** frdDecimals)} <small>{frdSymbol}</small> (new user reward)
                 </div>

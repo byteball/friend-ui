@@ -260,7 +260,7 @@ export default async function FaqPage() {
             <p>In 60 days after becoming friends, you and your friend become eligible for follow-up rewards. </p>
 
             <p>
-              Percentage-wise, they are 1/10th of the initial rewards, that is 0.1% to the locked balance and 0.01% in liquid {symbol}. However, they are applied to your new balance, which is likely much higher than the balance you had when you became friends.
+              Percentage-wise, they are 1/10th of the initial rewards, that is {toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% to the locked balance and {toLocalString(appConfig.initialRewardsVariables.liquid_reward_share * 100)}% in liquid {symbol}. However, they are applied to your new balance, which is likely much higher than the balance you had when you became friends.
             </p>
 
             <p>
