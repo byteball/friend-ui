@@ -33,6 +33,8 @@ export const DepositForm: FC<DepositFormProps> = () => {
   const [amount, setAmount] = useState<string>("0.1");
   const [term, setTerm] = useState<number>(0);
   const data = useData();
+  const frdToken = data.getFrdToken();
+
   const getCookie = useGetCookie();
   const { data: rate, isLoading: isRateLoading } = useExchangeRate(currency.asset, data.state.constants.asset);
 
@@ -153,7 +155,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
           <Activity mode={currency.asset !== frdAsset ? "visible" : "hidden"}>
             {isRateLoading
               ? <Skeleton className="w-full h-6" />
-              : <div suppressHydrationWarning>{toLocalString(Number(amount) * (rate ?? 0))} FRD (according to the current ceiling price 1 FRD = {toLocalString(rate ? 1 / rate : 0)} {currency.symbol})</div>}
+              : <div suppressHydrationWarning>{toLocalString(Number(amount) * (rate ?? 0))} {frdToken?.symbol} (according to the current ceiling price 1 {frdToken?.symbol} = {toLocalString(rate ? 1 / rate : 0)} {currency.symbol})</div>}
           </Activity>
           <div>
             <Slider

@@ -2,7 +2,7 @@
 
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { FC, useEffect, useState } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 import { useClipboard } from "use-clipboard-copy";
 
 import { appConfig } from "@/app-config";
@@ -22,10 +22,7 @@ interface CardFooterReferralProps {
   type: "chart" | "streak";
 }
 
-const tweetTextByType: Record<string, string> = {
-  chart: "I’m unstoppable, I’m unblockable, I’m uncensorable. Because I keep my money on Obyte. So do my friends. Join me.",
-  streak: "Help me complete my streak by becoming my next friend. And start making 1% a day by making friends every day.",
-};
+
 
 export const CardFooterReferral: FC<CardFooterReferralProps> = ({ hasDeposit = false, query = "", type, address }) => {
   const pathname = usePathname();
@@ -34,7 +31,18 @@ export const CardFooterReferral: FC<CardFooterReferralProps> = ({ hasDeposit = f
   });
 
   const data = useData();
+
   const params = data.params;
+
+  const lockedRewardsShareInPercent = toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100);
+
+  const tweetTextByType: Record<typeof type, ReactNode> = {
+    chart: <span>I&apos;m unstoppable, I&apos;m unblockable, I&apos;m uncensorable. Because I keep my money on Obyte. Become my friend and start making {lockedRewardsShareInPercent}% a day by making friends every day – like me.
+    </span>,
+
+    streak: <span>Help me continue my streak by becoming my next friend. Similar to me, make {lockedRewardsShareInPercent}% a day by making friends every day.
+    </span>
+  };
 
   const { decimals, symbol } = data.getFrdToken();
 

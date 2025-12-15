@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BadgeCheck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { ReactNode } from "react";
 
 interface TweetCardProps {
   displayName?: string;
@@ -14,7 +15,7 @@ interface TweetCardProps {
   ogImageUrl?: string;
   ogTitle?: string;
   ogSource?: string;
-  tweetText?: string;
+  tweetText?: ReactNode;
 }
 
 export const TweetCard = ({
