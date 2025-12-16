@@ -6,7 +6,7 @@ import { PuzzleImage } from "../ui/puzzle-image";
 
 export const HowItWorksBlock = () => {
   const frd = __GLOBAL_STORE__?.getOwnToken();
-  const frdToUsd = __GLOBAL_STORE__?.getFrdPriceUSD()?.toPrecision(4) ?? 'N/A';
+  const frdToUsd = __GLOBAL_STORE__?.getFrdPriceUSD()?.toPrecision(2) ?? 'N/A';
 
   return (<div>
     <div className="grid grid-cols-3 gap-8 max-w-5xl mx-auto">
