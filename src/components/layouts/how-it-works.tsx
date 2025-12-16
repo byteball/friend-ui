@@ -25,7 +25,7 @@ export const HowItWorksBlock = () => {
         <div className="flex gap-4 items-center mb-6">
           <div className="shrink-0 rounded-full w-8 h-8 bg-gray-300/30 flex items-center justify-center font-semibold text-muted-foreground">3</div>
           <div>
-            Claim rewards for becoming friends. Each of you gets {toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% added to your locked balance, plus {toLocalString(appConfig.initialRewardsVariables.liquid_reward_share * 100)}% in liquid {frd?.symbol} (Friend) tokens, which you can spend immediately. Additionally, you get a {toLocalString(appConfig.initialRewardsVariables.new_user_reward / 10 ** (frd?.decimals ?? 0))} {frd?.symbol} new user reward and a {toLocalString(appConfig.initialRewardsVariables.referral_reward / 10 ** (frd?.decimals ?? 0))} {frd?.symbol} referral reward (1 {frd?.symbol} ≈ ${frdToUsd}).
+            Claim rewards for becoming friends. Each of you gets {toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% added to your locked balance, plus {toLocalString(appConfig.initialRewardsVariables.liquid_reward_share * 100)}% in liquid {frd?.symbol} (Friend) tokens, which you can spend immediately. Additionally, you get a {toLocalString(appConfig.initialRewardsVariables.new_user_reward / 10 ** (frd?.decimals ?? 0))} {frd?.symbol} new user reward and a {toLocalString(appConfig.initialRewardsVariables.referral_reward / 10 ** (frd?.decimals ?? 0))} {frd?.symbol} referral reward (1 {frd?.symbol} &asymp; ${frdToUsd}).
           </div>
         </div>
         <div className="text-muted-foreground text-sm">

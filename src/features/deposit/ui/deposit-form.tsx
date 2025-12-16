@@ -157,7 +157,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
           <Activity mode={currency.asset !== frdAsset ? "visible" : "hidden"}>
             {isRateLoading
               ? <Skeleton className="w-full h-6" />
-              : <div suppressHydrationWarning>{toLocalString(Number(amount) * (rate ?? 0))} {frdToken?.symbol} (according to the current ceiling price 1 {frdToken?.symbol} = {toLocalString(rate ? 1 / rate : 0)} {currency.symbol})</div>}
+              : <div suppressHydrationWarning>&asymp; {toLocalString(Number(amount) * (rate ?? 0))} {frdToken?.symbol} (according to the current ceiling price 1 {frdToken?.symbol} = {toLocalString(rate ? 1 / rate : 0)} {currency.symbol})</div>}
           </Activity>
           <div>
             <Slider
