@@ -45,7 +45,7 @@ const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
           </DialogHeader>
           <div className="mx-auto">
             <a href={href}>
-              <QRCodeSVG size={200} className="qr" bgColor="#24292e" fgColor="#fff" value={href} />
+              <QRCodeSVG size={200} value={href} />
             </a>
           </div>
 
