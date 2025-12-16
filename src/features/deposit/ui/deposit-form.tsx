@@ -14,9 +14,10 @@ import { generateLink } from "@/lib/generate-link";
 import { useData } from "@/app/context";
 import { toLocalString } from "@/lib/to-local-string";
 
+import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { QRButton } from "@/components/ui/qr-button";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 import { useExchangeRate } from "@/hooks/use-exchange-rate";
@@ -109,11 +110,11 @@ export const DepositForm: FC<DepositFormProps> = () => {
       <div>If you deposit less than {toLocalString(agentParams.min_balance_instead_of_real_name / 10 ** (frdMeta?.decimals ?? 0))} {frdMeta?.symbol} (or equivalent), you must be <a className="text-blue-700" href="#">real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
     </div>
 
-    <div>
-      <div className="flex flex-col gap-4">
-        <div className="flex items-end gap-4">
-          <div className="w-full">
-            <label htmlFor="amount" className="pb-1 text-muted-foreground">Amount</label>
+    <FieldSet>
+      <FieldGroup>
+        <div className="flex justify-baseline gap-x-4">
+          <Field>
+            <FieldLabel htmlFor="amount">Amount</FieldLabel>
 
             <NumericFormat
               value={amount}
@@ -134,23 +135,31 @@ export const DepositForm: FC<DepositFormProps> = () => {
               }}
               inputMode="decimal"
             />
-          </div>
+          </Field>
 
-          <Select defaultValue={currency.asset} onValueChange={handleTokenChange}>
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Select a token" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Currency</SelectLabel>
-                {Object.entries(data?.tokens ?? {}).map(([_tokenKey, token]) => (
-                  <SelectItem key={token.asset} value={token.asset}>
-                    {token.symbol}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <Field className="w-[200px]">
+            <FieldLabel htmlFor="currency">Currency</FieldLabel>
+            <Select defaultValue={currency.asset} onValueChange={handleTokenChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a token" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {/* <SelectLabel>Currency</SelectLabel> */}
+                  {Object.entries(data?.tokens ?? {}).map(([_tokenKey, token]) => (
+                    <SelectItem key={token.asset} value={token.asset}>
+                      {token.symbol}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+
+            <FieldDescription>
+              Buy on {frdAsset === currency.asset
+                ? <Link className="text-blue-700" href="https://oswap.io" target="_blank" rel="noopener noreferrer"> Oswap</Link>
+                : <Link className="text-blue-700" href="https://getmein.ooo" target="_blank" rel="noopener noreferrer"> GetMeIn</Link>}</FieldDescription>
+          </Field>
         </div>
 
         <div className="flex flex-col w-full gap-4">
@@ -159,17 +168,17 @@ export const DepositForm: FC<DepositFormProps> = () => {
               ? <Skeleton className="w-full h-6" />
               : <div suppressHydrationWarning>&asymp; {toLocalString(Number(amount) * (rate ?? 0))} {frdToken?.symbol} (according to the current ceiling price 1 {frdToken?.symbol} = {toLocalString(rate ? 1 / rate : 0)} {currency.symbol})</div>}
           </Activity>
-          <div>
+
+          <Field>
             <Slider
               value={[selectedTerm]}
               id="term"
-              className="mt-2"
               onValueChange={(value) => setTerm((value[0] <= minTerm ? minTerm : value[0]) as number)}
               step={30}
               min={0}
               max={MAX_LOCKED_TERM_DAYS}
             />
-          </div>
+          </Field>
 
           <div suppressHydrationWarning>Locking term: {formatDays(selectedTerm)} — until {formatInTimeZone(until, "UTC", "MMMM do, yyyy")} <span className="text-muted-foreground">(applies to your entire balance)</span>
           </div>
@@ -177,10 +186,13 @@ export const DepositForm: FC<DepositFormProps> = () => {
           {(addReferralAsData) ? <div>Using <Link href={`/${referralAddress}`} className="text-blue-700">{referralAddress}</Link> as referrer</div> : null}
         </div>
 
-        <QRButton ref={btnRef} disabled={!amount || Number(amount) <= 0} href={url}>
-          Send {!Number(amount) ? '' : toLocalString(amount)} {currency?.symbol.toUpperCase()}
-        </QRButton>
-      </div>
-    </div>
+
+        <Field>
+          <QRButton ref={btnRef} disabled={!amount || Number(amount) <= 0} href={url}>
+            Send {!Number(amount) ? '' : toLocalString(amount)} {currency?.symbol.toUpperCase()}
+          </QRButton>
+        </Field>
+      </FieldGroup>
+    </FieldSet>
   </div>
 }
