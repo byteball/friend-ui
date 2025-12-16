@@ -33,7 +33,7 @@ export const HowItWorksBlock = () => {
         </div>
       </div>
 
-      <div className="bg-white hidden rounded-xl p-4 md:flex items-center">
+      <div className="bg-card hidden rounded-xl p-4 md:flex items-center">
         <img src="/handshake.svg" width="100%" alt="Handshake" />
       </div>
 
@@ -60,7 +60,7 @@ export const HowItWorksBlock = () => {
         </p>
 
         <p>
-          See more details in the <Link className="text-blue-700" href="/faq">FAQ</Link>.
+          See more details in the <Link className="text-primary" href="/faq">FAQ</Link>.
         </p>
       </div>
     </div>

@@ -32,7 +32,7 @@ export default async function Leaderboard() {
   const usernames = await getProfileUsernames(data.map(d => d.address));
 
   return <div>
-    <h1 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-6xl">Leaderboard</h1>
+    <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-6xl">Leaderboard</h1>
 
     <div className="mt-8">
       <LeaderboardTable

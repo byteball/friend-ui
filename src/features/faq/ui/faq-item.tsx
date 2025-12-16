@@ -5,7 +5,7 @@ interface IFaqItemProps {
 }
 
 export const FaqItem: FC<IFaqItemProps> = ({ children }) => {
-  return <div className="pb-6 border-b border-gray-200">
+  return <div className="pb-6 border-b border-border">
     {children}
   </div>
 }

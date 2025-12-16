@@ -41,7 +41,7 @@ export default async function FaqPage() {
 
   return (
     <div className="prose prose-2xl">
-      <h1 className="text-4xl font-semibold tracking-tight text-gray-900 sm:text-6xl">Frequently asked questions</h1>
+      <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-6xl">Frequently asked questions</h1>
 
       <Faq.Container>
         <Faq.Item>
@@ -554,7 +554,7 @@ export default async function FaqPage() {
       </Faq.Container>
 
       <div className="mt-20">
-        <p className="mt-4 text-lg text-gray-700 text-pretty">Can&rsquo;t find the answer you&rsquo;re looking for? Reach out to our <a href="https://discord.obyte.org" target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-700 hover:text-blue-500">discord</a>.</p>
+        <p className="mt-4 text-lg text-muted-foreground text-pretty">Can&rsquo;t find the answer you&rsquo;re looking for? Reach out to our <a href="https://discord.obyte.org" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">discord</a>.</p>
       </div>
     </div>
   )
