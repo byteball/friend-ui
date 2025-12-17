@@ -37,7 +37,6 @@ export default function Home() {
   return <div className="grid space-y-8">
     <HeroBlock />
     <HowItWorksBlock />
-
     <MainActionTabs />
   </div>
 }
