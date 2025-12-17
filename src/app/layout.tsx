@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import { Geist } from "next/font/google";
 
 import Navbar from "@/components/layouts/main-navbar";
 
@@ -6,7 +6,7 @@ import { ClientProviders } from "./client-providers";
 
 import "./globals.css";
 
-const InterFont = Inter({
+const GeistFont = Geist({
   subsets: ["latin"],
 });
 
@@ -103,7 +103,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${InterFont.className} antialiased`}
+        className={`${GeistFont.className} antialiased`}
       >
         <ClientProviders initialSnapshot={snapshot ?? null}>
           <Navbar />
