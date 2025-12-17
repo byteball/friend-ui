@@ -3,7 +3,7 @@ import { toLocalString } from "@/lib/to-local-string";
 
 export const HeroBlock = () => (
   <div className="w-full overflow-hidden">
-    <div className="px-6 pb-18 pt-4 sm:pb-18 lg:flex lg:justify-center lg:px-8 lg:pb-18">
+    <div className="px-6 pb-8 md:pb-18 pt-4 lg:flex lg:justify-center lg:px-8">
       <div>
 
         <h1 className="text-center w-full text-pretty text-5xl font-semibold tracking-tight text-foreground sm:text-7xl">

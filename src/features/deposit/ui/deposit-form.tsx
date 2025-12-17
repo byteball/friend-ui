@@ -14,7 +14,7 @@ import { generateLink } from "@/lib/generate-link";
 import { useData } from "@/app/context";
 import { toLocalString } from "@/lib/to-local-string";
 
-import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { QRButton } from "@/components/ui/qr-button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -101,13 +101,13 @@ export const DepositForm: FC<DepositFormProps> = () => {
     }
   });
 
-  return <div className="grid gap-4">
+  return <div className="grid gap-4 deposit-form">
     <h2 className="text-3xl font-bold">New deposit</h2>
 
     <div className="grid gap-4 text-muted-foreground">
-      <div>Before depositing, you must be attested on <a className="text-blue-700" href={appConfig.TELEGRAM_BOT_URL}>telegram</a> and/or <a className="text-blue-700" href={appConfig.DISCORD_BOT_URL}>discord</a>. This is important to notify you about follow-up rewards in the future.</div>
+      <div>Before depositing, you must be attested on <a className="text-gray-200 underline underline-offset-3" href={appConfig.TELEGRAM_BOT_URL}>telegram</a> and/or <a className="text-gray-200 underline underline-offset-3" href={appConfig.DISCORD_BOT_URL}>discord</a>. This is important to notify you about follow-up rewards in the future.</div>
 
-      <div>If you deposit less than {toLocalString(agentParams.min_balance_instead_of_real_name / 10 ** (frdMeta?.decimals ?? 0))} {frdMeta?.symbol} (or equivalent), you must be <a className="text-blue-700" href="#">real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
+      <div>If you deposit less than {toLocalString(agentParams.min_balance_instead_of_real_name / 10 ** (frdMeta?.decimals ?? 0))} {frdMeta?.symbol} (or equivalent), you must be <a className="text-gray-200 underline underline-offset-3" href="#">real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
     </div>
 
     <FieldSet>
@@ -154,19 +154,15 @@ export const DepositForm: FC<DepositFormProps> = () => {
                 </SelectGroup>
               </SelectContent>
             </Select>
-
-            <FieldDescription>
-              Buy on {frdAsset === currency.asset
-                ? <Link className="text-blue-700" href="https://oswap.io" target="_blank" rel="noopener noreferrer"> Oswap</Link>
-                : <Link className="text-blue-700" href="https://getmein.ooo" target="_blank" rel="noopener noreferrer"> GetMeIn</Link>}</FieldDescription>
           </Field>
         </div>
 
-        <div className="flex flex-col w-full gap-4">
+        <div className="flex flex-col w-full gap-8 md:gap-4">
           <Activity mode={currency.asset !== frdAsset ? "visible" : "hidden"}>
             {isRateLoading
               ? <Skeleton className="w-full h-6" />
-              : <div suppressHydrationWarning>&asymp; {toLocalString(Number(amount) * (rate ?? 0))} {frdToken?.symbol} (according to the current ceiling price 1 {frdToken?.symbol} = {toLocalString(rate ? 1 / rate : 0)} {currency.symbol})</div>}
+              : <div suppressHydrationWarning>&asymp; {toLocalString(Number(amount) * (rate ?? 0))} {frdToken?.symbol} (according to the current ceiling price 1 {frdToken?.symbol} = {toLocalString(rate ? 1 / rate : 0)} {currency.symbol}).
+              </div>}
           </Activity>
 
           <Field>
@@ -187,11 +183,17 @@ export const DepositForm: FC<DepositFormProps> = () => {
         </div>
 
 
-        <Field>
+        <div className="flex flex-col md:flex-row gap-6 md:gap-4 items-center">
           <QRButton ref={btnRef} disabled={!amount || Number(amount) <= 0} href={url}>
             Send {!Number(amount) ? '' : toLocalString(amount)} {currency?.symbol.toUpperCase()}
           </QRButton>
-        </Field>
+
+          <div className="text-muted-foreground">
+            Buy on {frdAsset === currency.asset
+              ? <Link className="text-gray-200 underline underline-offset-3" href="https://oswap.io" target="_blank" rel="noopener noreferrer"> Oswap</Link>
+              : <Link className="text-gray-200 underline underline-offset-3" href="https://getmein.ooo" target="_blank" rel="noopener noreferrer"> GetMeIn</Link>}
+          </div>
+        </div>
       </FieldGroup>
     </FieldSet>
   </div>

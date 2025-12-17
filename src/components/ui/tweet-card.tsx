@@ -72,7 +72,7 @@ export const TweetCard = ({
                         src={ogImageUrl}
                         alt={ogTitle || ""}
                         fill
-                        className="object-cover"
+                        className="object-cover opacity-80"
                       />
                     </div>
                     {ogTitle && (

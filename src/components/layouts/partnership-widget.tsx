@@ -9,7 +9,7 @@ const PartnershipWidget = () => {
           <div className="relative group cursor-pointer">
             <div className="relative w-16 h-16 md:w-20 md:h-20 backdrop-blur-xl bg-gradient-to-br from-surface-elevated/80 to-surface/60 rounded-2xl flex items-center justify-center border border-border/30 shadow-2xl group-hover:border-primary/40 transition-all duration-300">
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-foreground/5 to-transparent" />
-              <Wallet className="relative w-10 h-10 md:w-12 md:h-12 text-foreground/70 group-hover:text-foreground transition-colors duration-300" strokeWidth={1.5} />
+              <Wallet className="relative w-10 h-10 md:w-12 md:h-12 text-foreground/70 group-hover:text-foreground  duration-300" strokeWidth={1.5} />
             </div>
           </div>
 
