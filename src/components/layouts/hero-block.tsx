@@ -1,5 +1,4 @@
 import { appConfig } from "@/app-config";
-import { Highlighter } from "@/components/magicui/highlighter";
 import { toLocalString } from "@/lib/to-local-string";
 
 export const HeroBlock = () => (
@@ -11,11 +10,9 @@ export const HeroBlock = () => (
           Obyte Friends
         </h1>
 
-        <p className="text-center mt-8 text-pretty text-lg font-medium text-muted-foreground sm:text-xl/8">
-          <Highlighter action="underline" color="#FF9800">Make {toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% a day</Highlighter> by making <Highlighter action="underline" color="#87CEFA">friends</Highlighter> every day
+        <p className="text-gray-200 mx-auto mb-8 mt-6 text-balance leading-relaxed text-xl text-center max-w-3xl">
+          Make {toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% a day by making friends every day and spreading the word about <a href="https://obyte.org" className="font-semibold underline-offset-3 underline" target="_blank">Obyte</a>'s unstoppable, censorship-resistant tech
         </p>
-
-        <p className="text-center mt-2 text-pretty text-lg font-medium text-muted-foreground sm:text-xl/8">and spreading the word about <a href="https://obyte.org" className="font-bold" target="_blank">Obyte</a>'s unstoppable, censorship-resistant tech</p>
       </div>
     </div>
 
