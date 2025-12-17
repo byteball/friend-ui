@@ -270,7 +270,7 @@ export const PuzzleImage: FC<PuzzleImageProps> = ({
   rows = 3,
   columns = 3,
 
-  stroke = "#ffffff",
+  stroke = "#e5e7eb",
   filledCells = 5,
   strokeWidth = 1.9,
   className,
