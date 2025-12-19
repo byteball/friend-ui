@@ -165,9 +165,9 @@ export const DepositForm: FC<DepositFormProps> = () => {
             </Select>
 
             <FieldDescription>
-              Buy on {frdAsset === currency.asset
-                ? <Link className="text-gray-200 underline underline-offset-3" href="https://oswap.io" target="_blank" rel="noopener noreferrer"> Oswap</Link>
-                : <Link className="text-gray-200 underline underline-offset-3" href="https://getmein.ooo" target="_blank" rel="noopener noreferrer"> GetMeIn</Link>}
+              {frdAsset === currency.asset
+                ? <>Buy on <Link className="text-gray-200 underline underline-offset-3" href="https://oswap.io" target="_blank" rel="noopener noreferrer">Oswap</Link></>
+                : <>Get on <Link className="text-gray-200 underline underline-offset-3" href="https://getmein.ooo" target="_blank" rel="noopener noreferrer">GetMeIn</Link></>}
             </FieldDescription>
           </Field>
         </div>
