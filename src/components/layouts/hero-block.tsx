@@ -10,9 +10,14 @@ export const HeroBlock = () => (
           Obyte Friends
         </h1>
 
-        <p className="text-gray-200 mx-auto mb-8 mt-6 text-balance leading-relaxed text-2xl text-center max-w-3xl">
-          Make {toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% a day by making friends every day and spreading the word about <a href="https://obyte.org" className="font-semibold underline-offset-3 underline" target="_blank">Obyte</a>'s unstoppable, censorship-resistant tech
-        </p>
+        <div className="text-gray-200 mx-auto mb-8 mt-6 text-balance leading-relaxed text-2xl text-center max-w-4xl">
+          <p>
+            Make {toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% a day by making friends every day
+          </p>
+
+          <p>and spreading the word about <a href="https://obyte.org" className="font-semibold underline-offset-3 underline" target="_blank">Obyte</a>'s unstoppable, censorship-resistant tech</p>
+        </div>
+
       </div>
     </div>
 
