@@ -188,7 +188,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
           <div suppressHydrationWarning>Locking term: {formatDays(selectedTerm)} — until {formatInTimeZone(until, "UTC", "MMMM do, yyyy")} <span className="text-muted-foreground">(applies to your entire balance)</span>
           </div>
 
-          {(addReferralAsData) ? <div>Using <Link href={`/${referralAddress}`} className="text-blue-700">{referralAddress}</Link> as referrer</div> : null}
+          {(addReferralAsData) ? <div>Using <Link href={`/${referralAddress}`} className="text-white underline underline-offset-3">{referralAddress}</Link> as referrer</div> : null}
         </div>
 
 
