@@ -30,12 +30,12 @@ export const TweetCard = ({
   tweetText = "Help me complete my streak by becoming my next friend. And start making 1% a day by making friends every day.",
 }: TweetCardProps) => {
   return (
-    <div className="w-full max-w-[598px] bg-gray-100 rounded-md mt-2 px-4 p-3 transition-colors ">
+    <div className="w-full max-w-[598px] bg-muted rounded-md mt-2 px-4 p-3 transition-colors ">
       <div className="flex gap-3">
 
         <Avatar className="h-10 w-10 flex-shrink-0">
           <AvatarImage src={avatarUrl} alt={displayName} />
-          <AvatarFallback className="bg-[#cfd9de] text-foreground text-sm">
+          <AvatarFallback className="bg-muted-foreground/20 text-foreground text-sm">
             {displayName.charAt(0).toUpperCase()}
           </AvatarFallback>
         </Avatar>
@@ -50,9 +50,9 @@ export const TweetCard = ({
               {verified && (
                 <BadgeCheck className="h-[18px] w-[18px] text-primary fill-primary" />
               )}
-              <span className="text-[#71767b]">@{username}</span>
-              <span className="text-[#71767b]">·</span>
-              <span className="text-[#71767b] hover:underline ">
+              <span className="text-muted-foreground">@{username}</span>
+              <span className="text-muted-foreground">·</span>
+              <span className="text-muted-foreground hover:underline ">
                 {timeAgo}
               </span>
             </div>
@@ -64,7 +64,7 @@ export const TweetCard = ({
           {(ogImageUrl || ogTitle) && (
             <div className="mt-3">
               <div className="text-sm text-foreground mb-2">{tweetText}</div>
-              <div className="border border-[#cfd9de] rounded-2xl overflow-hidden hover:bg-white/[0.03] transition-colors">
+              <div className="border border-border rounded-2xl overflow-hidden hover:bg-accent/10 transition-colors">
                 {ogImageUrl && (
                   <div className="relative">
                     <div className="aspect-[1.91/1] w-full bg-accent relative">
@@ -72,7 +72,7 @@ export const TweetCard = ({
                         src={ogImageUrl}
                         alt={ogTitle || ""}
                         fill
-                        className="object-cover"
+                        className="object-cover opacity-80"
                       />
                     </div>
                     {ogTitle && (
@@ -88,7 +88,7 @@ export const TweetCard = ({
                 )}
               </div>
               {ogSource && (
-                <div className="text-[13px] text-[#71767b] mt-1 block">
+                <div className="text-[13px] text-muted-foreground mt-1 block">
                   From {ogSource}
                 </div>
               )}

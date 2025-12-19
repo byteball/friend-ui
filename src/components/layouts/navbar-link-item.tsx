@@ -20,7 +20,7 @@ interface NavbarLinkItemProps
 export function NavbarLinkItem({
   link,
   className,
-  activeClassName = "text-blue-700",
+  activeClassName = "text-white",
   prefetch = false,
   ...props
 }: NavbarLinkItemProps) {

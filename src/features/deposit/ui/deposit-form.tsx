@@ -101,13 +101,13 @@ export const DepositForm: FC<DepositFormProps> = () => {
     }
   });
 
-  return <div className="grid gap-4">
+  return <div className="grid gap-4 deposit-form">
     <h2 className="text-3xl font-bold">New deposit</h2>
 
     <div className="grid gap-4 text-muted-foreground">
-      <div>Before depositing, you must be attested on <a className="text-blue-700" href={appConfig.TELEGRAM_BOT_URL}>telegram</a> and/or <a className="text-blue-700" href={appConfig.DISCORD_BOT_URL}>discord</a>. This is important to notify you about follow-up rewards in the future.</div>
+      <div>Before depositing, you must be attested on <a className="text-gray-200 underline underline-offset-3" href={appConfig.TELEGRAM_BOT_URL}>telegram</a> and/or <a className="text-gray-200 underline underline-offset-3" href={appConfig.DISCORD_BOT_URL}>discord</a>. This is important to notify you about follow-up rewards in the future.</div>
 
-      <div>If you deposit less than {toLocalString(agentParams.min_balance_instead_of_real_name / 10 ** (frdMeta?.decimals ?? 0))} {frdMeta?.symbol} (or equivalent), you must be <a className="text-blue-700" href="#">real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
+      <div>If you deposit less than {toLocalString(agentParams.min_balance_instead_of_real_name / 10 ** (frdMeta?.decimals ?? 0))} {frdMeta?.symbol} (or equivalent), you must be <a className="text-gray-200 underline underline-offset-3" href="#">real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
     </div>
 
     <FieldSet>
@@ -135,6 +135,15 @@ export const DepositForm: FC<DepositFormProps> = () => {
               }}
               inputMode="decimal"
             />
+
+            <FieldDescription>
+              <Activity mode={currency.asset !== frdAsset ? "visible" : "hidden"}>
+                {isRateLoading
+                  ? <Skeleton className="w-full h-6" />
+                  : <div suppressHydrationWarning>&asymp; {toLocalString(Number(amount) * (rate ?? 0))} {frdToken?.symbol} (according to the current ceiling price 1 {frdToken?.symbol} = {toLocalString(rate ? 1 / rate : 0)} {currency.symbol}).
+                  </div>}
+              </Activity>
+            </FieldDescription>
           </Field>
 
           <Field className="w-[200px]">
@@ -157,17 +166,13 @@ export const DepositForm: FC<DepositFormProps> = () => {
 
             <FieldDescription>
               Buy on {frdAsset === currency.asset
-                ? <Link className="text-blue-700" href="https://oswap.io" target="_blank" rel="noopener noreferrer"> Oswap</Link>
-                : <Link className="text-blue-700" href="https://getmein.ooo" target="_blank" rel="noopener noreferrer"> GetMeIn</Link>}</FieldDescription>
+                ? <Link className="text-gray-200 underline underline-offset-3" href="https://oswap.io" target="_blank" rel="noopener noreferrer"> Oswap</Link>
+                : <Link className="text-gray-200 underline underline-offset-3" href="https://getmein.ooo" target="_blank" rel="noopener noreferrer"> GetMeIn</Link>}
+            </FieldDescription>
           </Field>
         </div>
 
-        <div className="flex flex-col w-full gap-4">
-          <Activity mode={currency.asset !== frdAsset ? "visible" : "hidden"}>
-            {isRateLoading
-              ? <Skeleton className="w-full h-6" />
-              : <div suppressHydrationWarning>&asymp; {toLocalString(Number(amount) * (rate ?? 0))} {frdToken?.symbol} (according to the current ceiling price 1 {frdToken?.symbol} = {toLocalString(rate ? 1 / rate : 0)} {currency.symbol})</div>}
-          </Activity>
+        <div className="flex flex-col w-full gap-8 md:gap-4">
 
           <Field>
             <Slider
@@ -183,15 +188,15 @@ export const DepositForm: FC<DepositFormProps> = () => {
           <div suppressHydrationWarning>Locking term: {formatDays(selectedTerm)} — until {formatInTimeZone(until, "UTC", "MMMM do, yyyy")} <span className="text-muted-foreground">(applies to your entire balance)</span>
           </div>
 
-          {(addReferralAsData) ? <div>Using <Link href={`/${referralAddress}`} className="text-blue-700">{referralAddress}</Link> as referrer</div> : null}
+          {(addReferralAsData) ? <div>Using <Link href={`/${referralAddress}`} className="text-white underline underline-offset-3">{referralAddress}</Link> as referrer</div> : null}
         </div>
 
 
-        <Field>
+        <div className="flex flex-col md:flex-row gap-6 md:gap-4 items-center">
           <QRButton ref={btnRef} disabled={!amount || Number(amount) <= 0} href={url}>
             Send {!Number(amount) ? '' : toLocalString(amount)} {currency?.symbol.toUpperCase()}
           </QRButton>
-        </Field>
+        </div>
       </FieldGroup>
     </FieldSet>
   </div>

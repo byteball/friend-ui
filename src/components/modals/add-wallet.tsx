@@ -67,7 +67,7 @@ export const AddWalletModal: FC<AddWalletModalProps> = ({ triggerClassName = "",
       <DialogHeader>
         <DialogTitle>Add wallet</DialogTitle>
         <DialogDescription>
-          <a href="https://obyte.org/#download" className="text-blue-700">Install Obyte wallet</a> if you don&apos;t have one yet, and copy/paste your address here.
+          <a href="https://obyte.org/#download" className="underline underline-offset-3 text-white">Install Obyte wallet</a> if you don&apos;t have one yet, and copy/paste your address here.
         </DialogDescription>
       </DialogHeader>
 

@@ -114,7 +114,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
               {address === walletAddress ? <Skeleton className="w-full h-9" /> : null}
             </div>
             : <div className="text-center w-full lg:w-auto flex flex-col items-center lg:items-end">
-              <div className="w-full max-w-[230px] aspect-square relative bg-accent rounded-md overflow-hidden animate-pulse [&:has(img)]:animate-none">
+              <div className="border p-2 w-full max-w-[230px] aspect-square relative bg-accent rounded-md overflow-hidden animate-pulse [&:has(img)]:animate-none">
                 <Image
                   wrapperClassName="w-full h-full"
                   className="w-full h-full object-cover"
@@ -126,7 +126,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
               </div>
 
               {address === walletAddress && <SelectGhostModal address={address}>
-                <Button variant="link" className="text-blue-700">choose another next ghost</Button>
+                <Button variant="link" className="underline mx-auto">choose another next ghost</Button>
               </SelectGhostModal>}
             </div>}
         </div>

@@ -32,7 +32,7 @@ class Client {
         // @ts-expect-error has error property
         throw new Error(errorObject.error);
       } else {
-        throw new Error("unknown error");
+        // throw new Error("unknown error");
       }
     }
 

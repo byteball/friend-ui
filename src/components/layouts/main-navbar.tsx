@@ -53,7 +53,7 @@ export default async function MainNavbar({ className }: NavbarProps) {
               <NavbarLinkItem
                 key={link.href}
                 link={link}
-                className="hidden text-sm text-muted-foreground hover:text-blue-700 md:block"
+                className="hidden text-sm text-muted-foreground hover:text-white md:block"
                 prefetch={false}
               />
             ))}
@@ -71,7 +71,7 @@ export default async function MainNavbar({ className }: NavbarProps) {
             {walletAddress ? (
               <NavbarLinkItem
                 link={{ text: "Profile", href: `/${walletAddress}` }}
-                className="hidden text-sm text-muted-foreground hover:text-blue-700 md:block"
+                className="hidden text-sm text-muted-foreground hover:text-white/50 md:block"
                 prefetch={false}
               />
             ) : null}

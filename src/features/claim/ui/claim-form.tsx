@@ -17,6 +17,7 @@ import { generateLink } from "@/lib/generate-link";
 import { toLocalString } from "@/lib/to-local-string";
 
 import { appConfig } from "@/app-config";
+import { Field, FieldLabel, FieldSet } from "@/components/ui/field";
 import { isValidAddress } from "@/lib/is-valid-address";
 import { useQueryState } from "nuqs";
 import { useRewards } from "../domain/use-rewards";
@@ -66,11 +67,11 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
       <div>You and your new friend must claim rewards here within 10 minutes of each other. If any of you is late, you have to claim again.</div>
     </div>
 
-    <div>
+    <FieldSet>
       <div className="flex flex-col gap-4">
         <div className="flex items-end max-w-2xl gap-4">
-          <div className="w-full">
-            <label htmlFor="address" className="pb-1 text-muted-foreground">Your friend’s address</label>
+          <Field className="w-full">
+            <FieldLabel htmlFor="address">Your friend’s address</FieldLabel>
             <Input
               id="address"
               value={friendWallet ?? ""}
@@ -80,7 +81,7 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
               }}
               onKeyDown={handleKeyDown}
             />
-          </div>
+          </Field>
 
           <QRButton
             href={url}
@@ -123,6 +124,6 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
           </div> : null)}
         </div>
       </div>
-    </div>
+    </FieldSet>
   </div>
 }

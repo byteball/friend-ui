@@ -28,39 +28,30 @@ const getDepositAssetExchangeRate = async (asset: string): Promise<number> => {
   return result.min / 0.9;
 }
 
-export const getTotalBalanceWithAssetReducer = async (balances: Balances, ceilingPrice: number) => {
-  const totals = { in_bytes: (balances.base ?? 0) * bytes_reducer };
-
-  for (const [asset, balance] of Object.entries(balances)) {
-    if (asset === 'base' || asset === 'frd') continue;
-
-    const exchangeRate = await getDepositAssetExchangeRate(asset);
-
-    totals.in_bytes = totals.in_bytes + balance * exchangeRate * deposit_asset_reducer;
-  }
-
-  return (balances.frd ?? 0) + (totals.in_bytes / ceilingPrice);
-}
-
 export const getTotalBalance = async (balances: Balances, ceilingPrice: number) => {
-  const totals = { in_bytes: (balances.base ?? 0) };
+  const totals = { deposit_assets_balance: 0 };
+
 
   for (const [asset, balance] of Object.entries(balances)) {
     if (asset === 'base' || asset === 'frd') continue;
 
     const exchangeRate = await getDepositAssetExchangeRate(asset);
 
-    totals.in_bytes = totals.in_bytes + balance * exchangeRate;
+    totals.deposit_assets_balance = totals.deposit_assets_balance + balance * exchangeRate;
   }
 
-  return (balances.frd ?? 0) + (totals.in_bytes / ceilingPrice);
+  return ({
+    sans_reducers: balances.frd + balances.base / ceilingPrice + totals.deposit_assets_balance / ceilingPrice,
+    with_reducers: balances.frd + balances.base / ceilingPrice * bytes_reducer + totals.deposit_assets_balance / ceilingPrice * deposit_asset_reducer,
+  });
 }
+
 
 export const getRewards = async (user1: IUserData | null, user2: IUserData | null, constants: IConstants) => {
   const ceilingPrice = getCeilingPrice(constants);
 
-  const totalBalance1 = await getTotalBalanceWithAssetReducer(user1?.balances ?? {}, ceilingPrice);
-  const totalBalance2 = await getTotalBalanceWithAssetReducer(user2?.balances ?? {}, ceilingPrice);
+  const totalBalance1 = (await getTotalBalance(user1?.balances ?? {}, ceilingPrice)).with_reducers;
+  const totalBalance2 = (await getTotalBalance(user2?.balances ?? {}, ceilingPrice)).with_reducers;
 
   const bNewUser = !user1?.last_date || !user2?.last_date;
 

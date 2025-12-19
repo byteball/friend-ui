@@ -25,14 +25,14 @@ export const GovernanceProfile: FC<GovernanceProfileProps> = ({ walletAddress })
     return <div className="font-medium">
       Please{" "}
       <AddWalletModal>
-        <Button variant="link" className="p-0 m-0 text-blue-700 text-md">add your wallet address</Button>
+        <Button variant="link" className="p-0 m-0 text-white underline underline-offset-3 text-md">add your wallet address</Button>
       </AddWalletModal>
       {" "}to see voting balance
     </div>
   }
 
   return <div>
-    Your wallet address: <span><Link href={`/${walletAddress}`} className="text-blue-700">
+    Your wallet address: <span><Link href={`/${walletAddress}`} className="text-white underline underline-offset-3">
       {String(walletAddress).slice(0, 5)}...{String(walletAddress).slice(-5, String(walletAddress).length)}
     </Link>
     </span>
