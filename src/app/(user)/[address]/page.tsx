@@ -27,7 +27,7 @@ export async function generateMetadata(
   const isChart = queryParams.r === 'c';
 
   const ceilingPrice = getCeilingPrice(state.constants!);
-  const totalBalance = await getTotalBalance(userData?.balances ?? {}, ceilingPrice);
+  const totalBalance = (await getTotalBalance(userData?.balances ?? {}, ceilingPrice)).sans_reducers;
 
   const frdTokenMeta = globalThis.__GLOBAL_STORE__?.getOwnToken();
   const frdDecimals = frdTokenMeta?.decimals ?? 9;
@@ -63,7 +63,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ addres
   const userData: IUserData | undefined = state?.[`user_${address}`];
 
   const ceilingPrice = getCeilingPrice(state.constants!);
-  const totalBalance = await getTotalBalance(userData?.balances ?? {}, ceilingPrice);
+  const totalBalance = (await getTotalBalance(userData?.balances ?? {}, ceilingPrice)).sans_reducers;
 
   const username = await getProfileUsername(address) ?? address.slice(0, 6) + "..." + address.slice(-4);
 

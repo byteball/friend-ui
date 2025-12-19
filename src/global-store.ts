@@ -216,7 +216,7 @@ export class GlobalStore extends EventEmitter {
         friends[addr].push(value);
       } else if (key.startsWith('user_') && !value.ghost) {
         const [, addr] = key.split('_');
-        const totalBalance = await getTotalBalance(value.balances ?? {}, ceilPrice);
+        const totalBalance = (await getTotalBalance(value.balances ?? {}, ceilPrice)).sans_reducers;
         totalBalances.set(addr, totalBalance);
       }
     }
