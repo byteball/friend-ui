@@ -44,8 +44,8 @@ export const HowItWorksBlock = () => {
     <div className="grid grid-cols-3 items-center gap-12 max-w-5xl mx-auto mt-16">
 
       <div className="col-span-3 md:col-span-1 select-none">
-        <div className="w-full">
-          <div className="bg-primary/10 border border-primary/30 p-4 flex rounded-xl">
+        <div className="md:w-full">
+          <div className="bg-primary/10 border border-primary/30 p-4 flex max-w-[350px] md:w-full mx-auto rounded-xl">
             <PuzzleImage
               src="/ghosts/tim-may.png"
               rows={2}
