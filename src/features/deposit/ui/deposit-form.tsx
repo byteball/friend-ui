@@ -14,7 +14,7 @@ import { generateLink } from "@/lib/generate-link";
 import { useData } from "@/app/context";
 import { toLocalString } from "@/lib/to-local-string";
 
-import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
+import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { QRButton } from "@/components/ui/qr-button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -135,6 +135,15 @@ export const DepositForm: FC<DepositFormProps> = () => {
               }}
               inputMode="decimal"
             />
+
+            <FieldDescription>
+              <Activity mode={currency.asset !== frdAsset ? "visible" : "hidden"}>
+                {isRateLoading
+                  ? <Skeleton className="w-full h-6" />
+                  : <div suppressHydrationWarning>&asymp; {toLocalString(Number(amount) * (rate ?? 0))} {frdToken?.symbol} (according to the current ceiling price 1 {frdToken?.symbol} = {toLocalString(rate ? 1 / rate : 0)} {currency.symbol}).
+                  </div>}
+              </Activity>
+            </FieldDescription>
           </Field>
 
           <Field className="w-[200px]">
@@ -154,16 +163,16 @@ export const DepositForm: FC<DepositFormProps> = () => {
                 </SelectGroup>
               </SelectContent>
             </Select>
+
+            <FieldDescription>
+              Buy on {frdAsset === currency.asset
+                ? <Link className="text-gray-200 underline underline-offset-3" href="https://oswap.io" target="_blank" rel="noopener noreferrer"> Oswap</Link>
+                : <Link className="text-gray-200 underline underline-offset-3" href="https://getmein.ooo" target="_blank" rel="noopener noreferrer"> GetMeIn</Link>}
+            </FieldDescription>
           </Field>
         </div>
 
         <div className="flex flex-col w-full gap-8 md:gap-4">
-          <Activity mode={currency.asset !== frdAsset ? "visible" : "hidden"}>
-            {isRateLoading
-              ? <Skeleton className="w-full h-6" />
-              : <div suppressHydrationWarning>&asymp; {toLocalString(Number(amount) * (rate ?? 0))} {frdToken?.symbol} (according to the current ceiling price 1 {frdToken?.symbol} = {toLocalString(rate ? 1 / rate : 0)} {currency.symbol}).
-              </div>}
-          </Activity>
 
           <Field>
             <Slider
@@ -187,12 +196,6 @@ export const DepositForm: FC<DepositFormProps> = () => {
           <QRButton ref={btnRef} disabled={!amount || Number(amount) <= 0} href={url}>
             Send {!Number(amount) ? '' : toLocalString(amount)} {currency?.symbol.toUpperCase()}
           </QRButton>
-
-          <div className="text-muted-foreground">
-            Buy on {frdAsset === currency.asset
-              ? <Link className="text-gray-200 underline underline-offset-3" href="https://oswap.io" target="_blank" rel="noopener noreferrer"> Oswap</Link>
-              : <Link className="text-gray-200 underline underline-offset-3" href="https://getmein.ooo" target="_blank" rel="noopener noreferrer"> GetMeIn</Link>}
-          </div>
         </div>
       </FieldGroup>
     </FieldSet>
