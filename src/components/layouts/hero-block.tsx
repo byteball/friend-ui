@@ -10,7 +10,7 @@ export const HeroBlock = () => (
           Obyte Friends
         </h1>
 
-        <div className="text-gray-200 mx-auto mb-8 mt-6 text-balance leading-relaxed text-3xl text-center max-w-6xl">
+        <div className="text-gray-200 mx-auto mb-8 mt-12 text-balance leading-relaxed text-3xl text-center max-w-6xl">
           <p>
             Make {toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% a day by making friends every day
           </p>

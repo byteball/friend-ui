@@ -41,7 +41,7 @@ export const HowItWorksBlock = () => {
 
     </div>
 
-    <div className="grid grid-cols-3 items-center gap-12 max-w-5xl mx-auto mt-16">
+    <div className="grid grid-cols-3 items-center gap-12 max-w-5xl mx-auto mt-24">
 
       <div className="col-span-3 md:col-span-1 select-none">
         <div className="md:w-full">

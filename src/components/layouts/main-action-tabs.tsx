@@ -12,7 +12,7 @@ export const MainActionTabs = () => {
     parse: (value: string) => (value === 'deposit' || value === 'befriend' ? value : 'deposit'),
   });
 
-  return <Tabs value={tab} onValueChange={setTab} className="items-center">
+  return <Tabs value={tab} onValueChange={setTab} className="items-center mt-18">
     <TabsList className="gap-1 bg-transparent">
       <TabsTrigger
         value="deposit"
