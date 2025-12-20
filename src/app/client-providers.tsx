@@ -27,7 +27,7 @@ export function ClientProviders({ children, initialSnapshot }: ProvidersProps) {
   return <DataProvider value={initialSnapshot}>
     <ProgressProvider
       height="4px"
-      color="#1447e6"
+      color="#60A5FA"
       options={{ showSpinner: false }}
       shallowRouting
       targetPreprocessor={normalizeProgressTarget}
