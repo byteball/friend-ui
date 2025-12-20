@@ -66,8 +66,8 @@ export const AddNewDepositAssetModal: FC<AddNewDepositAssetModalProps> = ({ chil
             />
 
             {!error && symbol && asset ? <FieldDescription>
-              Symbol: <a target="_blank" className="text-white underline underline-offset-3" href={`https://${appConfig.TESTNET ? "testnet." : ""}tokens.ooo/${symbol}`}>{symbol}</a><br />
-              Asset: <a target="_blank" className="text-white underline underline-offset-3" href={getExplorerUrl(asset, "asset")}>{asset}</a>
+              Symbol: <a target="_blank" href={`https://${appConfig.TESTNET ? "testnet." : ""}tokens.ooo/${symbol}`}>{symbol}</a><br />
+              Asset: <a target="_blank" href={getExplorerUrl(asset, "asset")}>{asset}</a>
             </FieldDescription> : null}
 
             {input ? <FieldError className={cn({ "text-muted-foreground": loading })}>

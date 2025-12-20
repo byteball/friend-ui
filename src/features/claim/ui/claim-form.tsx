@@ -119,7 +119,7 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
             </DescriptionGroup>
           </DescriptionList> : (!walletAddress ? <div className="text-yellow-600">
             <AddWalletModal>
-              <span className="underline cursor-pointer">Add your address</span>
+              <span className="cursor-pointer">Add your address</span>
             </AddWalletModal> to see the rewards for this friendship
           </div> : null)}
         </div>

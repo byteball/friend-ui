@@ -34,7 +34,7 @@ export const FriendsListItem: FC<IFriendsListItemProps> = async ({ friendAddress
       : <div>
         <Link
           href={`/${friendAddress}`}
-          className={cn(cns, "text-white underline underline-offset-3 inline")}
+          className={cn(cns, "inline")}
         >
           {username}
         </Link>

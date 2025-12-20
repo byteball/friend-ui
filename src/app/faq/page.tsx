@@ -554,7 +554,7 @@ export default async function FaqPage() {
       </Faq.Container>
 
       <div className="mt-20">
-        <p className="mt-4 text-lg text-muted-foreground text-pretty">Can&rsquo;t find the answer you&rsquo;re looking for? Reach out to our <a href="https://discord.obyte.org" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">discord</a>.</p>
+        <p className="mt-4 text-lg text-muted-foreground text-pretty">Can&rsquo;t find the answer you&rsquo;re looking for? Reach out to our <a href="https://discord.obyte.org" target="_blank" rel="noopener noreferrer" className="font-semibold">discord</a>.</p>
       </div>
     </div>
   )

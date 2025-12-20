@@ -49,7 +49,7 @@ export const GovernanceDepositAssetItemContent: FC<GovernanceDepositAssetItemCon
 
   return <CardContent>
     {leaderValue ? <div suppressHydrationWarning className="flex items-center justify-between">
-      <div>Leader: {leaderValue === "no" ? <span>against this asset</span> : <a className="underline underline-offset-3" target="_blank" href={getExplorerUrl(leaderValue, "address")}>{truncateAddress(leaderValue)}</a>}
+      <div>Leader: {leaderValue === "no" ? <span>against this asset</span> : <a target="_blank" href={getExplorerUrl(leaderValue, "address")}>{truncateAddress(leaderValue)}</a>}
       </div>
 
       {timeEndChallengingPeriod
@@ -57,15 +57,18 @@ export const GovernanceDepositAssetItemContent: FC<GovernanceDepositAssetItemCon
           date={timeEndChallengingPeriod * 1000}
           renderer={(props) => challengingCountdownRenderer(props, asset !== 'no' ? commitUrl : undefined)}
         /> : null}
-    </div> : null}
+    </div> : null
+    }
 
-    {votes.length > 0 ? <div className="mt-4">
-      <GovernanceDepositAssetItemSupportsTable
-        asset={asset}
-        votes={votes}
-        frdToken={frdToken}
-        governanceAa={governanceAa}
-      />
-    </div> : null}
-  </CardContent>
+    {
+      votes.length > 0 ? <div className="mt-4">
+        <GovernanceDepositAssetItemSupportsTable
+          asset={asset}
+          votes={votes}
+          frdToken={frdToken}
+          governanceAa={governanceAa}
+        />
+      </div> : null
+    }
+  </CardContent >
 }

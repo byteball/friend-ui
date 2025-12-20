@@ -22,9 +22,9 @@ export const columns: ColumnDef<UserRank>[] = [
       const username = meta?.usernames?.find((u: any) => u.address === address)?.username;
 
       return <>
-        <Link className="text-primary hover:underline" href={`/${address}`}>{username ?? address}</Link>
+        <Link href={`/${address}`}>{username ?? address}</Link>
         <Link className="ml-2 text-muted-foreground hover:underline" href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${address}`} target="_blank" rel="noreferrer">(explorer)</Link>
-</>
+      </>
     }
   },
   {

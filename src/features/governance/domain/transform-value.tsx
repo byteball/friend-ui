@@ -49,7 +49,7 @@ export const transformValue = <K extends keyof AgentParams>(key: K, value: Agent
           target="_blank"
           rel="noopener noreferrer"
           key={index}
-          className="whitespace-nowrap mt-2 underline underline-offset-3 font-normal inline-block"
+          className="whitespace-nowrap mt-2 font-normal inline-block"
         >
           {transformer(item as AgentParams[K], frdToken)}
         </a>

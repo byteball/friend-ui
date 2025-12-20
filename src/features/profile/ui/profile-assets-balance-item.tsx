@@ -79,7 +79,7 @@ export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
           </span>
 
           {asset !== "frd" && walletAddress === address
-            ? <> <span className="underline text-white underline-offset-3 cursor-pointer" onClick={replace}>(replace)</span></>
+            ? <> <span className="cursor-pointer" onClick={replace}>(replace)</span></>
             : null}
         </div>
       </> : null}

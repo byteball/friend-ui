@@ -66,7 +66,7 @@ export const HowItWorksBlock = () => {
         </p>
 
         <p>
-          See more details in the <Link className="underline underline-offset-3" href="/faq">FAQ</Link>.
+          See more details in the <Link href="/faq">FAQ</Link>.
         </p>
       </div>
     </div>

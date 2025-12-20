@@ -27,7 +27,7 @@ export const governanceDepositAssetItemSupportsColumns: ColumnDef<IAggregatedDat
 
       if (!address || address === "no") return <span>against this asset</span>
 
-      return <a target="_blank" className="underline underline-offset-3 text-white" href={getExplorerUrl(address, "address")}>{address}</a>;
+      return <a target="_blank" rel="noopener" href={getExplorerUrl(address, "address")}>{address}</a>;
     },
   },
   {
@@ -51,7 +51,7 @@ export const governanceDepositAssetItemSupportsColumns: ColumnDef<IAggregatedDat
 
           <div className="grid gap-2">
             {voters?.map(voter => <div key={voter}>
-              <Link className="text-white underline underline-offset-3" href={`/${voter}`}>{voter}</Link>
+              <Link href={`/${voter}`}>{voter}</Link>
             </div>)}
           </div>
         </DialogContent>

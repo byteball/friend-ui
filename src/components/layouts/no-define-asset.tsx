@@ -22,7 +22,7 @@ export const NoDefineAsset = () => {
           <div>No defined asset found</div>
         </AlertTitle>
         <AlertDescription>
-          <div>Please <a href={url} className="inline underline">define an asset</a> to continue</div>
+          <div>Please <a href={url} className="inline">define an asset</a> to continue</div>
         </AlertDescription>
       </Alert>
     </div>

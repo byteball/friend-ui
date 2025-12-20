@@ -57,7 +57,7 @@ export const governanceItemSupportsColumns: ColumnDef<SupportedValuesData>[] = [
 
           <div className="grid gap-2">
             {thisValueVoters.map(voter => <div key={voter}>
-              <Link className="underline underline-offset-3 text-white" href={`/${voter}`}>{voter}</Link>
+              <Link href={`/${voter}`}>{voter}</Link>
             </div>)}
           </div>
         </DialogContent>
