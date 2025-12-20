@@ -123,22 +123,20 @@
     @apply bg-background text-foreground;
   }
 
-  a:not(.ui-link){
-    color: #60A5FA;
-    /* @apply underline-offset-2 underline */
-  }
 
-  a:hover:not(.ui-link) {
-    color: #93C5FD;
-    @apply underline underline-offset-4
-  }
 
 }
 
-.faq-items a {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  @apply text-gray-200;
+.faq-items a,
+a:not(.ui-link) {
+  color: #60A5FA;
+  @apply no-underline
+}
+
+.faq-items a:hover,
+a:hover:not(.ui-link) {
+  color: #93C5FD;
+  @apply underline underline-offset-4
 }
 
 .CollapsibleContent {
