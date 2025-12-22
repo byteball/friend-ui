@@ -1,9 +1,12 @@
-import { appConfig } from "@/app-config";
-import { toLocalString } from "@/lib/to-local-string";
+import Image from "next/image";
 import Link from "next/link";
 import "server-only";
+
+import { toLocalString } from "@/lib/to-local-string";
+
 import { PuzzleImage } from "../ui/puzzle-image";
-import PartnershipWidget from "./partnership-widget";
+
+import { appConfig } from "@/app-config";
 
 export const HowItWorksBlock = () => {
   const frd = __GLOBAL_STORE__?.getOwnToken();
@@ -36,7 +39,7 @@ export const HowItWorksBlock = () => {
       </div>
 
       <div className="shrink-0 col-span-3 md:col-span-1 p-4">
-        <PartnershipWidget />
+        <Image src="/handshake.svg" alt="how it works" width={340} height={300} className="mx-auto md:mx-0" />
       </div>
 
     </div>
