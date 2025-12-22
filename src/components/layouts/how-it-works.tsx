@@ -63,7 +63,7 @@ export const HowItWorksBlock = () => {
         </div>
       </div>
 
-      <div className="col-span-3 text-gray-200 h-full py-6 flex flex-col leading-relaxed text-xl md:col-span-2 space-y-4">
+      <div className="col-span-3 text-gray-200 h-ful flex flex-col leading-relaxed text-xl md:col-span-2 space-y-4">
         <p>
           After completing a 4-day streak of making new friends daily, you can become friends with the ghost of a famous cypherpunk, such as Satoshi Nakamoto, Tim May, Hal Finney, and others. After an additional 9 days, you can meet another, and so on.
         </p>
