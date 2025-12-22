@@ -212,7 +212,7 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
     <Field>
       {(isLoading || isValidating) && !rate
         ? <Skeleton className="w-full h-6" />
-        : <div className="text-sm space-y-2">
+        : <div className="text-md space-y-2">
 
           <div>
             <span>Rate</span>: 1 {inputTokenMeta.symbol} = {toLocalString(rate)} {outputTokenMeta.symbol}

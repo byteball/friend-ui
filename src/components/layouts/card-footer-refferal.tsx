@@ -87,7 +87,7 @@ export const CardFooterReferral: FC<CardFooterReferralProps> = ({ hasDeposit = f
               </InputGroupButton>
             </InputGroupAddon>
           </InputGroup>
-          <small className="text-xs text-muted-foreground">You&apos;ll receive {toLocalString(params.referrer_frd_deposit_reward_share * 100)}% of their deposits in {symbol}, {toLocalString(params.referrer_bytes_deposit_reward_share * 100)}% of their deposits in GBYTE, {toLocalString(params.referrer_deposit_asset_deposit_reward_share * 100)}% of all other deposits, and a {appConfig.initialRewardsVariables.new_user_reward / 10 ** decimals} {symbol} reward when they make their first friend
+          <small className="text-sm text-muted-foreground">You&apos;ll receive {toLocalString(params.referrer_frd_deposit_reward_share * 100)}% of their deposits in {symbol}, {toLocalString(params.referrer_bytes_deposit_reward_share * 100)}% of their deposits in GBYTE, {toLocalString(params.referrer_deposit_asset_deposit_reward_share * 100)}% of all other deposits, and a {appConfig.initialRewardsVariables.new_user_reward / 10 ** decimals} {symbol} reward when they make their first friend
           </small>
           <div className="mt-2 pt-2">
             <FieldLabel>Example tweet</FieldLabel>

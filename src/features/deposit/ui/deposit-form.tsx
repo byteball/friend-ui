@@ -101,7 +101,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
     }
   });
 
-  return <div className="grid gap-4 deposit-form">
+  return <div className="grid gap-4 text-md deposit-form">
     <h2 className="text-3xl font-bold">New deposit</h2>
 
     <div className="grid gap-4 text-muted-foreground">

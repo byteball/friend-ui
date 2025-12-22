@@ -40,7 +40,7 @@ export function NavbarLinkItem({
     <Link
       href={link.href}
       prefetch={prefetch}
-      className={cn(className, isActive && activeClassName, "ui-link")}
+      className={cn(className, isActive && activeClassName, "ui-link text-md")}
       {...props}
     >
       {link.text}

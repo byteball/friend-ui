@@ -124,7 +124,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
         </Collapsible>
 
         {userData?.unlock_date ? <div className="mt-2 flex justify-between items-center">
-          <div className="text-sm text-muted-foreground">
+          <div className="text-md text-muted-foreground">
             Unlock date: {formatDateAsUTC(parseDateFromAA(userData.unlock_date))}
           </div>
 
@@ -156,12 +156,12 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
         </div>
 
         {userData?.liquid_rewards
-          ? <div className="mt-2 text-sm text-muted-foreground">
+          ? <div className="mt-2 text-md text-muted-foreground">
             including {toLocalString((liquidRewards / 10 ** frdDecimals).toPrecision(frdDecimals))} {frdSymbol} liquid</div>
           : null}
 
         {userData?.new_user_rewards
-          ? <div className="mt-2 text-sm text-muted-foreground">
+          ? <div className="mt-2 text-md text-muted-foreground">
             including {toLocalString(((userData.new_user_rewards ?? 0) / 10 ** frdDecimals).toPrecision(frdDecimals))} {frdSymbol} for new users</div>
           : null}
       </CardContent>
@@ -173,12 +173,12 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
         <div className="mt-2 text-3xl">{toLocalString(friends.length)}</div>
 
         {userData?.new_users
-          ? <div className="mt-2 text-sm text-muted-foreground">
+          ? <div className="mt-2 text-md text-muted-foreground">
             including {toLocalString(userData.new_users)} new user{userData.new_users !== 1 ? "s" : ""}</div>
           : null}
 
         {userData?.last_date
-          ? <div className="mt-2 text-sm text-muted-foreground">
+          ? <div className="mt-2 text-md text-muted-foreground">
             Last: {" "}
             {formatDateAsUTC(parseDateFromAA(userData.last_date))}
           </div>
@@ -206,32 +206,5 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
         </div>
       </CardContent>
     </Card> : null}
-
-    {/* {walletAddress === address && userData && userData.balances ? <Card className="col-span-6 md:col-span-3">
-      <CardContent className="h-full grow-0">
-        <CardTitle>Balances</CardTitle>
-
-        <div className="flex flex-col justify-between h-full pb-3">
-          <ProfileAssetsBalance
-            address={address}
-            balances={userData?.balances ?? {}}
-          />
-
-          <div className="grid gap-y-2">
-            <QRButton href={withdrawUrl} className="w-full" disabled={locked}>
-              <div className="w-full">
-                Withdraw
-              </div>
-            </QRButton>
-
-            {userData?.unlock_date ? <div className="text-sm mt-1 text-muted-foreground">
-              Unlock date: {formatDateAsUTC(parseDateFromAA(userData.unlock_date))}
-            </div> : null}
-          </div>
-        </div>
-
-      </CardContent>
-    </Card> : null} */}
-
   </div>
 }

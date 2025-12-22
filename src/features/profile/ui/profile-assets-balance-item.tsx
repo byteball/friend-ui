@@ -68,7 +68,7 @@ export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
   }
 
   return <div key={asset} className="first:mt-2">
-    <div className="font-semibold">{toLocalString(balance / 10 ** tokenMeta.decimals)} {tokenMeta.symbol}</div>
+    <div className="font-semibold text-md">{toLocalString(balance / 10 ** tokenMeta.decimals)} {tokenMeta.symbol}</div>
 
     {asset !== "frd" ?
       <>

@@ -5,5 +5,5 @@ interface IFaqContentProps {
 }
 
 export const FaqContent: FC<IFaqContentProps> = ({ children }) => {
-  return <div className="mt-2 text-muted-foreground text-base/7 faq-items">{children}</div>
+  return <div className="mt-2 text-muted-foreground text-lg/7 faq-items">{children}</div>
 }

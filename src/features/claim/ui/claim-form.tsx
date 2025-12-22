@@ -17,7 +17,7 @@ import { generateLink } from "@/lib/generate-link";
 import { toLocalString } from "@/lib/to-local-string";
 
 import { appConfig } from "@/app-config";
-import { Field, FieldLabel, FieldSet } from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { isValidAddress } from "@/lib/is-valid-address";
 import { useQueryState } from "nuqs";
 import { useRewards } from "../domain/use-rewards";
@@ -63,12 +63,12 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
   return <div className="grid gap-4">
     <h2 className="text-3xl font-bold">Claim rewards for becoming friends</h2>
 
-    <div className="grid gap-4 text-muted-foreground">
+    <div className="grid gap-4 text-muted-foreground text-md">
       <div>You and your new friend must claim rewards here within 10 minutes of each other. If any of you is late, you have to claim again.</div>
     </div>
 
     <FieldSet>
-      <div className="flex flex-col gap-4">
+      <FieldGroup className="flex flex-col gap-4">
         <div className="flex items-end max-w-2xl gap-4">
           <Field className="w-full">
             <FieldLabel htmlFor="address">Your friend’s address</FieldLabel>
@@ -123,7 +123,7 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
             </AddWalletModal> to see the rewards for this friendship
           </div> : null)}
         </div>
-      </div>
+      </FieldGroup>
     </FieldSet>
   </div>
 }

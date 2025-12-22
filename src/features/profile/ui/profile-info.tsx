@@ -71,7 +71,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
 
         <div className="flex flex-col mt-4 sm:mt-0 sm:text-right  sm:items-end gap-2">
           <QRButton href={connectUrl} disabled={!isActive || walletAddress === address} variant="secondary">Add friend</QRButton>
-          <small className="text-xs text-muted-foreground">Please contact {username} first</small>
+          <span className="text-md text-muted-foreground">Please contact {username} first</span>
         </div>
       </div>
 
