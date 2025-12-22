@@ -35,7 +35,7 @@ export const HowItWorksBlock = () => {
         </div>
       </div>
 
-      <div className="shrink-0 col-span-3 md:col-span-1 md:flex items-center">
+      <div className="shrink-0 col-span-3 md:col-span-1 p-4">
         <PartnershipWidget />
       </div>
 
