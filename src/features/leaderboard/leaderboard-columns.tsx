@@ -41,7 +41,7 @@ export const columns: ColumnDef<UserRank>[] = [
       const meta = table.options.meta as ILeaderboardTableMeta;
       const amount = row.getValue("amount") as number;
 
-      return <span>{toLocalString(amount / 10 ** meta.frdDecimals)} <small>{meta.frdSymbol}</small></span>
+      return <span><span className="fixed-numbers">{Number(toLocalString(amount / 10 ** meta.frdDecimals)).toPrecision(meta.frdDecimals)}</span> <small>{meta.frdSymbol}</small></span>
     }
   },
   {

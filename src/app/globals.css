@@ -170,3 +170,8 @@ a:hover:not(.ui-link) {
     height: 0;
   }
 }
+
+.fixed-numbers {
+  font-family: "Roboto", sans-serif;
+  font-variant-numeric: tabular-nums;
+}
