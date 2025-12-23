@@ -27,6 +27,7 @@ export const GovernanceDepositAssetItem: FC<GovernanceItemProps> = ({
 }) => {
   const { state, getGovernanceAA } = useData();
   const { symbol, loading } = useToken({ asset });
+
   const governanceAa = getGovernanceAA();
 
   return (
@@ -48,6 +49,7 @@ export const GovernanceDepositAssetItem: FC<GovernanceItemProps> = ({
         governanceAa={governanceAa}
         depositAsset={asset}
         depositAssetSymbol={symbol!}
+        alreadyAdded={`deposit_asset_${asset}` in state}
       />
 
     </GovernanceDepositAssetItemWrapper>

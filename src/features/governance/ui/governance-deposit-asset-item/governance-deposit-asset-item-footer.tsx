@@ -12,12 +12,14 @@ interface GovernanceItemFooterProps {
   depositAsset: string;
   depositAssetSymbol: string;
   governanceAa: string;
+  alreadyAdded: boolean;
 }
 
 export const GovernanceDepositAssetItemFooter: FC<GovernanceItemFooterProps> = ({
   depositAsset,
   governanceAa,
-  depositAssetSymbol
+  depositAssetSymbol,
+  alreadyAdded
 }) => (<CardFooter className="flex gap-x-4">
   <GovernanceDepositAssetModal
     depositAssetSymbol={depositAssetSymbol}
@@ -37,6 +39,7 @@ export const GovernanceDepositAssetItemFooter: FC<GovernanceItemFooterProps> = (
         deposit_asset: depositAsset
       }
     })}
+    disabled={alreadyAdded}
     variant="link"
     className="p-0 m-0"
   >
