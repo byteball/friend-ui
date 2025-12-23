@@ -14,6 +14,7 @@ export const columns: ColumnDef<UserRank>[] = [
   {
     accessorKey: "address",
     header: "User",
+    meta: { className: "w-[220px] min-w-[200px]" },
     cell: ({ row, table }: any) => {
       const meta = table.options.meta as ILeaderboardTableMeta;
       const address = row.getValue("address") as string;
@@ -27,18 +28,15 @@ export const columns: ColumnDef<UserRank>[] = [
   },
   {
     accessorKey: "amount",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(true)}
-        >
-          Total balance
-          <ArrowDownWideNarrow className="w-4 h-4 ml-2" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (<Button
+      variant="ghost"
+      size="sm"
+      onClick={() => column.toggleSorting(true)}
+    >
+      Total balance
+      <ArrowDownWideNarrow className="w-4 h-4 ml-2" />
+    </Button>),
+    meta: { className: "w-[160px] min-w-[140px]" },
     cell: ({ row, table }: any) => {
       const meta = table.options.meta as ILeaderboardTableMeta;
       const amount = row.getValue("amount") as number;
@@ -48,18 +46,15 @@ export const columns: ColumnDef<UserRank>[] = [
   },
   {
     accessorKey: "friends",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(true)}
-        >
-          Friends
-          <ArrowDownWideNarrow className="w-4 h-4 ml-2" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (<Button
+      variant="ghost"
+      size="sm"
+      onClick={() => column.toggleSorting(true)}
+    >
+      Friends
+      <ArrowDownWideNarrow className="w-4 h-4 ml-2" />
+    </Button>),
+    meta: { className: "w-[120px] min-w-[110px] text-center" },
   },
   {
     accessorKey: "new_users",
@@ -75,5 +70,11 @@ export const columns: ColumnDef<UserRank>[] = [
         </Button>
       )
     },
+    meta: { className: "w-[120px] min-w-[110px] text-center" },
+    cell: ({ row }) => {
+      const newUsers = row.getValue("new_users") as number;
+
+      return <span className="">{newUsers}</span>
+    }
   }
 ]

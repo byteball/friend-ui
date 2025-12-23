@@ -23,10 +23,10 @@ import { useData } from "@/app/context";
 import { DataTableProps, ILeaderboardTableMeta } from "./domain/types";
 import { columns } from "./leaderboard-columns";
 
-export function LeaderboardTable<TData>({
+export function LeaderboardTable({
   leaderboardData,
   usernames
-}: DataTableProps<TData>) {
+}: DataTableProps<UserRank>) {
   const data = useData();
 
   const { symbol: frdSymbol, decimals: frdDecimals } = data.getFrdToken();
@@ -41,8 +41,8 @@ export function LeaderboardTable<TData>({
     usernames
   }
 
-  const table = useReactTable({
-    data: leaderboardData as UserRank[],
+  const table = useReactTable<UserRank>({
+    data: leaderboardData,
     columns,
     meta,
     getCoreRowModel: getCoreRowModel(),
@@ -55,14 +55,19 @@ export function LeaderboardTable<TData>({
   })
 
   return (
-    <div className="overflow-hidden border rounded-md">
-      <Table>
+    <div className="border rounded-md overflow-x-auto">
+      <Table className="table-fixed min-w-[640px] w-full">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
+                const columnMeta = header.column.columnDef.meta as { className?: string } | undefined;
+
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className={columnMeta?.className}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -82,11 +87,18 @@ export function LeaderboardTable<TData>({
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                {row.getVisibleCells().map((cell) => {
+                  const columnMeta = cell.column.columnDef.meta as { className?: string } | undefined;
+
+                  return (
+                    <TableCell
+                      key={cell.id}
+                      className={columnMeta?.className}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  )
+                })}
               </TableRow>
             ))
           ) : (
