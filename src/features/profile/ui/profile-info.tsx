@@ -69,10 +69,21 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
           <ActiveUserLabel isActive={isActive} />
         </div>
 
-        <div className="flex flex-col mt-4 sm:mt-0 sm:text-right  sm:items-end gap-2">
-          <QRButton href={connectUrl} disabled={!isActive || walletAddress === address} variant="secondary">Add friend</QRButton>
+        {walletAddress !== address ? <div className="flex flex-col mt-4 sm:mt-0 sm:text-right  sm:items-end gap-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div>
+                <QRButton href={connectUrl} disabled={!isActive} variant="secondary">
+                  Add friend
+                </QRButton>
+              </div>
+            </TooltipTrigger>
+            {!isActive ? <TooltipContent>
+              {username} doesn't have <b>locked</b> balance
+            </TooltipContent> : null}
+          </Tooltip>
           <span className="text-md text-muted-foreground">Please contact {username} first</span>
-        </div>
+        </div> : null}
       </div>
 
       <div className="flex space-x-4 flex-wrap gap-y-2">
