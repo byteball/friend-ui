@@ -1,6 +1,9 @@
 "use client"
 
+import { useReactiveGetCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 import { FC, use } from "react";
+import { scroller } from "react-scroll";
 
 import { getCeilingPrice } from "@/lib/calculations/get-rewards";
 import { toLocalString } from "@/lib/to-local-string";
@@ -8,9 +11,6 @@ import { toLocalString } from "@/lib/to-local-string";
 import { appConfig } from "@/app-config";
 import { useData } from "@/app/context";
 import { WALLET_COOKIE_NAME } from "@/constants";
-import { useReactiveGetCookie } from "cookies-next";
-import { useRouter } from "next/navigation";
-import { scroller } from "react-scroll";
 
 interface ProfileAssetBalanceItemProps {
   address: string;
@@ -34,10 +34,7 @@ export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
   const rate = use(rateGetter);
   const ceilingPrice = getCeilingPrice(data.state.constants);
 
-  const assetRate = rate.max ?? 0;
-  const balanceInBytes = asset === "base" ? balance : asset === "frd" ? balance * ceilingPrice : balance * assetRate;
-
-  const equivalentInFrd = balanceInBytes / ceilingPrice;
+  const assetRate = (rate.min || 0) / 0.9;
 
   let tokenMeta: TokenMeta | undefined = undefined;
 
@@ -53,7 +50,24 @@ export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
 
   if (!tokenMeta) throw new Error("Token meta not found");
 
-  const reducer = asset === "base" ? appConfig.initialRewardsVariables.bytes_reducer : appConfig.initialRewardsVariables.deposit_asset_reducer;
+  let equivalentInFrd = 0;
+
+  if (asset === "base") {
+    equivalentInFrd = balance / ceilingPrice;
+  } else if (asset === "frd") {
+    equivalentInFrd = balance;
+  } else {
+    equivalentInFrd = (balance * assetRate) / ceilingPrice;
+  }
+
+  let reducer: number = 1;
+
+  if (asset === "base") {
+    reducer = appConfig.initialRewardsVariables.bytes_reducer;
+  } else if (asset !== "frd") {
+    reducer = appConfig.initialRewardsVariables.deposit_asset_reducer;
+  }
+
 
   const replace = () => {
     if (asset === "frd") return; // cannot replace frd
