@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { toLocalString } from "@/lib/to-local-string";
 import { ILeaderboardTableMeta } from "./domain/types";
 
-import { appConfig } from "@/app-config";
 
 export const columns: ColumnDef<UserRank>[] = [
   {
@@ -23,7 +22,6 @@ export const columns: ColumnDef<UserRank>[] = [
 
       return <>
         <Link href={`/${address}`}>{username ?? address}</Link>
-        <Link className="ml-2 text-muted-foreground hover:underline" href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${address}`} target="_blank" rel="noreferrer">(explorer)</Link>
       </>
     }
   },
