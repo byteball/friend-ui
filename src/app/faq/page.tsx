@@ -493,7 +493,7 @@ export default async function FaqPage() {
         </Faq.Item>
 
 
-        <Faq.Item>
+        <Faq.Item id="how-governance-works">
           <Faq.Title>How does governance work?</Faq.Title>
           <Faq.Content>
             <p>

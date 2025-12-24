@@ -38,7 +38,7 @@ export const GovernanceProfile: FC<GovernanceProfileProps> = ({ walletAddress })
     </span>
 
     <div>
-      Your voting power: <span suppressHydrationWarning>{toLocalString(votingPower / 10 ** frdToken.decimals)}</span>
+      Your voting power: <span suppressHydrationWarning>{toLocalString(votingPower / 10 ** frdToken.decimals)}</span> (square root of your locked balance, <Link href="/faq#how-governance-works" className="underline"> see FAQ</Link>)
     </div>
   </div>;
 }
