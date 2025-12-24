@@ -19,6 +19,7 @@ import { getExplorerUrl } from "@/lib/get-explorer-url";
 import { appConfig } from "@/app-config";
 
 export interface GovernanceDepositAssetItemContent {
+  currentValue?: string;
   leaderValue?: string;
   asset: string;
   challengingPeriodStartTs?: number;
@@ -27,6 +28,7 @@ export interface GovernanceDepositAssetItemContent {
 
 export const GovernanceDepositAssetItemContent: FC<GovernanceDepositAssetItemContent> = ({
   leaderValue,
+  currentValue,
   challengingPeriodStartTs = 0,
   votes = [],
   asset
@@ -55,7 +57,7 @@ export const GovernanceDepositAssetItemContent: FC<GovernanceDepositAssetItemCon
       {timeEndChallengingPeriod
         ? <Countdown
           date={timeEndChallengingPeriod * 1000}
-          renderer={(props) => challengingCountdownRenderer(props, asset !== 'no' ? commitUrl : undefined)}
+          renderer={(props) => challengingCountdownRenderer(props, asset !== 'no' ? commitUrl : undefined, leaderValue === currentValue)}
         /> : null}
     </div> : null
     }

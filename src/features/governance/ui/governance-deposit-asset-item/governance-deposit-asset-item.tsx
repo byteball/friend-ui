@@ -40,6 +40,7 @@ export const GovernanceDepositAssetItem: FC<GovernanceItemProps> = ({
 
       <GovernanceDepositAssetItemContent
         leaderValue={leaderValue}
+        currentValue={state[`deposit_asset_${asset}`]}
         votes={votes}
         asset={asset}
         challengingPeriodStartTs={challengingPeriodStartTs}
