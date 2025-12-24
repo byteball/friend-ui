@@ -62,15 +62,13 @@ export const GovernanceDepositAssetItemContent: FC<GovernanceDepositAssetItemCon
     </div> : null
     }
 
-    {
-      votes.length > 0 ? <div className="mt-4">
-        <GovernanceDepositAssetItemSupportsTable
-          asset={asset}
-          votes={votes}
-          frdToken={frdToken}
-          governanceAa={governanceAa}
-        />
-      </div> : null
-    }
+    {votes.length > 0 ? <div className="mt-4">
+      <GovernanceDepositAssetItemSupportsTable
+        asset={asset}
+        votes={votes}
+        frdToken={frdToken}
+        governanceAa={governanceAa}
+      />
+    </div> : null}
   </CardContent >
 }

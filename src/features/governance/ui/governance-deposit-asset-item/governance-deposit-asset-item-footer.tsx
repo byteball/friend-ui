@@ -6,6 +6,7 @@ import { QRButton } from "@/components/ui/qr-button";
 
 import { generateLink } from "@/lib/generate-link";
 
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { GovernanceDepositAssetModal } from "../governance-deposit-asset-modal";
 
 interface GovernanceItemFooterProps {
@@ -29,20 +30,30 @@ export const GovernanceDepositAssetItemFooter: FC<GovernanceItemFooterProps> = (
     <Button variant="link" className="p-0 m-0 link-style">suggest another price AA</Button>
   </GovernanceDepositAssetModal>
 
-  <QRButton
-    href={generateLink({
-      aa: governanceAa,
-      amount: 10000,
-      data: {
-        name: "deposit_asset",
-        value: "no",
-        deposit_asset: depositAsset
-      }
-    })}
-    disabled={alreadyAdded}
-    variant="link"
-    className="p-0 m-0"
-  >
-    vote against this asset
-  </QRButton>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <div>
+        <QRButton
+          href={generateLink({
+            aa: governanceAa,
+            amount: 10000,
+            data: {
+              name: "deposit_asset",
+              value: "no",
+              deposit_asset: depositAsset
+            }
+          })}
+          disabled={alreadyAdded}
+          variant="link"
+          className="p-0 m-0"
+        >
+          vote against this asset
+        </QRButton>
+      </div>
+    </TooltipTrigger>
+
+    {alreadyAdded ? <TooltipContent>
+      This asset is already added, you can&apos;t vote &apos;no&apos; anymore
+    </TooltipContent> : null}
+  </Tooltip>
 </CardFooter>)
