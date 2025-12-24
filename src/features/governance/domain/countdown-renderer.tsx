@@ -2,9 +2,9 @@ import { CountdownRenderProps } from 'react-countdown';
 
 import { QRButton } from '@/components/ui/qr-button';
 
-export const challengingCountdownRenderer = (props: CountdownRenderProps, commitUrl?: string, disabled?: boolean = false) => {
+export const challengingCountdownRenderer = (props: CountdownRenderProps, commitUrl?: string, disabled?: boolean) => {
   if (props.completed) {
-    return commitUrl ? <QRButton disabled={disabled} href={commitUrl} variant="link" className="p-0 m-0 link-style">commit</QRButton> : null;
+    return commitUrl ? <QRButton disabled={!!disabled} href={commitUrl} variant="link" className="p-0 m-0 link-style">commit</QRButton> : null;
   } else {
     const { days, hours, minutes, seconds } = props;
     let date = 'Challenging period expires in ';
