@@ -25,13 +25,13 @@ export const GovernableItemHeader = <K extends keyof AgentParams>({ name, curren
 
   return (
     <CardHeader className="text-lg">
-      <CardTitle className="flex flex-col md:items-center md:justify-between md:flex-row gap-2">
+      <CardTitle className="flex flex-col md:items-center md:justify-between md:flex-row">
         <div className="flex gap-x-2 shrink-0">{getNameByKey(name)}
           <Tooltip>
             <TooltipTrigger>
               <Info className="size-5" />
             </TooltipTrigger>
-            <TooltipContent className="max-w-xs">
+            <TooltipContent className="max-w-[300px]">
               <p>{descriptions[name] ?? ""}</p>
             </TooltipContent>
           </Tooltip>
