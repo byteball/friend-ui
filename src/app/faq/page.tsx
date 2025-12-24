@@ -296,7 +296,7 @@ export default async function FaqPage() {
               </li>
 
               <li>
-                Go to the &ldquo;Claim&rdquo; section on the homepage of this website, enter your friend&rsquo;s address, click &ldquo;Claim&rdquo; and confirm the transaction in your Obyte wallet. Your friend needs to do the same (but enter your address) at about the same time. You need to send your claiming requests within 10 minutes of each other. It doesn&rsquo;t matter who claims first. If the second claim comes too late, no worries, you can try as many times as necessary.
+                Go to the <Link href="/?tab=befriend">&ldquo;Claim&rdquo; section</Link> on the homepage of this website, enter your friend&rsquo;s address, click &ldquo;Claim&rdquo; and confirm the transaction in your Obyte wallet. Your friend needs to do the same (but enter your address) at about the same time. You need to send your claiming requests within 10 minutes of each other. It doesn&rsquo;t matter who claims first. If the second claim comes too late, no worries, you can try as many times as necessary.
               </li>
             </ol>
           </Faq.Content>
