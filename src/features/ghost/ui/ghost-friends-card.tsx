@@ -104,7 +104,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
                       </QRButton>
                     </div>
                   </TooltipTrigger>
-                  {((userData?.current_streak || 0) < requiredStreak) && <TooltipContent>
+                  {((userData?.current_streak || 0) < requiredStreak) && <TooltipContent className="max-w-[320px]">
                     <p>
                       You need to complete the <b>{requiredStreak}-day</b> streak to become friends with <b>{ghostName}</b>
                     </p>
