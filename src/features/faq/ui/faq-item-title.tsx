@@ -5,5 +5,5 @@ interface IFaqTitleProps {
 }
 
 export const FaqTitle: FC<IFaqTitleProps> = ({ children }) => {
-  return <h2 className="font-semibold text-gray-200 text-4xl/7">{children}</h2>
+  return <h2 className="font-semibold text-gray-200 text-4xl/12">{children}</h2>
 }
