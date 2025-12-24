@@ -26,7 +26,7 @@ export const GovernanceDepositAssetItemFooter: FC<GovernanceItemFooterProps> = (
     depositAsset={depositAsset}
     defaultValue={undefined}
   >
-    <Button variant="link" className="p-0 m-0">suggest another price AA</Button>
+    <Button variant="link" className="p-0 m-0 link-style">suggest another price AA</Button>
   </GovernanceDepositAssetModal>
 
   <QRButton

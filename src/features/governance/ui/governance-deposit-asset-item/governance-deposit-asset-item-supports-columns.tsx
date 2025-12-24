@@ -27,7 +27,7 @@ export const governanceDepositAssetItemSupportsColumns: ColumnDef<IAggregatedDat
 
       if (!address || address === "no") return <span>against this asset</span>
 
-      return <a target="_blank" rel="noopener" href={getExplorerUrl(address, "address")}>{address}</a>;
+      return <a target="_blank" rel="noopener" className="link-style" href={getExplorerUrl(address, "address")}>{address}</a>;
     },
   },
   {
@@ -40,7 +40,7 @@ export const governanceDepositAssetItemSupportsColumns: ColumnDef<IAggregatedDat
 
       return <Dialog>
         <DialogTrigger asChild>
-          <Button variant="link" className="p-0 m-0">
+          <Button variant="link" className="p-0 m-0 link-style">
             {toLocalString(amount / 10 ** meta.frdToken.decimals)}
           </Button>
         </DialogTrigger>
@@ -75,7 +75,7 @@ export const governanceDepositAssetItemSupportsColumns: ColumnDef<IAggregatedDat
         }
       });
 
-      return <QRButton href={url} variant="link" className="p-0 m-0">vote for this value</QRButton>
+      return <QRButton href={url} variant="link" className="p-0 m-0 link-style">vote for this value</QRButton>
     },
   }
 ]

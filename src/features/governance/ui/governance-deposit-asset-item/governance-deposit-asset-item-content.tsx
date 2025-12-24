@@ -49,7 +49,7 @@ export const GovernanceDepositAssetItemContent: FC<GovernanceDepositAssetItemCon
 
   return <CardContent>
     {leaderValue ? <div suppressHydrationWarning className="flex items-center justify-between">
-      <div>Leader: {leaderValue === "no" ? <span>against this asset</span> : <a target="_blank" href={getExplorerUrl(leaderValue, "address")}>{truncateAddress(leaderValue)}</a>}
+      <div>Leader: {leaderValue === "no" ? <span>against this asset</span> : <a target="_blank" className="link-style" href={getExplorerUrl(leaderValue, "address")}>{truncateAddress(leaderValue)}</a>}
       </div>
 
       {timeEndChallengingPeriod

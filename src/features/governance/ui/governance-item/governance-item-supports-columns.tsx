@@ -46,7 +46,7 @@ export const governanceItemSupportsColumns: ColumnDef<SupportedValuesData>[] = [
 
       return <Dialog>
         <DialogTrigger asChild>
-          <Button variant="link" className="p-0 m-0">
+          <Button variant="link" className="p-0 m-0 link-style">
             {toLocalString(amount / 10 ** meta.frdToken.decimals)}
           </Button>
         </DialogTrigger>
@@ -73,7 +73,7 @@ export const governanceItemSupportsColumns: ColumnDef<SupportedValuesData>[] = [
 
       return <div>
         <GovernanceModal isNew={false} name={name} defaultValue={value}>
-          <Button variant="link" className="p-0 m-0">vote for this value</Button>
+          <Button variant="link" className="p-0 m-0 link-style">vote for this value</Button>
         </GovernanceModal>
       </div>
     },

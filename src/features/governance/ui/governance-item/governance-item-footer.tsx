@@ -8,6 +8,6 @@ interface GovernanceItemFooterProps<K extends keyof AgentParams> {
 
 export const GovernanceItemFooter = <K extends keyof AgentParams>({ name }: GovernanceItemFooterProps<K>) => ((<CardFooter>
   <GovernanceModal name={name} defaultValue={undefined}>
-    <Button variant="link" className="p-0 m-0">suggest another value</Button>
+    <Button variant="link" className="p-0 m-0 link-style">suggest another value</Button>
   </GovernanceModal>
 </CardFooter>))

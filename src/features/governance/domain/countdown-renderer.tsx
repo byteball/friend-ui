@@ -4,7 +4,7 @@ import { QRButton } from '@/components/ui/qr-button';
 
 export const challengingCountdownRenderer = (props: CountdownRenderProps, commitUrl?: string) => {
   if (props.completed) {
-    return commitUrl ? <QRButton className="p-0 m-0" href={commitUrl} variant="link">commit</QRButton> : null;
+    return commitUrl ? <QRButton href={commitUrl} variant="link" className="p-0 m-0 link-style">commit</QRButton> : null;
   } else {
     const { days, hours, minutes, seconds } = props;
     let date = 'Challenging period expires in ';
