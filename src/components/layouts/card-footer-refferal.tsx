@@ -87,9 +87,9 @@ export const CardFooterReferral: FC<CardFooterReferralProps> = ({ hasDeposit = f
               </InputGroupButton>
             </InputGroupAddon>
           </InputGroup>
-          <small className="text-sm text-muted-foreground">You&apos;ll receive {toLocalString(params.referrer_frd_deposit_reward_share * 100)}% of their deposits in {symbol}, {toLocalString(params.referrer_bytes_deposit_reward_share * 100)}% of their deposits in GBYTE, {toLocalString(params.referrer_deposit_asset_deposit_reward_share * 100)}% of all other deposits, and a {appConfig.initialRewardsVariables.new_user_reward / 10 ** decimals} {symbol} reward when they make their first friend
+          <small className="text-sm text-muted-foreground">You&apos;ll receive {toLocalString(params.referrer_frd_deposit_reward_share * 100)}% of their deposits in {symbol}, {toLocalString(params.referrer_bytes_deposit_reward_share * 100)}% of their deposits in GBYTE, {toLocalString(params.referrer_deposit_asset_deposit_reward_share * 100)}% of all other deposits, and a {appConfig.initialRewardsVariables.new_user_reward / 10 ** decimals} {symbol} &asymp; ${toLocalString(((appConfig.initialRewardsVariables.new_user_reward / 10 ** decimals) * data.getFrdPrice()).toPrecision(3))} reward when they make their first friend
           </small>
-          <div className="mt-2 pt-2">
+          <div className="pt-2 mt-2">
             <FieldLabel>Example tweet</FieldLabel>
             <TweetCard
               username="friendOfObyte"
@@ -111,7 +111,7 @@ export const CardFooterReferral: FC<CardFooterReferralProps> = ({ hasDeposit = f
           <FieldLabel>
             <Skeleton className="h-[19.5px] w-full" />
           </FieldLabel>
-          <Skeleton className="h-9 w-full" />
+          <Skeleton className="w-full h-9" />
         </Field>
       </FieldGroup>
     </CardFooter>}

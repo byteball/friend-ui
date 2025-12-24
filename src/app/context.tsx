@@ -3,6 +3,7 @@
 
 import { appConfig } from "@/app-config";
 import { STORE_EVENTS } from "@/constants";
+import { getCeilingPrice } from "@/lib/calculations/get-rewards";
 import "client-only";
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useSSE } from "use-next-sse";
@@ -57,11 +58,24 @@ export function useData() {
     return (data.state?.[`user_${address}`] || null) as IUserData | null;
   }, [data]);
 
+  const getFrdPrice = useCallback((): number => {
+    const constants = data.state?.constants as IConstants | undefined;
+    if (!constants) return 0;
+
+    const frdToken = data.tokens?.[constants.asset];
+    if (!frdToken) return 0;
+
+    const ceilPrice = getCeilingPrice(constants);
+
+    return ceilPrice * data.gbytePriceUSD;
+  }, [data]);
+
   return useMemo(() => ({
     ...data,
     getFrdToken,
     getGovernanceAA,
     getUserData,
+    getFrdPrice
   }), [data, getFrdToken, getGovernanceAA, getUserData]);
 }
 
