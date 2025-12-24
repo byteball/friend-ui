@@ -4,6 +4,8 @@ import Navbar from "@/components/layouts/main-navbar";
 
 import { ClientProviders } from "./client-providers";
 
+import CookieConsent from "@/components/blocks/cookie-consent";
+
 import "./globals.css";
 
 const GeistFont = Geist({
@@ -114,9 +116,9 @@ export default async function RootLayout({
         <footer className="p-4 pb-1 text-center">
           <div className="flex justify-center mb-3 space-x-2 md:space-x-6 md:order-2">
             {navigation.social.map((item) => (
-              <a key={item.name} target="_blank" rel="noopener" href={item.href} className="text-muted-foreground relative hover:text-foreground ui-link">
+              <a key={item.name} target="_blank" rel="noopener" href={item.href} className="relative text-muted-foreground hover:text-foreground ui-link">
                 <span className="sr-only">{item.name}</span>
-                <item.icon className="h-6 w-6" aria-hidden="true" />
+                <item.icon className="w-6 h-6" aria-hidden="true" />
               </a>
             ))}
           </div>
@@ -124,6 +126,7 @@ export default async function RootLayout({
           <a href="https://obyte.org" target="_blank" rel="noopener noreferrer" className="ui-link">Built on Obyte</a>
         </footer>
 
+        <CookieConsent variant="mini" />
       </body>
     </html>
   );
