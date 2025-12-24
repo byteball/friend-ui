@@ -34,7 +34,7 @@ export const HowItWorksBlock = () => {
         </div>
 
         <div className="text-lg leading-relaxed text-gray-200">
-          The 1% daily rewards compound. If you deposit 1 {frd?.symbol} and make one friend every day for a year, your locked balance will grow to 37.8 {frd?.symbol}, and you’ll receive 3.68 liquid {frd?.symbol} over the course of the year (not including new user and referral rewards).
+          The 1% daily rewards compound. If you deposit 1 {frd?.symbol} and make one friend every day for a year, your locked balance will grow to 37.8 {frd?.symbol}, and you’ll receive 3.68 liquid {frd?.symbol} over the course of the year (plus new user and referral rewards).
         </div>
       </div>
 
