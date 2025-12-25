@@ -124,6 +124,8 @@
   }
 }
 
+
+
 .link-style,
 .faq-items a,
 a:not(.ui-link) {
@@ -173,4 +175,8 @@ a:hover:not(.ui-link) {
 .fixed-numbers {
   font-family: "Roboto", sans-serif;
   font-variant-numeric: tabular-nums;
+}
+
+.faq-items ol>li::marker {
+  @apply text-gray-300;
 }
