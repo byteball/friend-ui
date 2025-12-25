@@ -99,16 +99,14 @@ export function DataProvider({
   const router = useRouter();
   const [isConnected, setIsConnected] = useState(false);
 
-  // Throttled router.refresh to update server components without blocking UI
-  // Max once every 3 seconds, no matter how many state updates occur
   const throttledRefresh = useMemo(
     () =>
       throttle(
         () => {
-          console.log('%c[Socket.IO] Refreshing server components (throttled)', 'color: purple');
-          router.refresh();
+          console.log('%c[Socket.IO] Router refresh DISABLED for debugging', 'color: orange');
+          router.refresh(); // DISABLED
         },
-        3000, // 3 seconds
+        3000,
         { leading: false, trailing: true }
       ),
     [router]
@@ -132,10 +130,16 @@ export function DataProvider({
   }, [fetchSnapshot]);
 
   const applyIncoming = useCallback((eventType: string, eventData: any) => {
+    console.log('%c[Client] applyIncoming called', 'color: cyan', eventType);
+
     try {
       if (!eventType) return;
 
       if (eventType === STORE_EVENTS.SNAPSHOT) {
+        console.log('%c[Client] Processing SNAPSHOT', 'color: cyan', {
+          stateKeys: Object.keys(eventData?.state || {}).length,
+          tokensCount: Object.keys(eventData?.tokens || {}).length,
+        });
         const snapshot = (eventData ?? {}) as Partial<IClientSnapshot>;
         setData({
           state: snapshot.state ?? {},
@@ -144,6 +148,7 @@ export function DataProvider({
           gbytePriceUSD: snapshot.gbytePriceUSD ?? 0,
           params: snapshot.params ?? snapshot.state?.variables ?? appConfig.initialParamsVariables,
         });
+        console.log('%c[Client] SNAPSHOT applied', 'color: green');
         return;
       }
 
@@ -152,9 +157,13 @@ export function DataProvider({
 
         // Deduplication check
         const hash = JSON.stringify(update);
-        if (hash === lastEventRef.current) return;
+        if (hash === lastEventRef.current) {
+          console.log('%c[Client] STATE_UPDATE deduplicated', 'color: yellow');
+          return;
+        }
         lastEventRef.current = hash;
 
+        console.log('%c[Client] Processing STATE_UPDATE', 'color: cyan', Object.keys(update).length, 'keys');
         setData((prev) => ({
           state: { ...(prev?.state ?? {}), ...update },
           governanceState: prev?.governanceState ?? {},
@@ -162,6 +171,7 @@ export function DataProvider({
           gbytePriceUSD: prev?.gbytePriceUSD ?? 0,
           params: update.variables ?? prev?.params ?? appConfig.initialParamsVariables,
         }));
+        console.log('%c[Client] STATE_UPDATE applied', 'color: green');
         return;
       }
 
@@ -170,18 +180,24 @@ export function DataProvider({
 
         // Deduplication check
         const hash = JSON.stringify(governanceUpdate);
-        if (hash === lastEventRef.current) return;
+        if (hash === lastEventRef.current) {
+          console.log('%c[Client] GOVERNANCE_STATE_UPDATE deduplicated', 'color: yellow');
+          return;
+        }
         lastEventRef.current = hash;
 
+        console.log('%c[Client] Processing GOVERNANCE_STATE_UPDATE', 'color: cyan');
         setData((prev) => ({
           ...prev,
           governanceState: { ...(prev?.governanceState ?? {}), ...governanceUpdate },
         }));
+        console.log('%c[Client] GOVERNANCE_STATE_UPDATE applied', 'color: green');
       }
     } catch (err) {
+      console.error('%c[Client] applyIncoming error', 'color: red', err);
       logWarn("applyIncoming error", err);
     }
-  }, [setData]);
+  }, []);
 
   const triggerSnapshotSync = useCallback(async () => {
     if (!fetchSnapshotRef.current) return;
