@@ -2,6 +2,7 @@ import "server-only";
 
 import { LRUCache } from "lru-cache";
 import { EventEmitter } from "stream";
+import type { Server as SocketIOServer } from 'socket.io';
 
 import { appConfig } from "./app-config";
 import { STORE_EVENTS } from "./constants";
@@ -33,6 +34,9 @@ export class GlobalStore extends EventEmitter {
 
   tgAttestations: LRUCache<string, IAttestation>;
   discordAttestations: LRUCache<string, IAttestation>;
+
+  socketIO?: SocketIOServer;
+  socketIOConnected: boolean = false;
 
   ready: boolean = false;
   stateUpdateId: number;
@@ -83,6 +87,9 @@ export class GlobalStore extends EventEmitter {
     this.stateUpdateId = 0;
 
     this.gbytePriceUSD = 0;
+
+    // Note: Socket.IO connection will be initiated from instrumentation.node.ts
+    // after server.js initializes the Socket.IO server
   }
 
   initializeState(initState: IAaState) {
@@ -301,5 +308,47 @@ export class GlobalStore extends EventEmitter {
     ]);
 
     this.tokens.set(asset, { asset, symbol, decimals });
+  }
+
+  // Socket.IO integration
+
+  connectSocketIO(retryCount = 0, maxRetries = 10) {
+    // Prevent multiple connections
+    if (this.socketIOConnected) {
+      console.log('log(GlobalStore): Already connected to Socket.IO server, skipping');
+      return;
+    }
+
+    if (typeof globalThis.__SOCKET_IO__ !== 'undefined') {
+      this.socketIO = globalThis.__SOCKET_IO__;
+      this.setupSocketIOListeners();
+      this.socketIOConnected = true;
+      console.log('log(GlobalStore): Connected to Socket.IO server');
+    } else {
+      if (retryCount >= maxRetries) {
+        console.error(`error(GlobalStore): Failed to connect to Socket.IO after ${maxRetries} attempts`);
+        return;
+      }
+      // Retry connection after bootstrap completes
+      const delay = Math.min(1000 * Math.pow(2, retryCount), 10000); // Exponential backoff, max 10s
+      setTimeout(() => this.connectSocketIO(retryCount + 1, maxRetries), delay);
+    }
+  }
+
+  setupSocketIOListeners() {
+    if (!this.socketIO) return;
+
+    // Listen to GlobalStore events and broadcast via Socket.IO
+    this.on(STORE_EVENTS.SNAPSHOT, (payload: IClientSnapshot) => {
+      this.socketIO?.emit(STORE_EVENTS.SNAPSHOT, payload);
+    });
+
+    this.on(STORE_EVENTS.STATE_UPDATE, (payload: IAaState) => {
+      this.socketIO?.emit(STORE_EVENTS.STATE_UPDATE, payload);
+    });
+
+    this.on(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, (payload: Record<string, any>) => {
+      this.socketIO?.emit(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, payload);
+    });
   }
 }

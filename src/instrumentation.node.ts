@@ -102,6 +102,9 @@ export async function register() {
 
     if (globalThis.__GLOBAL_STORE__.ready) {
       console.log("log(bootstrap): GlobalStore is ready");
+
+      // Ensure Socket.IO connection
+      globalThis.__GLOBAL_STORE__.connectSocketIO();
     } else {
       console.error("error(bootstrap): GlobalStore failed to initialize");
     }
