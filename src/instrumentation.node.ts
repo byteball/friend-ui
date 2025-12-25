@@ -8,6 +8,75 @@ export async function register() {
 
   console.log("log(bootstrap): Start bootstrapping...");
 
+  // Initialize Socket.IO server inline (same process, avoids bundling issues)
+  if (!globalThis.__SOCKET_IO_SERVER_STARTED__) {
+    console.log("log(bootstrap): Starting Socket.IO server...");
+
+    try {
+      const { createServer } = await import('http');
+      const { Server: SocketIOServer } = await import('socket.io');
+
+      const port = parseInt(process.env.SOCKET_PORT || '3001', 10);
+      const corsOrigin = process.env.NEXT_PUBLIC_SOCKET_CORS_ORIGIN
+        ? process.env.NEXT_PUBLIC_SOCKET_CORS_ORIGIN.split(',')
+        : ['http://localhost:3000', 'https://friends.obby.space'];
+
+      console.log('[Socket.IO] Port:', port);
+      console.log('[Socket.IO] CORS origins:', corsOrigin);
+
+      // Create HTTP server for Socket.IO
+      const server = createServer((req, res) => {
+        if (req.url === '/health') {
+          res.writeHead(200, { 'Content-Type': 'text/plain' });
+          res.end('OK');
+          return;
+        }
+        res.writeHead(404);
+        res.end('Socket.IO server');
+      });
+
+      // Initialize Socket.IO
+      const io = new SocketIOServer(server, {
+        cors: { origin: corsOrigin, credentials: true },
+        transports: ['websocket', 'polling'],
+        pingInterval: 15000,
+        pingTimeout: 10000,
+        maxHttpBufferSize: 1e6,
+      });
+
+      globalThis.__SOCKET_IO__ = io;
+      console.log('[Socket.IO] Server initialized');
+
+      // Connection handler
+      io.on('connection', (socket) => {
+        console.log(`[Socket.IO] Client connected: ${socket.id}`);
+        try {
+          const store = globalThis.__GLOBAL_STORE__;
+          if (store) {
+            const snapshot = store.getSnapshot();
+            socket.emit('SNAPSHOT', snapshot);
+            console.log(`[Socket.IO] Snapshot sent to ${socket.id}`);
+          }
+        } catch (err) {
+          console.error(`[Socket.IO] Error sending snapshot:`, err);
+        }
+
+        socket.on('disconnect', (reason) => {
+          console.log(`[Socket.IO] Client disconnected: ${socket.id}, reason: ${reason}`);
+        });
+      });
+
+      server.listen(port, '0.0.0.0', () => {
+        console.log(`[Socket.IO] Ready on http://0.0.0.0:${port}`);
+      });
+
+      globalThis.__SOCKET_IO_SERVER_STARTED__ = true;
+      console.log("log(bootstrap): Socket.IO server initialized");
+    } catch (err) {
+      console.error("error(bootstrap): Failed to start Socket.IO server:", err);
+    }
+  }
+
   if (process.env.NEXT_RUNTIME !== 'nodejs') {
     console.error("error: Unsupported runtime");
     throw new Error("Unsupported runtime");

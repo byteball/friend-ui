@@ -66,21 +66,19 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/.next/server/instrumentation.js ./.next/server/instrumentation.js
 
-# Copy custom server.js with Socket.IO integration
-# This overwrites the auto-generated server.js from Next.js standalone
-COPY --from=builder --chown=nextjs:nodejs /app/server.js ./server.js
-
-# CRITICAL: Copy ALL node_modules for custom server
-# Standalone mode doesn't include dependencies for custom server.js
-# Since we use Socket.IO with many transitive dependencies, copy everything
+# CRITICAL: Copy ALL node_modules for Socket.IO dependencies
+# Socket.IO server runs inline via instrumentation hooks
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 USER nextjs
 
-EXPOSE 3000
+# Expose both Next.js (3000) and Socket.IO (3001) ports
+EXPOSE 3000 3001
 
 ENV PORT=3000
+ENV SOCKET_PORT=3001
 
-# Use our custom server.js with Socket.IO support
+# Standard Next.js standalone server
+# Socket.IO starts automatically via instrumentation hooks
 ENV HOSTNAME="0.0.0.0"
 CMD ["node", "server.js"]

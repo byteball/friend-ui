@@ -9,6 +9,8 @@ namespace globalThis {
   var __GLOBAL_STORE__: import('@/global-store').GlobalStore | undefined;
   // eslint-disable-next-line no-var
   var __SOCKET_IO__: import('socket.io').Server | undefined;
+  // eslint-disable-next-line no-var
+  var __SOCKET_IO_SERVER_STARTED__: boolean | undefined;
 }
 
 type TokenMeta = {

@@ -9,6 +9,7 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_TESTNET: z.boolean().default(false),
     NEXT_PUBLIC_SITE_URL: z.string().default("http://localhost:3000"),
+    NEXT_PUBLIC_SOCKET_URL: z.string().default("http://localhost:3001"),
     NEXT_PUBLIC_NOTIFY_URL: z.string().default("http://localhost:3050"),
     // Default to empty string so Docker builds don't fail when the env var is missing; real deployments should override.
     NEXT_PUBLIC_NOTIFY_PAIRING_URL: z.string().default(""),
@@ -18,6 +19,7 @@ export const env = createEnv({
     NEXT_PUBLIC_TESTNET: Boolean(process.env.NEXT_PUBLIC_TESTNET),
     NEXT_PUBLIC_AA_ADDRESS: process.env.NEXT_PUBLIC_AA_ADDRESS,
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+    NEXT_PUBLIC_SOCKET_URL: process.env.NEXT_PUBLIC_SOCKET_URL,
     NEXT_PUBLIC_NOTIFY_URL: process.env.NEXT_PUBLIC_NOTIFY_URL,
     NEXT_PUBLIC_NOTIFY_PAIRING_URL: process.env.NEXT_PUBLIC_NOTIFY_PAIRING_URL,
     WS_NO_BUFFER_UTIL: process.env.WS_NO_BUFFER_UTIL ? Number(process.env.WS_NO_BUFFER_UTIL) : undefined,

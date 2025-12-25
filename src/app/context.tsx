@@ -22,8 +22,12 @@ type StoreEventEnvelope =
   | { event: typeof STORE_EVENTS.GOVERNANCE_STATE_UPDATE; data: Record<string, any> }
   | { event?: string; data?: unknown };
 
-const SOCKET_URL = typeof window !== 'undefined' ? window.location.origin : '';
-const SOCKET_PATH = '/api/socket';
+// Socket.IO server runs on separate port (3001) in same process
+// In production, use env var to configure the URL
+const SOCKET_URL = typeof window !== 'undefined'
+  ? (process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3001')
+  : '';
+const SOCKET_PATH = '/socket.io'; // Default Socket.IO path
 const RECONNECT_DELAY_MS = 2_000;
 
 const DEFAULT_SNAPSHOT: IClientSnapshot = {
@@ -104,7 +108,7 @@ export function DataProvider({
       throttle(
         () => {
           console.log('%c[Socket.IO] Router refresh DISABLED for debugging', 'color: orange');
-          router.refresh(); // DISABLED - Temporarily disabled to debug RSC request failures
+          router.refresh();
         },
         3000,
         { leading: false, trailing: true }
