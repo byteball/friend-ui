@@ -13,7 +13,7 @@ import { ILeaderboardTableMeta } from "./domain/types";
 export const columns: ColumnDef<UserRank>[] = [
   {
     accessorKey: "address",
-    header: "User",
+    header: "Friend",
     meta: { className: "w-[220px] min-w-[200px]" },
     cell: ({ row, table }: any) => {
       const meta = table.options.meta as ILeaderboardTableMeta;
