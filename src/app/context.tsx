@@ -104,7 +104,7 @@ export function DataProvider({
       throttle(
         () => {
           console.log('%c[Socket.IO] Router refresh DISABLED for debugging', 'color: orange');
-          router.refresh(); // DISABLED
+          // router.refresh(); // DISABLED - Temporarily disabled to debug RSC request failures
         },
         3000,
         { leading: false, trailing: true }

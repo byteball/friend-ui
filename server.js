@@ -10,6 +10,18 @@ const port = parseInt(process.env.PORT || '3000', 10);
 console.log(`[Server] Starting in ${dev ? 'development' : 'production'} mode`);
 console.log(`[Server] Hostname: ${hostname}, Port: ${port}`);
 
+// CRITICAL: In standalone mode, load the required-server-files.json config
+// This tells Next.js where to find its production bundle
+if (!dev) {
+  try {
+    const { config } = require('./.next/required-server-files.json');
+    process.env.__NEXT_PRIVATE_STANDALONE_CONFIG = JSON.stringify(config);
+    console.log('[Server] Loaded standalone configuration');
+  } catch (err) {
+    console.error('[Server] Failed to load standalone config:', err);
+  }
+}
+
 // In production with standalone, don't pass hostname/port to Next.js
 const app = dev ? next({ dev, hostname, port }) : next({ dev });
 const handle = app.getRequestHandler();
@@ -20,14 +32,20 @@ app.prepare().then(() => {
   console.log('[Server] Next.js app prepared successfully');
 
   const server = createServer(async (req, res) => {
+    const requestStart = Date.now();
+
     try {
-      // Log incoming requests
-      console.log(`[HTTP] ${req.method} ${req.url}`);
+      // Log ALL incoming requests (even before parsing)
+      console.log(`[HTTP] >>> INCOMING: ${req.method} ${req.url}`);
 
       const parsedUrl = parse(req.url, true);
       await handle(req, res, parsedUrl);
+
+      const duration = Date.now() - requestStart;
+      console.log(`[HTTP] <<< COMPLETED: ${req.method} ${req.url} (${duration}ms)`);
     } catch (err) {
-      console.error('[HTTP] Error occurred handling', req.url, err);
+      const duration = Date.now() - requestStart;
+      console.error(`[HTTP] !!! ERROR: ${req.method} ${req.url} (${duration}ms)`, err);
       res.statusCode = 500;
       res.end('internal server error');
     }
