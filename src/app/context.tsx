@@ -30,6 +30,15 @@ const SOCKET_URL = typeof window !== 'undefined'
 const SOCKET_PATH = '/socket.io'; // Default Socket.IO path
 const RECONNECT_DELAY_MS = 2_000;
 
+// Debug logging
+if (typeof window !== 'undefined') {
+  console.log('%c[Socket.IO] Configuration:', 'color: cyan; font-weight: bold');
+  console.log('  URL:', SOCKET_URL);
+  console.log('  Path:', SOCKET_PATH);
+  console.log('  Full connection:', `${SOCKET_URL}${SOCKET_PATH}`);
+  console.log('  Env var:', process.env.NEXT_PUBLIC_SOCKET_URL);
+}
+
 const DEFAULT_SNAPSHOT: IClientSnapshot = {
   state: {},
   governanceState: {},
