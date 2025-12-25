@@ -71,6 +71,14 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/server/instrumentation.js .
 # This overwrites the auto-generated server.js from Next.js standalone
 COPY --from=builder --chown=nextjs:nodejs /app/server.js ./server.js
 
+# CRITICAL: Copy Socket.IO dependencies (not included in standalone by default)
+# Standalone only includes dependencies used in Next.js code, not custom server
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/socket.io ./node_modules/socket.io
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/socket.io-client ./node_modules/socket.io-client
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/engine.io ./node_modules/engine.io
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/socket.io-adapter ./node_modules/socket.io-adapter
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/socket.io-parser ./node_modules/socket.io-parser
+
 USER nextjs
 
 EXPOSE 3000
