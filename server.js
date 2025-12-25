@@ -4,19 +4,30 @@ const next = require('next');
 const { Server: SocketIOServer } = require('socket.io');
 
 const dev = process.env.NODE_ENV !== 'production';
-const hostname = process.env.HOSTNAME || 'localhost';
+const hostname = process.env.HOSTNAME || '0.0.0.0';
 const port = parseInt(process.env.PORT || '3000', 10);
 
-const app = next({ dev, hostname, port });
+console.log(`[Server] Starting in ${dev ? 'development' : 'production'} mode`);
+console.log(`[Server] Hostname: ${hostname}, Port: ${port}`);
+
+// In production with standalone, don't pass hostname/port to Next.js
+const app = dev ? next({ dev, hostname, port }) : next({ dev });
 const handle = app.getRequestHandler();
 
+console.log('[Server] Preparing Next.js app...');
+
 app.prepare().then(() => {
+  console.log('[Server] Next.js app prepared successfully');
+
   const server = createServer(async (req, res) => {
     try {
+      // Log incoming requests
+      console.log(`[HTTP] ${req.method} ${req.url}`);
+
       const parsedUrl = parse(req.url, true);
       await handle(req, res, parsedUrl);
     } catch (err) {
-      console.error('Error occurred handling', req.url, err);
+      console.error('[HTTP] Error occurred handling', req.url, err);
       res.statusCode = 500;
       res.end('internal server error');
     }
@@ -48,11 +59,19 @@ app.prepare().then(() => {
   io.on('connection', (socket) => {
     console.log(`[Socket.IO] Client connected: ${socket.id}`);
 
-    // Send initial snapshot
-    const store = globalThis.__GLOBAL_STORE__;
-    if (store) {
-      const snapshot = store.getSnapshot();
-      socket.emit('SNAPSHOT', snapshot);
+    try {
+      // Send initial snapshot
+      const store = globalThis.__GLOBAL_STORE__;
+      if (store) {
+        console.log(`[Socket.IO] Sending snapshot to ${socket.id}...`);
+        const snapshot = store.getSnapshot();
+        socket.emit('SNAPSHOT', snapshot);
+        console.log(`[Socket.IO] Snapshot sent to ${socket.id}`);
+      } else {
+        console.warn(`[Socket.IO] GlobalStore not ready for ${socket.id}`);
+      }
+    } catch (err) {
+      console.error(`[Socket.IO] Error sending snapshot to ${socket.id}:`, err);
     }
 
     socket.on('disconnect', (reason) => {
