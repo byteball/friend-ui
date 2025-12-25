@@ -134,7 +134,7 @@ a:not(.ui-link) {
 .faq-items a:hover,
 .link-style:hover,
 a:hover:not(.ui-link) {
-  color: #93C5FD;
+  /* color: #93C5FD; */
   @apply underline underline-offset-4
 }
 

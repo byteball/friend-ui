@@ -10,7 +10,9 @@ interface GovernanceModalHeaderProps {
 }
 
 export const GovernanceModalHeader: FC<GovernanceModalHeaderProps> = ({ name }) => (<DialogHeader>
-  <DialogTitle>Change {getNameByKey(name).toLowerCase()}</DialogTitle>
+  <DialogTitle>
+    Change <span className="inline-block first-letter:lowercase">{getNameByKey(name)}</span>
+  </DialogTitle>
 
   {name in descriptions ? <DialogDescription>
     {descriptions[name]}
