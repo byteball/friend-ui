@@ -61,8 +61,7 @@ RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
+# Copy Next.js build output
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/.next/server/instrumentation.js ./.next/server/instrumentation.js
@@ -71,13 +70,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/server/instrumentation.js .
 # This overwrites the auto-generated server.js from Next.js standalone
 COPY --from=builder --chown=nextjs:nodejs /app/server.js ./server.js
 
-# CRITICAL: Copy Socket.IO dependencies (not included in standalone by default)
-# Standalone only includes dependencies used in Next.js code, not custom server
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/socket.io ./node_modules/socket.io
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/socket.io-client ./node_modules/socket.io-client
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/engine.io ./node_modules/engine.io
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/socket.io-adapter ./node_modules/socket.io-adapter
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/socket.io-parser ./node_modules/socket.io-parser
+# CRITICAL: Copy ALL node_modules for custom server
+# Standalone mode doesn't include dependencies for custom server.js
+# Since we use Socket.IO with many transitive dependencies, copy everything
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 USER nextjs
 
