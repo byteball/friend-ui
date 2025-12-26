@@ -46,10 +46,29 @@ export class GlobalStore extends EventEmitter {
   // Debounce timer for leaderboard revalidation
   private leaderboardRevalidationTimer?: NodeJS.Timeout;
 
+  // Deduplication hashes for server-side filtering
+  private lastStateUpdateHash?: string;
+  private lastGovernanceUpdateHash?: string;
+
   constructor({ initState, initTokens, initGovernanceState }: GlobalStoreOptions = { initState: {}, initTokens: {}, initGovernanceState: {} }) {
     super();
 
-    this.setMaxListeners(1000); // avoid memory leak warnings — we control listeners
+    // Set reasonable max listeners limit with monitoring
+    this.setMaxListeners(50);
+
+    // Monitor listener count every minute to detect leaks early
+    setInterval(() => {
+      const snapshotListeners = this.listenerCount(STORE_EVENTS.SNAPSHOT);
+      const stateUpdateListeners = this.listenerCount(STORE_EVENTS.STATE_UPDATE);
+      const govListeners = this.listenerCount(STORE_EVENTS.GOVERNANCE_STATE_UPDATE);
+
+      if (snapshotListeners > 10 || stateUpdateListeners > 10 || govListeners > 10) {
+        console.warn(
+          `warn(GlobalStore): High listener count detected - possible memory leak!`,
+          { snapshotListeners, stateUpdateListeners, govListeners }
+        );
+      }
+    }, 60000); // Check every minute
 
     this.state = new LRUCache<string, any>({
       max: 10000,
@@ -218,21 +237,37 @@ export class GlobalStore extends EventEmitter {
   }
 
   sendStateUpdate(update: IAaState) {
+    // Server-side deduplication to reduce network traffic
+    const hash = JSON.stringify(update);
+    if (hash === this.lastStateUpdateHash) {
+      console.log('log(GlobalStore): STATE_UPDATE deduplicated on server');
+      return;
+    }
+    this.lastStateUpdateHash = hash;
     this.send(STORE_EVENTS.STATE_UPDATE, update);
   }
 
   sendGovernanceStateUpdate(update: Record<string, any>) {
+    // Server-side deduplication for governance updates
+    const hash = JSON.stringify(update);
+    if (hash === this.lastGovernanceUpdateHash) {
+      console.log('log(GlobalStore): GOVERNANCE_STATE_UPDATE deduplicated on server');
+      return;
+    }
+    this.lastGovernanceUpdateHash = hash;
     this.send(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, update);
   }
 
   async revalidateLeaderboardData() {
+    const startTime = Date.now();
     const friends: { [key: string]: string[] } = {};
-    const totalBalances: Map<string, number> = new Map();
+    const balancePromises: Promise<[string, number]>[] = [];
 
     const constants = this.state.get('constants');
     if (!constants) return;
     const ceilPrice = getCeilingPrice(constants as IConstants);
 
+    // Collect friends and prepare balance calculations in parallel
     for (const [key, value] of this.state.entries()) {
       if (key.startsWith('friend_')) {
         const [, addr] = key.split('_');
@@ -240,10 +275,17 @@ export class GlobalStore extends EventEmitter {
         friends[addr].push(value);
       } else if (key.startsWith('user_') && !value.ghost) {
         const [, addr] = key.split('_');
-        const totalBalance = (await getTotalBalance(value.balances ?? {}, ceilPrice)).sans_reducers;
-        totalBalances.set(addr, totalBalance);
+        // Schedule async computation - don't await here!
+        balancePromises.push(
+          getTotalBalance(value.balances ?? {}, ceilPrice)
+            .then(result => [addr, result.sans_reducers] as [string, number])
+        );
       }
     }
+
+    // Execute all balance calculations in parallel
+    const balanceResults = await Promise.all(balancePromises);
+    const totalBalances = new Map(balanceResults);
 
     const newEntries: Array<[string, UserRank]> = [];
     for (const [addr, totalBalance] of totalBalances.entries()) {
@@ -264,6 +306,13 @@ export class GlobalStore extends EventEmitter {
     this.leaderboardData.clear();
     for (const [addr, data] of newEntries) {
       this.leaderboardData.set(addr, data);
+    }
+
+    const duration = Date.now() - startTime;
+    if (duration > 2000) {
+      console.warn(`warn(leaderboard): Slow revalidation took ${duration}ms for ${balancePromises.length} users`);
+    } else {
+      console.log(`log(leaderboard): Revalidated ${balancePromises.length} users in ${duration}ms`);
     }
   }
 

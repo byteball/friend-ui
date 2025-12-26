@@ -183,5 +183,45 @@ export async function register() {
       }
     });
 
-  }
+  } // End of __BOOTSTRAP_ONCONNECT_REGISTERED__ guard
+
+  // Setup graceful shutdown handlers
+  const shutdown = async (signal: string) => {
+    console.log(`log(shutdown): Received ${signal}, starting shutdown...`);
+
+    try {
+      // Clear heartbeat timer
+      if (globalThis.__OBYTE_HEARTBEAT__) {
+        clearInterval(globalThis.__OBYTE_HEARTBEAT__);
+        console.log('log(shutdown): Cleared Obyte heartbeat');
+      }
+
+      // Close Socket.IO server
+      if (globalThis.__SOCKET_IO__) {
+        await new Promise<void>((resolve) => {
+          globalThis.__SOCKET_IO__?.close(() => {
+            console.log('log(shutdown): Socket.IO server closed');
+            resolve();
+          });
+        });
+      }
+
+      // Close Obyte WebSocket connection
+      if (globalThis.__OBYTE_CLIENT__) {
+        // @ts-expect-error accessing internal ws
+        globalThis.__OBYTE_CLIENT__.client.ws.close();
+        console.log('log(shutdown): Obyte client disconnected');
+      }
+
+      console.log('log(shutdown): Graceful shutdown complete');
+      process.exit(0);
+    } catch (error) {
+      console.error('error(shutdown): Error during shutdown:', error);
+      process.exit(1);
+    }
+  };
+
+  // Register shutdown handlers
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
 }
