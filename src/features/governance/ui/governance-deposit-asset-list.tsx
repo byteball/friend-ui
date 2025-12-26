@@ -23,7 +23,7 @@ export const GovernanceDepositAssetList: FC = () => {
       </AddNewDepositAssetModal>
     </div>
 
-    <div className="grid gap-8">
+    <div className="grid gap-y-8">
       {Object.entries(depositAssetsData).map(([asset, value]) => (
         <GovernanceDepositAssetItem
           key={asset}

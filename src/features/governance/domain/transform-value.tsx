@@ -42,7 +42,7 @@ export const transformValue = <K extends keyof AgentParams>(key: K, value: Agent
   if (ADDRESS_PARAMS.includes(key)) {
     const formattedValue = (value as string).split(":");
 
-    return <div className="flex gap-y-1 gap-x-3 flex-wrap">
+    return <span className="inline-flex flex-wrap space-x-4">
       {formattedValue.map((item, index) => (
         <a
           href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${item}`}
@@ -54,7 +54,7 @@ export const transformValue = <K extends keyof AgentParams>(key: K, value: Agent
           {transformer(item as AgentParams[K], frdToken)}
         </a>
       ))}
-    </div>;
+    </span>;
   } else {
     return transformer(value as AgentParams[K], frdToken);
   }

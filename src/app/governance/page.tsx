@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 export default async function GovernancePage() {
   const walletAddress = await getCookie(WALLET_COOKIE_NAME, { cookies })
 
-  return <div>
+  return <div className="w-full max-w-full">
     <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-6xl">Governance</h1>
 
     <div className="mt-5">

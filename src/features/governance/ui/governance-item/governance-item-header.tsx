@@ -24,8 +24,8 @@ export const GovernableItemHeader = <K extends keyof AgentParams>({ name, curren
   const frdToken = getFrdToken();
 
   return (
-    <CardHeader className="text-lg">
-      <CardTitle className="flex flex-col items-start  md:justify-between md:flex-row">
+    <CardHeader className="text-lg w-full overflow-hidden">
+      <CardTitle className="flex flex-col items-start md:justify-between md:flex-row">
         <div className="flex gap-x-2 shrink-0">{getNameByKey(name)}
           <Tooltip>
             <TooltipTrigger>
