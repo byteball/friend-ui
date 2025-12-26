@@ -222,10 +222,11 @@ export class GlobalStore extends EventEmitter {
       clearTimeout(this.leaderboardRevalidationTimer);
     }
 
-    // Schedule new revalidation after 500ms of inactivity
+    // Schedule new revalidation after 2 seconds of inactivity
+    // Longer delay prevents CPU spikes during rapid updates
     this.leaderboardRevalidationTimer = setTimeout(() => {
       this.revalidateLeaderboardData();
-    }, 500);
+    }, 2000);
   }
 
   updateGovernanceState(newStateVars: Record<string, any>) {
@@ -283,9 +284,22 @@ export class GlobalStore extends EventEmitter {
       }
     }
 
-    // Execute all balance calculations in parallel
-    const balanceResults = await Promise.all(balancePromises);
-    const totalBalances = new Map(balanceResults);
+    // Execute balance calculations in batches to avoid CPU overload
+    console.log(`log(leaderboard): Processing ${balancePromises.length} users in batches`);
+    const BATCH_SIZE = 50; // Process 50 at a time to avoid CPU spike
+    const totalBalances = new Map<string, number>();
+
+    for (let i = 0; i < balancePromises.length; i += BATCH_SIZE) {
+      const batch = balancePromises.slice(i, i + BATCH_SIZE);
+      const batchResults = await Promise.all(batch);
+      for (const [addr, balance] of batchResults) {
+        totalBalances.set(addr, balance);
+      }
+      // Small delay between batches to let CPU breathe
+      if (i + BATCH_SIZE < balancePromises.length) {
+        await new Promise(resolve => setImmediate(resolve));
+      }
+    }
 
     const newEntries: Array<[string, UserRank]> = [];
     for (const [addr, totalBalance] of totalBalances.entries()) {

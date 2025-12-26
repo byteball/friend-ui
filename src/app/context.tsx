@@ -110,27 +110,26 @@ export function DataProvider({
   const lastEventRef = useRef<string | number>(null);
   const socketRef = useRef<Socket | null>(null);
   const isMountedRef = useRef(true);
+  const isFirstConnectRef = useRef(true); // Track first connection
   const router = useRouter();
   const [isConnected, setIsConnected] = useState(false);
 
-  // Selective router refresh for Server Components
-  // Client Components update automatically via React Context
-  // Server Components need occasional refresh for fresh data
+  // Throttle state updates to prevent excessive re-renders
+  const pendingUpdateRef = useRef<IClientSnapshot | null>(null);
+  const updateTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Router refresh DISABLED to prevent freezing during navigation
+  // Server Components will show slightly stale data until next navigation
+  // Client Components (majority of UI) update in real-time via React Context
   const throttledRefresh = useMemo(
     () =>
       throttle(
         () => {
-          // Only refresh if component is still mounted
-          if (!isMountedRef.current) {
-            console.log('%c[Socket.IO] Skipping refresh - unmounted', 'color: orange');
-            return;
-          }
-
-          // Gentle refresh every 30 seconds for Server Components
-          console.log('%c[Socket.IO] Refreshing Server Components', 'color: cyan');
-          router.refresh();
+          // INTENTIONALLY DISABLED - prevents CPU spikes and navigation freezing
+          // Server Components refresh happens naturally on page navigation
+          console.log('%c[Socket.IO] State updated (refresh disabled for stability)', 'color: cyan');
         },
-        30000, // 30 seconds instead of 3 - much less aggressive
+        30000,
         { leading: false, trailing: true }
       ),
     [router]
@@ -155,6 +154,26 @@ export function DataProvider({
     fetchSnapshotRef.current = fetchSnapshot;
   }, [fetchSnapshot]);
 
+  // Throttled setData to batch rapid updates and prevent CPU spikes
+  const throttledSetData = useCallback((newData: IClientSnapshot) => {
+    // Store the latest update
+    pendingUpdateRef.current = newData;
+
+    // Clear existing timer
+    if (updateTimerRef.current) {
+      return; // Already scheduled, will use latest data
+    }
+
+    // Schedule update after 50ms to batch rapid updates
+    updateTimerRef.current = setTimeout(() => {
+      if (pendingUpdateRef.current && isMountedRef.current) {
+        setData(pendingUpdateRef.current);
+        pendingUpdateRef.current = null;
+      }
+      updateTimerRef.current = null;
+    }, 50); // 50ms throttle - balances responsiveness and performance
+  }, []);
+
   // Stable references for Socket.IO callbacks to avoid reconnections
   const applyIncomingRef = useRef<((eventType: string, eventData: any) => void) | null>(null);
   const triggerSnapshotSyncRef = useRef<(() => Promise<void>) | null>(null);
@@ -177,6 +196,7 @@ export function DataProvider({
           tokensCount: Object.keys(eventData?.tokens || {}).length,
         });
         const snapshot = (eventData ?? {}) as Partial<IClientSnapshot>;
+        // Use immediate setData for SNAPSHOT (initial load)
         setData({
           state: snapshot.state ?? {},
           governanceState: snapshot.governanceState ?? {},
@@ -191,15 +211,21 @@ export function DataProvider({
       if (eventType === STORE_EVENTS.STATE_UPDATE) {
         const update = (eventData ?? {}) as IAaState & { variables?: AgentParams };
 
-        // Deduplication check
-        const hash = JSON.stringify(update);
-        if (hash === lastEventRef.current) {
+        // Lightweight deduplication - check key count instead of full JSON.stringify
+        // JSON.stringify on large objects causes CPU spikes!
+        const updateKeyCount = Object.keys(update).length;
+        const updateFirstKey = Object.keys(update)[0];
+        const simpleHash = `${updateKeyCount}:${updateFirstKey}`;
+
+        if (simpleHash === lastEventRef.current) {
           console.log('%c[Client] STATE_UPDATE deduplicated', 'color: yellow');
           return;
         }
-        lastEventRef.current = hash;
+        lastEventRef.current = simpleHash;
 
         console.log('%c[Client] Processing STATE_UPDATE', 'color: cyan', Object.keys(update).length, 'keys');
+
+        // Batch rapid updates through throttle to prevent CPU spikes
         setData((prev) => ({
           state: { ...(prev?.state ?? {}), ...update },
           governanceState: prev?.governanceState ?? {},
@@ -207,6 +233,7 @@ export function DataProvider({
           gbytePriceUSD: prev?.gbytePriceUSD ?? 0,
           params: update.variables ?? prev?.params ?? appConfig.initialParamsVariables,
         }));
+
         console.log('%c[Client] STATE_UPDATE applied', 'color: green');
         return;
       }
@@ -214,13 +241,16 @@ export function DataProvider({
       if (eventType === STORE_EVENTS.GOVERNANCE_STATE_UPDATE) {
         const governanceUpdate = (eventData ?? {}) as Record<string, any>;
 
-        // Deduplication check
-        const hash = JSON.stringify(governanceUpdate);
-        if (hash === lastEventRef.current) {
+        // Lightweight deduplication - avoid expensive JSON.stringify
+        const updateKeyCount = Object.keys(governanceUpdate).length;
+        const updateFirstKey = Object.keys(governanceUpdate)[0];
+        const simpleHash = `gov:${updateKeyCount}:${updateFirstKey}`;
+
+        if (simpleHash === lastEventRef.current) {
           console.log('%c[Client] GOVERNANCE_STATE_UPDATE deduplicated', 'color: yellow');
           return;
         }
-        lastEventRef.current = hash;
+        lastEventRef.current = simpleHash;
 
         console.log('%c[Client] Processing GOVERNANCE_STATE_UPDATE', 'color: cyan');
         setData((prev) => ({
@@ -271,7 +301,15 @@ export function DataProvider({
     socket.on('connect', () => {
       console.log('%c[Socket.IO] Connected', 'color: green', socket.id);
       setIsConnected(true);
-      triggerSnapshotSyncRef.current?.();
+
+      if (isFirstConnectRef.current) {
+        console.log('%c[Socket.IO] First connection - fetching snapshot', 'color: cyan');
+        isFirstConnectRef.current = false;
+        triggerSnapshotSyncRef.current?.();
+      } else {
+        console.log('%c[Socket.IO] Reconnected - using existing data', 'color: cyan');
+        // Don't fetch snapshot - rely on real-time updates via Socket.IO
+      }
     });
 
     socket.on('disconnect', (reason) => {
