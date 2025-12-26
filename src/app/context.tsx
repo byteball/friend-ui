@@ -113,17 +113,24 @@ export function DataProvider({
   const router = useRouter();
   const [isConnected, setIsConnected] = useState(false);
 
-  // Router refresh is DISABLED - React Context updates UI automatically
-  // Keeping throttled function for backward compatibility but it does nothing
+  // Selective router refresh for Server Components
+  // Client Components update automatically via React Context
+  // Server Components need occasional refresh for fresh data
   const throttledRefresh = useMemo(
     () =>
       throttle(
         () => {
-          // INTENTIONALLY EMPTY - React Context handles UI updates
-          // router.refresh() causes infinite loop during navigation
-          console.log('%c[Socket.IO] State updated (router refresh disabled)', 'color: cyan');
+          // Only refresh if component is still mounted
+          if (!isMountedRef.current) {
+            console.log('%c[Socket.IO] Skipping refresh - unmounted', 'color: orange');
+            return;
+          }
+
+          // Gentle refresh every 30 seconds for Server Components
+          console.log('%c[Socket.IO] Refreshing Server Components', 'color: cyan');
+          router.refresh();
         },
-        3000,
+        30000, // 30 seconds instead of 3 - much less aggressive
         { leading: false, trailing: true }
       ),
     [router]
