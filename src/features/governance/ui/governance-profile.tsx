@@ -27,7 +27,7 @@ export const GovernanceProfile: FC<GovernanceProfileProps> = ({ walletAddress })
       <AddWalletModal>
         <Button variant="link" className="p-0 m-0 text-md link-style">add your wallet address</Button>
       </AddWalletModal>
-      {" "}to see voting balance
+      {" "}to see your voting balance
     </div>
   }
 
