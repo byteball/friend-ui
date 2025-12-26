@@ -109,15 +109,19 @@ export function DataProvider({
   const [data, setData] = useState<IClientSnapshot>(resolvedInitialValue);
   const lastEventRef = useRef<string | number>(null);
   const socketRef = useRef<Socket | null>(null);
+  const isMountedRef = useRef(true);
   const router = useRouter();
   const [isConnected, setIsConnected] = useState(false);
 
+  // Router refresh is DISABLED - React Context updates UI automatically
+  // Keeping throttled function for backward compatibility but it does nothing
   const throttledRefresh = useMemo(
     () =>
       throttle(
         () => {
-          console.log('%c[Socket.IO] Router refresh DISABLED for debugging', 'color: orange');
-          router.refresh();
+          // INTENTIONALLY EMPTY - React Context handles UI updates
+          // router.refresh() causes infinite loop during navigation
+          console.log('%c[Socket.IO] State updated (router refresh disabled)', 'color: cyan');
         },
         3000,
         { leading: false, trailing: true }
@@ -127,9 +131,11 @@ export function DataProvider({
 
   useEffect(() => {
     console.log("%cDataProvider mounted", "color: green");
+    isMountedRef.current = true;
 
     return () => {
       console.log("%cDataProvider unmounted", "color: red");
+      isMountedRef.current = false;
     };
   }, []);
 
@@ -150,6 +156,12 @@ export function DataProvider({
     console.log('%c[Client] applyIncoming called', 'color: cyan', eventType);
 
     try {
+      // Ignore updates if component is unmounted
+      if (!isMountedRef.current) {
+        console.log('%c[Client] Ignoring update - component unmounted', 'color: orange');
+        return;
+      }
+
       if (!eventType) return;
 
       if (eventType === STORE_EVENTS.SNAPSHOT) {
@@ -272,13 +284,11 @@ export function DataProvider({
 
     socket.on(STORE_EVENTS.STATE_UPDATE, (payload) => {
       applyIncomingRef.current?.(STORE_EVENTS.STATE_UPDATE, payload);
-      console.log('%c[Socket.IO] State updated, refreshing router', 'color: blue');
       throttledRefresh();
     });
 
     socket.on(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, (payload) => {
       applyIncomingRef.current?.(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, payload);
-      console.log('%c[Socket.IO] Governance state updated, refreshing router', 'color: blue');
       throttledRefresh();
     });
 
