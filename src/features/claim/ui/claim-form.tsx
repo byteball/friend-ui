@@ -60,7 +60,7 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
     }
   })
 
-  return <div className="grid gap-4">
+  return <div id="befriend" className="grid gap-4">
     <h2 className="text-3xl font-bold">Claim rewards for becoming friends</h2>
 
     <div className="grid gap-4 text-muted-foreground text-md">
