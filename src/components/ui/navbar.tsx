@@ -6,7 +6,7 @@ function Navbar({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
       data-slot="navbar"
-      className={cn("flex items-center justify-between py-4", className)}
+      className={cn("flex items-end justify-between py-4", className)}
       {...props}
     />
   );
@@ -16,7 +16,7 @@ function NavbarLeft({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
       data-slot="navbar-left"
-      className={cn("flex items-center justify-start space-x-4", className)}
+      className={cn("flex items-end justify-start space-x-4", className)}
       {...props}
     />
   );
@@ -26,7 +26,7 @@ function NavbarRight({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
       data-slot="navbar-right"
-      className={cn("flex items-center justify-end space-x-4", className)}
+      className={cn("flex items-end justify-end space-x-4", className)}
       {...props}
     />
   );
