@@ -16,10 +16,13 @@ interface GovernanceProfileProps {
 export const GovernanceProfile: FC<GovernanceProfileProps> = ({ walletAddress }) => {
   const data = useData();
   const frdToken = data.getFrdToken();
-  const ceilingBalance = getCeilingPrice(data.state.constants);
+  const ceilingPrice = getCeilingPrice(data.state.constants);
 
   const userBaseBalance = data.state[`user_${walletAddress}`]?.balances;
-  const votingPower = Math.sqrt((userBaseBalance?.frd ?? 0) + ((userBaseBalance?.base ?? 0) / ceilingBalance));
+  const votingPower =
+    Math.sqrt(
+      ((userBaseBalance?.frd ?? 0) + ((userBaseBalance?.base ?? 0) / ceilingPrice)) / 10 ** frdToken.decimals
+    );
 
   if (!walletAddress) {
     return <div className="font-medium">
@@ -38,7 +41,7 @@ export const GovernanceProfile: FC<GovernanceProfileProps> = ({ walletAddress })
     </span>
 
     <div>
-      Your voting power: <span suppressHydrationWarning>{toLocalString(votingPower / 10 ** frdToken.decimals)}</span> (square root of your locked balance, <Link href="/faq#how-governance-works" className="underline"> see FAQ</Link>)
+      Your voting power: <span suppressHydrationWarning>{toLocalString(votingPower)}</span> (square root of your locked balance, <Link href="/faq#how-governance-works" className="underline"> see FAQ</Link>)
     </div>
   </div>;
 }
