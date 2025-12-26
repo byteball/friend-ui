@@ -13,18 +13,9 @@ const getObyteClient = async () => {
     reconnect: AUTO_RECONNECT
   });
 
-  globalThis.__OBYTE_CLIENT__.onConnect(async () => {
-
-    // clear existing heartbeat if any
-    if (globalThis.__OBYTE_HEARTBEAT__) {
-      clearInterval(globalThis.__OBYTE_HEARTBEAT__);
-      globalThis.__OBYTE_HEARTBEAT__ = undefined;
-    }
-
-    if (!globalThis.__OBYTE_CLIENT__) {
-      console.error("error(bootstrap): obyte client missing");
-      return;
-    }
+  // Prevent multiple subscribe() calls on HMR or reconnect
+  if (!globalThis.__OBYTE_SUBSCRIBED__) {
+    globalThis.__OBYTE_SUBSCRIBED__ = true;
 
     globalThis.__OBYTE_CLIENT__.subscribe((err, result) => {
       if (err) {
@@ -93,6 +84,22 @@ const getObyteClient = async () => {
       }
     });
 
+    console.log('log(bootstrap): Obyte client subscribed to events');
+  }
+
+  globalThis.__OBYTE_CLIENT__.onConnect(async () => {
+
+    // clear existing heartbeat if any
+    if (globalThis.__OBYTE_HEARTBEAT__) {
+      clearInterval(globalThis.__OBYTE_HEARTBEAT__);
+      globalThis.__OBYTE_HEARTBEAT__ = undefined;
+    }
+
+    if (!globalThis.__OBYTE_CLIENT__) {
+      console.error("error(bootstrap): obyte client missing");
+      return;
+    }
+
     globalThis.__OBYTE_HEARTBEAT__ = setInterval(async () => {
       if (!globalThis.__OBYTE_CLIENT__) {
         console.error("error(heartbeat): obyte client missing");
@@ -107,10 +114,19 @@ const getObyteClient = async () => {
       }
     }, HEARTBEAT_INTERVAL);
 
-    // @ts-expect-error no error
-    globalThis.__OBYTE_CLIENT__.client.ws.addEventListener("close", () => {
+    // Remove previous close listener if exists to prevent duplicates
+    if (globalThis.__OBYTE_WS_CLOSE_HANDLER__) {
+      // @ts-expect-error no error
+      globalThis.__OBYTE_CLIENT__.client.ws.removeEventListener("close", globalThis.__OBYTE_WS_CLOSE_HANDLER__);
+    }
+
+    // Store the handler reference for cleanup
+    globalThis.__OBYTE_WS_CLOSE_HANDLER__ = () => {
       clearInterval(globalThis.__OBYTE_HEARTBEAT__);
-    });
+    };
+
+    // @ts-expect-error no error
+    globalThis.__OBYTE_CLIENT__.client.ws.addEventListener("close", globalThis.__OBYTE_WS_CLOSE_HANDLER__);
 
     console.error('log(bootstrap): connected to Obyte client');
   });

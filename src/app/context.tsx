@@ -142,6 +142,10 @@ export function DataProvider({
     fetchSnapshotRef.current = fetchSnapshot;
   }, [fetchSnapshot]);
 
+  // Stable references for Socket.IO callbacks to avoid reconnections
+  const applyIncomingRef = useRef<((eventType: string, eventData: any) => void) | null>(null);
+  const triggerSnapshotSyncRef = useRef<(() => Promise<void>) | null>(null);
+
   const applyIncoming = useCallback((eventType: string, eventData: any) => {
     console.log('%c[Client] applyIncoming called', 'color: cyan', eventType);
 
@@ -222,6 +226,12 @@ export function DataProvider({
     }
   }, [setData]);
 
+  // Update stable references
+  useEffect(() => {
+    applyIncomingRef.current = applyIncoming;
+    triggerSnapshotSyncRef.current = triggerSnapshotSync;
+  }, [applyIncoming, triggerSnapshotSync]);
+
   // Socket.IO connection management
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -231,7 +241,8 @@ export function DataProvider({
       transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionDelay: RECONNECT_DELAY_MS,
-      reconnectionAttempts: Infinity,
+      reconnectionDelayMax: 10000,
+      reconnectionAttempts: 20, // Limit to 20 attempts instead of Infinity
       timeout: 10000,
     });
 
@@ -241,7 +252,7 @@ export function DataProvider({
     socket.on('connect', () => {
       console.log('%c[Socket.IO] Connected', 'color: green', socket.id);
       setIsConnected(true);
-      triggerSnapshotSync();
+      triggerSnapshotSyncRef.current?.();
     });
 
     socket.on('disconnect', (reason) => {
@@ -253,20 +264,20 @@ export function DataProvider({
       logWarn('Connection error:', error);
     });
 
-    // Event listeners
+    // Event listeners - use stable references
     socket.on(STORE_EVENTS.SNAPSHOT, (payload) => {
-      applyIncoming(STORE_EVENTS.SNAPSHOT, payload);
+      applyIncomingRef.current?.(STORE_EVENTS.SNAPSHOT, payload);
       // No refresh needed - snapshot is full state replacement
     });
 
     socket.on(STORE_EVENTS.STATE_UPDATE, (payload) => {
-      applyIncoming(STORE_EVENTS.STATE_UPDATE, payload);
+      applyIncomingRef.current?.(STORE_EVENTS.STATE_UPDATE, payload);
       console.log('%c[Socket.IO] State updated, refreshing router', 'color: blue');
       throttledRefresh();
     });
 
     socket.on(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, (payload) => {
-      applyIncoming(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, payload);
+      applyIncomingRef.current?.(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, payload);
       console.log('%c[Socket.IO] Governance state updated, refreshing router', 'color: blue');
       throttledRefresh();
     });
@@ -287,7 +298,7 @@ export function DataProvider({
       // Cancel any pending throttled refresh
       throttledRefresh.cancel();
     };
-  }, [applyIncoming, triggerSnapshotSync, throttledRefresh]);
+  }, [throttledRefresh]);
 
   return (
     <DataContext.Provider value={data || null}>

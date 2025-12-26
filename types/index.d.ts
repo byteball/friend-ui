@@ -6,6 +6,12 @@ namespace globalThis {
   // eslint-disable-next-line no-var
   var __OBYTE_CONNECTS_TOTAL__: number | undefined;
   // eslint-disable-next-line no-var
+  var __OBYTE_SUBSCRIBED__: boolean | undefined;
+  // eslint-disable-next-line no-var
+  var __OBYTE_WS_CLOSE_HANDLER__: (() => void) | undefined;
+  // eslint-disable-next-line no-var
+  var __BOOTSTRAP_ONCONNECT_REGISTERED__: boolean | undefined;
+  // eslint-disable-next-line no-var
   var __GLOBAL_STORE__: import('@/global-store').GlobalStore | undefined;
   // eslint-disable-next-line no-var
   var __SOCKET_IO__: import('socket.io').Server | undefined;

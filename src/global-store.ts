@@ -37,10 +37,14 @@ export class GlobalStore extends EventEmitter {
 
   socketIO?: SocketIOServer;
   socketIOConnected: boolean = false;
+  socketIOListenersSetup: boolean = false;
 
   ready: boolean = false;
   stateUpdateId: number;
   gbytePriceUSD: number = 0;
+
+  // Debounce timer for leaderboard revalidation
+  private leaderboardRevalidationTimer?: NodeJS.Timeout;
 
   constructor({ initState, initTokens, initGovernanceState }: GlobalStoreOptions = { initState: {}, initTokens: {}, initGovernanceState: {} }) {
     super();
@@ -188,8 +192,21 @@ export class GlobalStore extends EventEmitter {
     }
 
     this.sendStateUpdate(newStateVars);
-    this.revalidateLeaderboardData();
+    this.scheduleLeaderboardRevalidation();
     this.stateUpdateId += 1;
+  }
+
+  // Debounced leaderboard revalidation to prevent excessive recalculations
+  private scheduleLeaderboardRevalidation() {
+    // Clear existing timer if any
+    if (this.leaderboardRevalidationTimer) {
+      clearTimeout(this.leaderboardRevalidationTimer);
+    }
+
+    // Schedule new revalidation after 500ms of inactivity
+    this.leaderboardRevalidationTimer = setTimeout(() => {
+      this.revalidateLeaderboardData();
+    }, 500);
   }
 
   updateGovernanceState(newStateVars: Record<string, any>) {
@@ -338,6 +355,14 @@ export class GlobalStore extends EventEmitter {
   setupSocketIOListeners() {
     if (!this.socketIO) return;
 
+    // Prevent duplicate listener registration
+    if (this.socketIOListenersSetup) {
+      console.log('log(GlobalStore): Socket.IO listeners already set up, skipping');
+      return;
+    }
+
+    this.socketIOListenersSetup = true;
+
     // Listen to GlobalStore events and broadcast via Socket.IO
     this.on(STORE_EVENTS.SNAPSHOT, (payload: IClientSnapshot) => {
       this.socketIO?.emit(STORE_EVENTS.SNAPSHOT, payload);
@@ -350,5 +375,7 @@ export class GlobalStore extends EventEmitter {
     this.on(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, (payload: Record<string, any>) => {
       this.socketIO?.emit(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, payload);
     });
+
+    console.log('log(GlobalStore): Socket.IO listeners set up');
   }
 }
