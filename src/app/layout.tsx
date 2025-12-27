@@ -68,7 +68,7 @@ const navigation = {
     },
     {
       name: 'YouTube',
-      href: 'https://www.youtube.com/channel/UC59w9bmROOeUFakVvhMepPQ/',
+      href: 'https://www.youtube.com/@ObyteOrg',
       icon: (props: any) => (
         <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
           <path
