@@ -52,7 +52,7 @@ export default async function FaqPage() {
 
         <Faq.Item>
           <Faq.Title>What&rsquo;s the purpose of Obyte Friends?</Faq.Title>
-          <Faq.Content>The purpose is to encourage Obyte community members to spread the word about <Link href="https://obyte.org" target="_blank" rel="noopener noreferrer">Obyte&rsquo;s uncensorable, unstoppable, truly decentralized network</Link>, and create closer connections with each other. By doing so, they become each other&rsquo;s friends, as well as Obyte&rsquo;s friends. We believe this helps to build a strong, coherent, and cooperative community.</Faq.Content>
+          <Faq.Content>The purpose is to encourage Obyte community members to spread the word about <Link href="https://obyte.org" target="_blank" rel="noopener">Obyte&rsquo;s uncensorable, unstoppable, truly decentralized network</Link>, and create closer connections with each other. By doing so, they become each other&rsquo;s friends, as well as Obyte&rsquo;s friends. We believe this helps to build a strong, coherent, and cooperative community.</Faq.Content>
         </Faq.Item>
 
 
@@ -272,7 +272,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              The next follow-up rewards are due in 150 days, then 270 days, and so on, after becoming friends. See the full schedule in the source <Link href="https://github.com/byteball/friend-aa/blob/main/friend.oscript#L31" target="_blank" rel="noopener noreferrer">code of the Obyte Friends AA</Link>.
+              The next follow-up rewards are due in 150 days, then 270 days, and so on, after becoming friends. See the full schedule in the source <Link href="https://github.com/byteball/friend-aa/blob/main/friend.oscript#L32" target="_blank" rel="noopener">code of the Obyte Friends AA</Link>.
             </p>
           </Faq.Content>
         </Faq.Item>
@@ -308,7 +308,7 @@ export default async function FaqPage() {
             How can I be sure the rules are actually what&rsquo;s described here, can&rsquo;t be changed, and my money can&rsquo;t be stolen?
           </Faq.Title>
           <Faq.Content>
-            The rules are implemented by <Link href="https://obyte.org/platform/autonomous-agents" target="_blank" rel="noopener noreferrer">Autonomous Agents (AAs)</Link>, which are soulless code-driven actors on <Link href="https://obyte.org/" target="_blank" rel="noopener noreferrer">Obyte DAG</Link>. Nobody can intervene with their operation, nobody can tell them what to do, nobody can take their money, and nobody can change their code. Even the Obyte team, which created them. Their code is <Link href="https://github.com/byteball/friend-aa" target="_blank" rel="noopener noreferrer">available on github</Link>, so anyone can see what rules the agents actually follow and compare with what we describe here.
+            The rules are implemented by <Link href="https://obyte.org/platform/autonomous-agents" target="_blank" rel="noopener">Autonomous Agents (AAs)</Link>, which are soulless code-driven actors on <Link href="https://obyte.org/" target="_blank" rel="noopener">Obyte DAG</Link>. Nobody can intervene with their operation, nobody can tell them what to do, nobody can take their money, and nobody can change their code. Even the Obyte team, which created them. Their code is <Link href="https://github.com/byteball/friend-aa" target="_blank" rel="noopener">available on github</Link>, so anyone can see what rules the agents actually follow and compare with what we describe here.
           </Faq.Content>
         </Faq.Item>
 
@@ -424,7 +424,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              You can also replace external tokens such as USDC and ETH for {symbol}. For external tokens, a combination of the ceiling price and the token&rsquo;s price against GBYTE from an <Link href="https://oswap.io/" target="_blank" rel="noopener noreferrer">Oswap</Link> pool is used to determine the replacement ratio. The <Link href="/governance">governance</Link> decides which Oswap pool is used.
+              You can also replace external tokens such as USDC and ETH for {symbol}. For external tokens, a combination of the ceiling price and the token&rsquo;s price against GBYTE from an <Link href="https://oswap.io/" target="_blank" rel="noopener">Oswap</Link> pool is used to determine the replacement ratio. The <Link href="/governance">governance</Link> decides which Oswap pool is used.
             </p>
 
           </Faq.Content>
@@ -490,7 +490,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              The rewards scheme can be updated in rather significant ways. For example, it may add an option to burn some amount of {symbol} to receive double rewards in the next 3 days in exchange. It can also link rewards to the user&rsquo;s status in <Link href="https://city.obyte.org/" target="_blank" rel="noopener noreferrer">Obyte City</Link>. It can be tuned to pay higher rewards to users with longer streaks. These are just some ideas, and there are many more possibilities.
+              The rewards scheme can be updated in rather significant ways. For example, it may add an option to burn some amount of {symbol} to receive double rewards in the next 3 days in exchange. It can also link rewards to the user&rsquo;s status in <Link href="https://city.obyte.org/" target="_blank" rel="noopener">Obyte City</Link>. It can be tuned to pay higher rewards to users with longer streaks. These are just some ideas, and there are many more possibilities.
             </p>
           </Faq.Content>
         </Faq.Item>
@@ -500,7 +500,7 @@ export default async function FaqPage() {
           <Faq.Title>How does governance work?</Faq.Title>
           <Faq.Content>
             <p>
-              Every user who has locked funds in Obyte Friends can participate in its <Link href="/governance">governance</Link>. Anyone can suggest changes in any of the governable parameters of Obyte Friends. A bot watches for such suggestions and automatically sends notifications to <Link href="https://discord.obyte.org" target="_blank" rel="noopener noreferrer">Obyte discord</Link>. Other community members learn about the suggestions from these notifications and can:
+              Every user who has locked funds in Obyte Friends can participate in its <Link href="/governance">governance</Link>. Anyone can suggest changes in any of the governable parameters of Obyte Friends. A bot watches for such suggestions and automatically sends notifications to <Link href="https://discord.obyte.org" target="_blank" rel="noopener">Obyte discord</Link>. Other community members learn about the suggestions from these notifications and can:
             </p>
 
             <ul>
@@ -528,7 +528,7 @@ export default async function FaqPage() {
           <Faq.Title>Who develops and supports Obyte Friends?</Faq.Title>
           <Faq.Content>
             <p>
-              The <Link href="https://obyte.org/" target="_blank" rel="noopener noreferrer">Obyte</Link> team has developed the <Link href="https://github.com/byteball/friend-aa" target="_blank" rel="noopener noreferrer">Friends AA</Link>, which is what handles user balances, deposits, withdrawals, rewards, and the governance framework. After that, the team doesn&rsquo;t operate the AA &mdash; it&rsquo;s an autonomous agent, and the team has no power over it. Neither can it change the AA &mdash; it&rsquo;s set in stone and nothing can be changed except a few parameters manageable by the community <Link href="/governance">governance</Link>. In particular, the governance can change the rules on how rewards are calculated.
+              The <Link href="https://obyte.org/" target="_blank" rel="noopener">Obyte</Link> team has developed the <Link href="https://github.com/byteball/friend-aa" target="_blank" rel="noopener">Friends AA</Link>, which is what handles user balances, deposits, withdrawals, rewards, and the governance framework. After that, the team doesn&rsquo;t operate the AA &mdash; it&rsquo;s an autonomous agent, and the team has no power over it. Neither can it change the AA &mdash; it&rsquo;s set in stone and nothing can be changed except a few parameters manageable by the community <Link href="/governance">governance</Link>. In particular, the governance can change the rules on how rewards are calculated.
             </p>
 
             <p>
@@ -557,7 +557,7 @@ export default async function FaqPage() {
       </Faq.Container>
 
       <div className="mt-20">
-        <p className="mt-4 text-lg text-muted-foreground text-pretty">Can&rsquo;t find the answer you&rsquo;re looking for? Ask on our <a href="https://discord.obyte.org" target="_blank" rel="noopener noreferrer" className="font-semibold">discord</a>.</p>
+        <p className="mt-4 text-lg text-muted-foreground text-pretty">Can&rsquo;t find the answer you&rsquo;re looking for? Ask on our <a href="https://discord.obyte.org" target="_blank" rel="noopener" className="font-semibold">discord</a>.</p>
       </div>
     </div>
   )

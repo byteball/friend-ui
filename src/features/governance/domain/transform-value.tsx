@@ -47,7 +47,7 @@ export const transformValue = <K extends keyof AgentParams>(key: K, value: Agent
         <a
           href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${item}`}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener"
           key={index}
           className="whitespace-nowrap mt-2 font-normal inline-block"
         >

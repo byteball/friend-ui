@@ -56,7 +56,7 @@ export const TweetCard = ({
                 {timeAgo}
               </span>
             </div>
-            <Link href="https://x.com" target="_blank" rel="noreferrer" className="h-[18.75px] w-[18.75px]">
+            <Link href="https://x.com" target="_blank" rel="noopener nofollow" className="h-[18.75px] w-[18.75px]">
               <Image src="/x-logo.svg" alt="X Logo" width={18.75} height={18.75} />
             </Link>
           </div>

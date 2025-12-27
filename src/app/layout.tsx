@@ -123,7 +123,7 @@ export default async function RootLayout({
             ))}
           </div>
 
-          <a href="https://obyte.org" target="_blank" rel="noopener noreferrer" className="ui-link py-4">Built on Obyte</a>
+          <a href="https://obyte.org" target="_blank" rel="noopener" className="ui-link py-4">Built on Obyte</a>
         </footer>
 
         <CookieConsent variant="mini" />
