@@ -1,5 +1,4 @@
 "use client";
-"use no memo"
 
 import { appConfig } from "@/app-config";
 import { STORE_EVENTS } from "@/constants";
@@ -59,38 +58,32 @@ export function useData() {
   const data = useContext(DataContext);
   if (!data) throw new Error("useData must be used within a DataProvider");
 
-  const getFrdToken = useCallback((): TokenMeta => {
-    const asset = data.state?.constants?.asset;
-    return data.tokens?.[asset] ?? {};
-  }, [data]);
-
-  const getGovernanceAA = useCallback((): string => {
-    return data.state?.constants?.governance_aa;
-  }, [data]);
-
-  const getUserData = useCallback((address: string): IUserData | null => {
-    return (data.state?.[`user_${address}`] || null) as IUserData | null;
-  }, [data]);
-
-  const getFrdPrice = useCallback((): number => {
-    const constants = data.state?.constants as IConstants | undefined;
-    if (!constants) return 0;
-
-    const frdToken = data.tokens?.[constants.asset];
-    if (!frdToken) return 0;
-
-    const ceilPrice = getCeilingPrice(constants);
-
-    return ceilPrice * data.gbytePriceUSD;
-  }, [data]);
-
+  // Return memoized object with stable getter functions
+  // No circular dependencies: only data is in the dependency array
   return useMemo(() => ({
     ...data,
-    getFrdToken,
-    getGovernanceAA,
-    getUserData,
-    getFrdPrice
-  }), [data, getFrdToken, getGovernanceAA, getUserData]);
+    getFrdToken: (): TokenMeta => {
+      const asset = data.state?.constants?.asset;
+      return data.tokens?.[asset] ?? {};
+    },
+    getGovernanceAA: (): string => {
+      return data.state?.constants?.governance_aa;
+    },
+    getUserData: (address: string): IUserData | null => {
+      return (data.state?.[`user_${address}`] || null) as IUserData | null;
+    },
+    getFrdPrice: (): number => {
+      const constants = data.state?.constants as IConstants | undefined;
+      if (!constants) return 0;
+
+      const frdToken = data.tokens?.[constants.asset];
+      if (!frdToken) return 0;
+
+      const ceilPrice = getCeilingPrice(constants);
+
+      return ceilPrice * data.gbytePriceUSD;
+    }
+  }), [data]);
 }
 
 type DataProviderProps = {

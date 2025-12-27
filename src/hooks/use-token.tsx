@@ -1,5 +1,4 @@
 "use client";
-"use no memo";
 
 import { appConfig } from "@/app-config";
 import { getAaStateVars } from "@/lib/http-client";

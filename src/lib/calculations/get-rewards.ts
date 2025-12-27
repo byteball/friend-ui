@@ -21,11 +21,29 @@ export const getCeilingPrice = (aaConstants: IConstants) => {
   return 2 ** ((now - aaConstants.launch_ts) / YEAR);
 }
 
+// In-memory cache for exchange rates to prevent excessive network calls
+type ExchangeRateCacheEntry = { rate: number; expiresAt: number };
+const exchangeRateCache = new Map<string, ExchangeRateCacheEntry>();
+const EXCHANGE_RATE_CACHE_TTL = 60 * 1000; // 1 minute cache
 
 const getDepositAssetExchangeRate = async (asset: string): Promise<number> => {
-  const result = await executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rates', [asset]) as { min: number; max: number };
+  // Check cache first
+  const cached = exchangeRateCache.get(asset);
+  if (cached && Date.now() < cached.expiresAt) {
+    return cached.rate;
+  }
 
-  return result.min / 0.9;
+  // Fetch from network
+  const result = await executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rates', [asset]) as { min: number; max: number };
+  const rate = result.min / 0.9;
+
+  // Store in cache
+  exchangeRateCache.set(asset, {
+    rate,
+    expiresAt: Date.now() + EXCHANGE_RATE_CACHE_TTL
+  });
+
+  return rate;
 }
 
 export const getTotalBalance = async (balances: Balances, ceilingPrice: number) => {

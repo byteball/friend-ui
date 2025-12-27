@@ -239,7 +239,9 @@ export class GlobalStore extends EventEmitter {
 
   sendStateUpdate(update: IAaState) {
     // Server-side deduplication to reduce network traffic
-    const hash = JSON.stringify(update);
+    // Use lightweight hash instead of JSON.stringify to avoid blocking event loop
+    const keys = Object.keys(update);
+    const hash = `${keys.length}:${keys[0] || ''}`;
     if (hash === this.lastStateUpdateHash) {
       console.log('log(GlobalStore): STATE_UPDATE deduplicated on server');
       return;
@@ -250,7 +252,9 @@ export class GlobalStore extends EventEmitter {
 
   sendGovernanceStateUpdate(update: Record<string, any>) {
     // Server-side deduplication for governance updates
-    const hash = JSON.stringify(update);
+    // Use lightweight hash instead of JSON.stringify to avoid blocking event loop
+    const keys = Object.keys(update);
+    const hash = `gov:${keys.length}:${keys[0] || ''}`;
     if (hash === this.lastGovernanceUpdateHash) {
       console.log('log(GlobalStore): GOVERNANCE_STATE_UPDATE deduplicated on server');
       return;
