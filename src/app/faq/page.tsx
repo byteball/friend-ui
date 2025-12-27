@@ -111,7 +111,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              If you deposit in assets other than {symbol}, reducers are applied to your balances in these assets. The reducer of GBYTE deposits is 0.75 and for other assets (such as USDC, ETH) it is 0.5. This means that only 75% of your GBYTE assets and 50% of your USDC or ETH assets actually work, and the rewards for making friends are 0.75% and 0.5% respectively on top of their balances. This measure is to incentivize deposits in {symbol}, supporting demand for it and its price.
+              If you deposit in assets other than {symbol}, reducers are applied to your balances in these assets. The reducer of GBYTE deposits is 0.75 and for other assets (such as USDC, ETH) it is 0.5. This means that only 75% of your GBYTE assets and 50% of your USDC or ETH assets actually work, and the rewards for making friends are 0.75% and 0.5% respectively on top of your balances in these tokens. This measure is to incentivize deposits in {symbol}, supporting demand for it and its price.
             </p>
 
             <p>
@@ -211,7 +211,7 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              When the locking period expires, you can get your locked tokens back, plus the accrued rewards in {symbol}.
+              When the locking period expires, you can get all your locked tokens back, plus the accrued rewards in {symbol}.
             </p>
 
             <p>
@@ -396,7 +396,17 @@ export default async function FaqPage() {
         <Faq.Item>
           <Faq.Title>What is the ceiling price?</Faq.Title>
           <Faq.Content>
-            The ceiling price is a preprogrammed price of {symbol} in terms of GBYTE that doubles every year. The market price is not guaranteed to match it. This price is used only when replacing one deposited token for another.
+            <p>
+              The ceiling price is a preprogrammed price of {symbol} in terms of GBYTE that doubles every year. The market price is not guaranteed to match it. This price is used only when replacing one deposited token for another (see below) and when calculating the value of the deposited GBYTE and external assets in FRD for calculation of rewards.
+            </p>
+
+            <p>
+              The ceiling price limits the rate of growth of {symbol} price against GBYTE. If its market price exceeds the ceiling price, it becomes cheaper to deposit GBYTE instead of {symbol} to get the same rewards (which are calculated based on the ceiling price, not the market price), thus reducing demand for {symbol}.
+            </p>
+
+            <p>
+              This limit reduces the incentive to hold liquid {symbol} in hopes of its appreciation due to efforts of others, and pushes users to lock {symbol} instead and start making more money by connecting with friends.
+            </p>
           </Faq.Content>
         </Faq.Item>
 
@@ -414,16 +424,9 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              You can also do a reverse replacement, or replace external tokens such as USDC and ETH for {symbol}, or vice versa. For external tokens, a combination of the ceiling price and the token&rsquo;s price against GBYTE from an <Link href="https://oswap.io/" target="_blank" rel="noopener noreferrer">Oswap</Link> pool is used to determine the replacement ratio. The <Link href="/governance">governance</Link> decides which Oswap pool is used.
+              You can also replace external tokens such as USDC and ETH for {symbol}. For external tokens, a combination of the ceiling price and the token&rsquo;s price against GBYTE from an <Link href="https://oswap.io/" target="_blank" rel="noopener noreferrer">Oswap</Link> pool is used to determine the replacement ratio. The <Link href="/governance">governance</Link> decides which Oswap pool is used.
             </p>
 
-            <p>
-              The ceiling price limits the rate of growth of {symbol} price against GBYTE. If its market price exceeds the ceiling price, it becomes profitable to replace the locked {symbol} with GBYTE and then sell the released {symbol} on the market for profit, thus pushing its price down.
-            </p>
-
-            <p>
-              This limit reduces the incentive to hold liquid {symbol} in hopes of its appreciation due to efforts of others, and pushes users to lock {symbol} instead and start making more money by connecting with friends.
-            </p>
           </Faq.Content>
         </Faq.Item>
 
@@ -522,7 +525,7 @@ export default async function FaqPage() {
 
 
         <Faq.Item>
-          <Faq.Title>Who develops and supports Obyte City?</Faq.Title>
+          <Faq.Title>Who develops and supports Obyte Friends?</Faq.Title>
           <Faq.Content>
             <p>
               The <Link href="https://obyte.org/" target="_blank" rel="noopener noreferrer">Obyte</Link> team has developed the <Link href="https://github.com/byteball/friend-aa" target="_blank" rel="noopener noreferrer">Friends AA</Link>, which is what handles user balances, deposits, withdrawals, rewards, and the governance framework. After that, the team doesn&rsquo;t operate the AA &mdash; it&rsquo;s an autonomous agent, and the team has no power over it. Neither can it change the AA &mdash; it&rsquo;s set in stone and nothing can be changed except a few parameters manageable by the community <Link href="/governance">governance</Link>. In particular, the governance can change the rules on how rewards are calculated.
