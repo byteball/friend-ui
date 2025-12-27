@@ -31,7 +31,7 @@ const CookieConsent = React.forwardRef<HTMLDivElement, CookieConsentProps>(
       onAcceptCallback = () => { },
       onDeclineCallback = () => { },
       className,
-      description = "We use cookies to ensure you get the best experience on our website.",
+      description = "We use cookies to make this site work.",
       learnMoreHref = "#",
       ...props
     },
@@ -180,7 +180,7 @@ const CookieConsent = React.forwardRef<HTMLDivElement, CookieConsentProps>(
                   size="sm"
                   className="w-full text-xs sm:w-auto h-7"
                 >
-                  Accept and hide
+                  Accept
                   <span className="sr-only sm:hidden">Accept</span>
                 </Button>
               </div>
