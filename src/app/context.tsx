@@ -13,7 +13,13 @@ import { io, Socket } from "socket.io-client";
  * Types you already have in your codebase; keep these placeholders if needed.
  */
 type IAaState = Record<string, any>;
-type IClientSnapshot = { state: IAaState; tokens: Record<string, any>; governanceState: Record<string, any>; params: AgentParams; gbytePriceUSD: number; };
+type IClientSnapshot = {
+  state: IAaState;
+  tokens: Record<string, any>;
+  governanceState: Record<string, any>;
+  params: AgentParams;
+  gbytePriceUSD: number;
+};
 
 type StoreEventEnvelope =
   | { event: typeof STORE_EVENTS.SNAPSHOT; data: Partial<IClientSnapshot> }
@@ -53,6 +59,7 @@ const logWarn = (...args: unknown[]) => {
 };
 
 const DataContext = createContext<IClientSnapshot | null>(null);
+const ConnectionContext = createContext<boolean>(false);
 
 export function useData() {
   const data = useContext(DataContext);
@@ -84,6 +91,11 @@ export function useData() {
       return ceilPrice * data.gbytePriceUSD;
     }
   }), [data]);
+}
+
+// Separate hook for connection status to avoid re-renders
+export function useConnectionStatus() {
+  return useContext(ConnectionContext);
 }
 
 type DataProviderProps = {
@@ -332,6 +344,8 @@ export function DataProvider({
 
     // Cleanup
     return () => {
+      console.log('%c[Socket.IO] Cleanup: removing listeners and disconnecting', 'color: orange');
+
       socket.off('connect');
       socket.off('disconnect');
       socket.off('connect_error');
@@ -343,14 +357,26 @@ export function DataProvider({
       socket.disconnect();
       socketRef.current = null;
 
+      // Clear pending update timer to prevent memory leak
+      if (updateTimerRef.current) {
+        clearTimeout(updateTimerRef.current);
+        updateTimerRef.current = null;
+        pendingUpdateRef.current = null;
+        console.log('%c[Socket.IO] Cleanup: cleared pending update timer', 'color: orange');
+      }
+
       // Cancel any pending throttled refresh
       throttledRefresh.cancel();
+
+      console.log('%c[Socket.IO] Cleanup complete', 'color: orange');
     };
   }, [throttledRefresh]);
 
   return (
-    <DataContext.Provider value={data || null}>
-      {children}
-    </DataContext.Provider>
+    <ConnectionContext.Provider value={isConnected}>
+      <DataContext.Provider value={data || null}>
+        {children}
+      </DataContext.Provider>
+    </ConnectionContext.Provider>
   );
 }

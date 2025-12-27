@@ -49,21 +49,34 @@ export async function register() {
 
       // Connection handler
       io.on('connection', (socket) => {
-        console.log(`[Socket.IO] Client connected: ${socket.id}`);
+        console.log(`[Socket.IO] Client connected: ${socket.id} (total: ${io.engine.clientsCount})`);
+
         try {
           const store = globalThis.__GLOBAL_STORE__;
-          if (store) {
+          if (store && store.ready) {
             const snapshot = store.getSnapshot();
             socket.emit('SNAPSHOT', snapshot);
             console.log(`[Socket.IO] Snapshot sent to ${socket.id}`);
+          } else {
+            console.warn(`[Socket.IO] GlobalStore not ready, cannot send snapshot to ${socket.id}`);
           }
         } catch (err) {
-          console.error(`[Socket.IO] Error sending snapshot:`, err);
+          console.error(`[Socket.IO] Error sending snapshot to ${socket.id}:`, err);
+          // Don't disconnect client - they can still receive updates
         }
 
         socket.on('disconnect', (reason) => {
-          console.log(`[Socket.IO] Client disconnected: ${socket.id}, reason: ${reason}`);
+          console.log(`[Socket.IO] Client disconnected: ${socket.id}, reason: ${reason} (remaining: ${io.engine.clientsCount})`);
         });
+
+        socket.on('error', (error) => {
+          console.error(`[Socket.IO] Socket error for ${socket.id}:`, error);
+        });
+      });
+
+      // Global error handler for Socket.IO server
+      io.engine.on('connection_error', (err) => {
+        console.error('[Socket.IO] Connection error:', err);
       });
 
       server.listen(port, '0.0.0.0', () => {
@@ -194,6 +207,12 @@ export async function register() {
       if (globalThis.__OBYTE_HEARTBEAT__) {
         clearInterval(globalThis.__OBYTE_HEARTBEAT__);
         console.log('log(shutdown): Cleared Obyte heartbeat');
+      }
+
+      // Cleanup GlobalStore listeners before closing Socket.IO
+      if (globalThis.__GLOBAL_STORE__) {
+        globalThis.__GLOBAL_STORE__.cleanupSocketIOListeners();
+        console.log('log(shutdown): GlobalStore listeners cleaned up');
       }
 
       // Close Socket.IO server

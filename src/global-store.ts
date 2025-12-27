@@ -50,6 +50,11 @@ export class GlobalStore extends EventEmitter {
   private lastStateUpdateHash?: string;
   private lastGovernanceUpdateHash?: string;
 
+  // Store listener references for cleanup
+  private snapshotListener?: (payload: IClientSnapshot) => void;
+  private stateUpdateListener?: (payload: IAaState) => void;
+  private governanceUpdateListener?: (payload: Record<string, any>) => void;
+
   constructor({ initState, initTokens, initGovernanceState }: GlobalStoreOptions = { initState: {}, initTokens: {}, initGovernanceState: {} }) {
     super();
 
@@ -430,19 +435,67 @@ export class GlobalStore extends EventEmitter {
 
     this.socketIOListenersSetup = true;
 
-    // Listen to GlobalStore events and broadcast via Socket.IO
-    this.on(STORE_EVENTS.SNAPSHOT, (payload: IClientSnapshot) => {
-      this.socketIO?.emit(STORE_EVENTS.SNAPSHOT, payload);
-    });
+    // Create listener functions and store references for cleanup
+    this.snapshotListener = (payload: IClientSnapshot) => {
+      try {
+        if (this.socketIO && this.socketIO.sockets) {
+          this.socketIO.emit(STORE_EVENTS.SNAPSHOT, payload);
+        }
+      } catch (err) {
+        console.error('error(GlobalStore): Failed to emit SNAPSHOT', err);
+      }
+    };
 
-    this.on(STORE_EVENTS.STATE_UPDATE, (payload: IAaState) => {
-      this.socketIO?.emit(STORE_EVENTS.STATE_UPDATE, payload);
-    });
+    this.stateUpdateListener = (payload: IAaState) => {
+      try {
+        if (this.socketIO && this.socketIO.sockets) {
+          this.socketIO.emit(STORE_EVENTS.STATE_UPDATE, payload);
+        }
+      } catch (err) {
+        console.error('error(GlobalStore): Failed to emit STATE_UPDATE', err);
+      }
+    };
 
-    this.on(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, (payload: Record<string, any>) => {
-      this.socketIO?.emit(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, payload);
-    });
+    this.governanceUpdateListener = (payload: Record<string, any>) => {
+      try {
+        if (this.socketIO && this.socketIO.sockets) {
+          this.socketIO.emit(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, payload);
+        }
+      } catch (err) {
+        console.error('error(GlobalStore): Failed to emit GOVERNANCE_STATE_UPDATE', err);
+      }
+    };
+
+    // Register listeners
+    this.on(STORE_EVENTS.SNAPSHOT, this.snapshotListener);
+    this.on(STORE_EVENTS.STATE_UPDATE, this.stateUpdateListener);
+    this.on(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, this.governanceUpdateListener);
 
     console.log('log(GlobalStore): Socket.IO listeners set up');
+  }
+
+  cleanupSocketIOListeners() {
+    if (!this.socketIOListenersSetup) return;
+
+    console.log('log(GlobalStore): Cleaning up Socket.IO listeners');
+
+    // Remove all listeners
+    if (this.snapshotListener) {
+      this.off(STORE_EVENTS.SNAPSHOT, this.snapshotListener);
+      this.snapshotListener = undefined;
+    }
+
+    if (this.stateUpdateListener) {
+      this.off(STORE_EVENTS.STATE_UPDATE, this.stateUpdateListener);
+      this.stateUpdateListener = undefined;
+    }
+
+    if (this.governanceUpdateListener) {
+      this.off(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, this.governanceUpdateListener);
+      this.governanceUpdateListener = undefined;
+    }
+
+    this.socketIOListenersSetup = false;
+    console.log('log(GlobalStore): Socket.IO listeners cleaned up');
   }
 }
