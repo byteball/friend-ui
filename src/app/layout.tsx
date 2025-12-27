@@ -81,7 +81,7 @@ const navigation = {
     },
     {
       name: 'GitHub',
-      href: 'https://github.com/byteball',
+      href: 'https://github.com/byteball/friend-aa',
       icon: (props: any) => (
         <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
           <path
