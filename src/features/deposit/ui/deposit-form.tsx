@@ -140,7 +140,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
               <Activity mode={currency.asset !== frdAsset ? "visible" : "hidden"}>
                 {isRateLoading
                   ? <Skeleton className="w-full h-6" />
-                  : <div suppressHydrationWarning>&asymp; {toLocalString(Number(amount) * (rate ?? 0))} {frdToken?.symbol} (according to the current ceiling price 1 {frdToken?.symbol} = {toLocalString(rate ? 1 / rate : 0)} {currency.symbol}).
+                  : <div suppressHydrationWarning>&asymp; {toLocalString(Number(amount) * (rate ?? 0))} {frdToken?.symbol} (according to the current <Link href="/faq#ceiling-price">ceiling price</Link> 1 {frdToken?.symbol} = {toLocalString(rate ? 1 / rate : 0)} {currency.symbol}).
                   </div>}
               </Activity>
             </FieldDescription>

@@ -393,7 +393,7 @@ export default async function FaqPage() {
         </Faq.Item>
 
 
-        <Faq.Item>
+        <Faq.Item id="ceiling-price">
           <Faq.Title>What is the ceiling price?</Faq.Title>
           <Faq.Content>
             <p>
