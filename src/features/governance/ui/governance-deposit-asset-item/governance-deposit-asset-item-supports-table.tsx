@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useMemo } from "react";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
@@ -27,9 +27,10 @@ export const GovernanceDepositAssetItemSupportsTable: FC<GovernanceItemSupportsT
   asset,
   governanceAa
 }) => {
+  const aggregatedData = useMemo(() => getAggregatedVotes(votes), [votes]);
 
   const table = useReactTable({
-    data: getAggregatedVotes(votes),
+    data: aggregatedData,
     columns: governanceDepositAssetItemSupportsColumns,
     meta: {
       frdToken,

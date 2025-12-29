@@ -4,7 +4,9 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["obyte"],
   },
-  reactCompiler: true,
+  reactCompiler: {
+    compilationMode: "all"
+  },
   output: "standalone",
   async rewrites() {
     return [

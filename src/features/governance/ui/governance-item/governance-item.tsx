@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { getGovernanceDataByKey } from "../../domain/get-governance-data-by-key";
 import { GovernanceItemContent } from "./governance-item-content";
 import { GovernanceItemFooter } from "./governance-item-footer";
@@ -16,7 +17,7 @@ export type GovernanceItemProps<K extends keyof AgentParams = keyof AgentParams>
 
 export function GovernanceItem<K extends keyof AgentParams>({ name }: GovernanceItemProps<K>) {
   const { governanceState, params } = useData();
-  const governanceStateData = getGovernanceDataByKey<K>(name, governanceState);
+  const governanceStateData = useMemo(() => getGovernanceDataByKey<K>(name, governanceState), [name, governanceState]);
 
   const currentValue = params[name] ?? appConfig.initialParamsVariables[name];
 

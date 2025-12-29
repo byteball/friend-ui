@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useMemo } from "react";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
@@ -26,18 +26,25 @@ export type SupportedValuesData = {
 }
 
 export const GovernanceItemSupportsTable: FC<GovernanceItemSupportsTableProps> = ({ choices, supportsValues, name, frdToken }) => {
-  const table = useReactTable({
-    data: supportsValues ? Object.entries(supportsValues).map(([value, amount]) => ({
+  const tableData = useMemo(() =>
+    supportsValues ? Object.entries(supportsValues).map(([value, amount]) => ({
       id: value,
       value: value,
       amount: amount
     })) : [],
+    [supportsValues]
+  );
+
+  const tableMeta = useMemo(() => ({
+    name,
+    frdToken,
+    choices
+  }), [name, frdToken, choices]);
+
+  const table = useReactTable({
+    data: tableData,
     columns: governanceItemSupportsColumns,
-    meta: {
-      name,
-      frdToken,
-      choices
-    },
+    meta: tableMeta,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     state: {

@@ -86,8 +86,8 @@ export const ReplaceForm: FC<ReplaceFormProps> = ({ address }) => {
     setInited(true);
   }, [balances, outputAsset, tokens, inited]);
 
-  const allAllowedTokens = Object.values(tokens);
-  const allPairs = getExchangePairs(allAllowedTokens, state.constants.asset);
+  const allAllowedTokens = useMemo(() => Object.values(tokens), [tokens]);
+  const allPairs = useMemo(() => getExchangePairs(allAllowedTokens, state.constants.asset), [allAllowedTokens, state.constants.asset]);
   const allPairingTokens = allPairs[inputAsset] || [];
 
   const outputTokenAsset = outputAsset && (allPairingTokens.find(p => p.asset === outputAsset)) ? outputAsset : allPairingTokens[0]?.asset;

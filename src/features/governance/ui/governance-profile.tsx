@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 
 import { useData } from "@/app/context";
 import { AddWalletModal } from "@/components/modals/add-wallet";
 import { Button } from "@/components/ui/button";
+
 import { getCeilingPrice } from "@/lib/calculations/get-rewards";
+import { getVPByBalance } from "@/lib/get-vp-by-balance";
 import { toLocalString } from "@/lib/to-local-string";
 
 interface GovernanceProfileProps {
@@ -15,14 +17,13 @@ interface GovernanceProfileProps {
 
 export const GovernanceProfile: FC<GovernanceProfileProps> = ({ walletAddress }) => {
   const data = useData();
-  const frdToken = data.getFrdToken();
-  const ceilingPrice = getCeilingPrice(data.state.constants);
+  const { getFrdToken } = data;
 
-  const userBaseBalance = data.state[`user_${walletAddress}`]?.balances;
-  const votingPower =
-    Math.sqrt(
-      ((userBaseBalance?.frd ?? 0) + ((userBaseBalance?.base ?? 0) / ceilingPrice)) / 10 ** frdToken.decimals
-    );
+  const frdToken = getFrdToken();
+
+  const ceilingPrice = useMemo(() => getCeilingPrice(data.state.constants), [data.state.constants]);
+  const userBalance = useMemo(() => data.state[`user_${walletAddress}`]?.balances ?? {}, [data.state, walletAddress]);
+  const votingPower = useMemo(() => getVPByBalance(userBalance, ceilingPrice, frdToken.decimals), [userBalance, ceilingPrice, frdToken.decimals]);
 
   if (!walletAddress) {
     return <div className="font-medium">
