@@ -150,10 +150,6 @@ export function DataProvider({
     };
   }, []);
 
-  useEffect(() => {
-    setData(resolvedInitialValue);
-  }, [resolvedInitialValue]);
-
   const fetchSnapshotRef = useRef(fetchSnapshot);
   useEffect(() => {
     fetchSnapshotRef.current = fetchSnapshot;
