@@ -323,7 +323,7 @@ export function DataProvider({
     });
 
     socket.on('connect_error', (error) => {
-      logWarn('Connection error:', error);
+      console.log('%c[Socket.IO] Connection error', 'color: red', error);
     });
 
     // Event listeners - use stable references
