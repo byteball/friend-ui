@@ -1,0 +1,14 @@
+{
+	"version": "1.0",
+	"description": "Obyte Friends Governance",
+	"homepage_url": "https://friends.obyte.org/governance",
+	"source_url": "https://github.com/byteball/firiend-aa",
+	"field_descriptions": {
+		"name": "Name of the parameter to vote for",
+		"value": "Value of the parameter to vote for",
+		"commit": "Commit a new value after voting has ended",
+		"deposit_asset": "Deposit asset being added or edited",
+		"update_user_balance": "Update user balance if it has changed",
+		"address": "User address"
+	}
+}

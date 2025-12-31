@@ -1,0 +1,21 @@
+{
+	"version": "1.0",
+	"description": "Obyte Friends AA",
+	"homepage_url": "https://friends.obyte.org",
+	"source_url": "https://github.com/byteball/friend-aa",
+	"field_descriptions": {
+		"deposit_asset": "Deposit asset to deposit or replace",
+		"add_ghost": "Add a new ghost",
+		"ghost_name": "Name of the ghost",
+		"deposit": "Deposit funds",
+		"term": "Locking term in days",
+		"ref": "Referrer address",
+		"no_referrer_deposit_reward": "Waive deposit rewards from referrers",
+		"friend": "Friend's address",
+		"connect": "Become friends with another user",
+		"followup": "Claim follow-up rewards",
+		"days": "Days between becoming friends and follow-up rewards",
+		"withdraw": "Withdraw funds (after they unlock)",
+		"replace": "Replace another deposited asset for FRD"
+	}
+}
