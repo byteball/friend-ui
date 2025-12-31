@@ -1,8 +1,8 @@
 import "server-only";
 
 import { LRUCache } from "lru-cache";
-import { EventEmitter } from "stream";
 import type { Server as SocketIOServer } from 'socket.io';
+import { EventEmitter } from "stream";
 
 import { appConfig } from "./app-config";
 import { STORE_EVENTS } from "./constants";

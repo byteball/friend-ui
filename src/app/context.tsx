@@ -6,7 +6,7 @@ import { getCeilingPrice } from "@/lib/calculations/get-rewards";
 import "client-only";
 import { throttle } from "lodash";
 import { useRouter } from "next/navigation";
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { createContext, startTransition, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
 /**
@@ -112,7 +112,9 @@ export function DataProvider({
 
   const resolvedInitialValue = useMemo(() => value ?? DEFAULT_SNAPSHOT, [value]);
   const [data, setData] = useState<IClientSnapshot>(resolvedInitialValue);
+  const dataRef = useRef<IClientSnapshot>(resolvedInitialValue);
   const lastEventRef = useRef<string | number>(null);
+  const lastSnapshotHashRef = useRef<string | null>(null);
   const socketRef = useRef<Socket | null>(null);
   const isMountedRef = useRef(true);
   const isFirstConnectRef = useRef(true); // Track first connection
@@ -175,6 +177,31 @@ export function DataProvider({
     }, 50); // 50ms throttle - balances responsiveness and performance
   }, []);
 
+  // Keep an up-to-date ref for building next state without causing renders
+  useEffect(() => {
+    dataRef.current = data;
+  }, [data]);
+
+  const hashSnapshot = (snapshot: Partial<IClientSnapshot>) => {
+    const stateKeys = Object.keys(snapshot.state ?? {}).length;
+    const tokenKeys = Object.keys(snapshot.tokens ?? {}).length;
+    const govKeys = Object.keys(snapshot.governanceState ?? {}).length;
+    const price = snapshot.gbytePriceUSD ?? 0;
+    return `snap:${stateKeys}:${tokenKeys}:${govKeys}:${price}`;
+  };
+
+  const isSnapshotComplete = (snapshot: Partial<IClientSnapshot>) => {
+    const constants = snapshot.state?.constants as IConstants | undefined;
+    if (!constants) return false;
+    if (!snapshot.tokens) return false;
+    if (typeof snapshot.gbytePriceUSD !== "number") return false;
+
+    // Ensure FRD token metadata exists when asset is known
+    if (constants.asset && !snapshot.tokens[constants.asset]) return false;
+
+    return true;
+  };
+
   // Stable references for Socket.IO callbacks to avoid reconnections
   const applyIncomingRef = useRef<((eventType: string, eventData: any) => void) | null>(null);
   const triggerSnapshotSyncRef = useRef<(() => Promise<void>) | null>(null);
@@ -197,14 +224,36 @@ export function DataProvider({
           tokensCount: Object.keys(eventData?.tokens || {}).length,
         });
         const snapshot = (eventData ?? {}) as Partial<IClientSnapshot>;
+
+        if (!isSnapshotComplete(snapshot)) {
+          console.warn('[Client] SNAPSHOT rejected: incomplete payload');
+          return;
+        }
+
+        const snapshotHash = hashSnapshot(snapshot);
+        if (snapshotHash === lastSnapshotHashRef.current) {
+          console.log('%c[Client] SNAPSHOT deduplicated', 'color: yellow');
+          return;
+        }
+
+        lastSnapshotHashRef.current = snapshotHash;
+
         // Use immediate setData for SNAPSHOT (initial load)
-        setData({
-          state: snapshot.state ?? {},
-          governanceState: snapshot.governanceState ?? {},
-          tokens: snapshot.tokens ?? {},
-          gbytePriceUSD: snapshot.gbytePriceUSD ?? 0,
-          params: snapshot.params ?? snapshot.state?.variables ?? appConfig.initialParamsVariables,
-        });
+        try {
+          startTransition(() => {
+            setData(d => ({
+              state: "state" in snapshot ? snapshot.state! : d.state ?? {},
+              governanceState: "governanceState" in snapshot ? snapshot.governanceState! : d.governanceState ?? {},
+              tokens: "tokens" in snapshot ? snapshot.tokens! : d.tokens ?? {},
+              gbytePriceUSD: "gbytePriceUSD" in snapshot ? snapshot.gbytePriceUSD! : d.gbytePriceUSD ?? 0,
+              params: "params" in snapshot ? snapshot.params! : d.params ?? appConfig.initialParamsVariables,
+            }));
+          });
+        } catch (err) {
+          console.error('%c[Client] SNAPSHOT setData error', 'color: red', err);
+          logWarn("SNAPSHOT setData error", err);
+        }
+
         console.log('%c[Client] SNAPSHOT applied', 'color: green');
         return;
       }
@@ -222,18 +271,24 @@ export function DataProvider({
           console.log('%c[Client] STATE_UPDATE deduplicated', 'color: yellow');
           return;
         }
+
         lastEventRef.current = simpleHash;
 
         console.log('%c[Client] Processing STATE_UPDATE', 'color: cyan', Object.keys(update).length, 'keys');
 
         // Batch rapid updates through throttle to prevent CPU spikes
-        setData((prev) => ({
-          state: { ...(prev?.state ?? {}), ...update },
-          governanceState: prev?.governanceState ?? {},
-          tokens: prev?.tokens ?? {},
-          gbytePriceUSD: prev?.gbytePriceUSD ?? 0,
-          params: update.variables ?? prev?.params ?? appConfig.initialParamsVariables,
-        }));
+        startTransition(() => {
+          const base = pendingUpdateRef.current ?? dataRef.current;
+          const mergedState = { ...(base?.state ?? {}), ...update };
+
+          throttledSetData({
+            state: mergedState,
+            governanceState: base?.governanceState ?? {},
+            tokens: base?.tokens ?? {},
+            gbytePriceUSD: base?.gbytePriceUSD ?? 0,
+            params: update.variables ?? base?.params ?? appConfig.initialParamsVariables,
+          });
+        });
 
         console.log('%c[Client] STATE_UPDATE applied', 'color: green');
         return;
@@ -254,10 +309,13 @@ export function DataProvider({
         lastEventRef.current = simpleHash;
 
         console.log('%c[Client] Processing GOVERNANCE_STATE_UPDATE', 'color: cyan');
-        setData((prev) => ({
-          ...prev,
-          governanceState: { ...(prev?.governanceState ?? {}), ...governanceUpdate },
-        }));
+        startTransition(() => {
+          const prev = pendingUpdateRef.current ?? dataRef.current;
+          throttledSetData({
+            ...prev,
+            governanceState: { ...(prev?.governanceState ?? {}), ...governanceUpdate },
+          });
+        });
         console.log('%c[Client] GOVERNANCE_STATE_UPDATE applied', 'color: green');
       }
     } catch (err) {
