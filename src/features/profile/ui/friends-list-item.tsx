@@ -23,7 +23,7 @@ export const FriendsListItem: FC<IFriendsListItemProps> = async ({ friendAddress
   const cns = "text-xl font-semibold first-letter:uppercase";
 
   const liquidRewardsView = toLocalString((rewards.liquid || 0) / 10 ** frdAssetDecimals)
-  const lockedRewardsView = toLocalString(((rewards.locked || 0) + (rewards.new_user_reward || 0)) / 10 ** frdAssetDecimals);
+  const lockedRewardsView = toLocalString((rewards.locked || 0) / 10 ** frdAssetDecimals);
 
   const hasNewUserReward = rewards.new_user_reward > 0;
   const newUserRewardView = hasNewUserReward ? toLocalString((rewards.new_user_reward || 0) / 10 ** frdAssetDecimals) : null;
