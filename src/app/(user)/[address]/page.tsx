@@ -34,7 +34,7 @@ export async function generateMetadata(
   const frdSymbol = frdTokenMeta?.symbol ?? "FRD";
 
   return ({
-    title: `Obyte friends — ${username}`,
+    title: `Obyte Friends — ${username}`,
     description: `Profile of user ${username} in Obyte Friends: total ${friends.length} friends, ${toLocalString(totalBalance / 10 ** frdDecimals)} ${frdSymbol} locked`,
     openGraph: {
       images: [

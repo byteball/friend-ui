@@ -10,7 +10,7 @@ import { GovernanceProfile, GovernanceTabs } from "@/features/governance";
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Obyte friends — Governance",
+  title: "Obyte Friends — Governance",
   description: "Community governance of Obyte Friends: change the rules for rewards and other parameters",
   openGraph: {
     images: [

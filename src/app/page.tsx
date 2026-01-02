@@ -12,7 +12,7 @@ export const revalidate = 0;
 export const fetchCache = 'force-no-store';
 
 export const metadata: Metadata = {
-  title: "Obyte friends — make 1% a day by making friends every day",
+  title: "Obyte Friends — make 1% a day by making friends every day",
   description: "Make 1% a day by making friends every day and spreading the word about Obyte’s unstoppable, censorship-resistant tech",
   openGraph: {
     images: [
