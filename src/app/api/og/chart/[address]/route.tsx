@@ -22,6 +22,18 @@ type BalancePoint = {
   trigger_date: string;
 };
 
+const prependZeroBalanceDay = (series: BalancePoint[]): BalancePoint[] => {
+  if (!series.length) return series;
+
+  const firstDate = new Date(`${series[0].trigger_date}T00:00:00Z`);
+  firstDate.setUTCDate(firstDate.getUTCDate() - 1);
+
+  return [
+    { trigger_date: firstDate.toISOString().slice(0, 10), totalBalance: 0 },
+    ...series,
+  ];
+};
+
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
   day: "numeric",
@@ -54,7 +66,7 @@ const generateChartSvg = (
   if (!data.length) {
     return `
       <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-        <rect width="${width}" height="${height}" rx="16" fill="rgba(20, 71, 229, 0.06)" />
+        <rect width="${width}" height="${height}" rx="16" fill="#262626" />
         <text x="50%" y="50%" fill="#6b7280" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" dominant-baseline="middle">
           No balance history yet
         </text>
@@ -125,7 +137,7 @@ const generateChartSvg = (
     const formattedValue = toLocalString(roundedValue);
     const y = margin.top + ratio * innerHeight;
     const label = `${formattedValue} ${symbol}`.trim();
-    return `<text x="${margin.left - 12}" y="${(y + 4).toFixed(2)}" font-family="Arial, sans-serif" font-size="16" fill="#4b5563" text-anchor="end" dominant-baseline="central">${label}</text>`;
+    return `<text x="${margin.left - 12}" y="${(y + 4).toFixed(2)}" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="end" dominant-baseline="central">${label}</text>`;
   });
 
   const tickCount = Math.min(4, displayNormalizedSeries.length);
@@ -152,17 +164,17 @@ const generateChartSvg = (
       const label = dateFormatter.format(new Date(date));
       return `
         <g transform="translate(${x.toFixed(2)}, ${baselineY + 20})">
-          <text text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#4b5563">${label}</text>
+          <text text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="white">${label}</text>
         </g>
       `;
     });
 
   return `
     <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-      <rect x="0" y="0" width="${width}" height="${height}" rx="16" fill="rgba(20, 71, 229, 0.08)" />
+      <rect x="0" y="0" width="${width}" height="${height}" rx="16" fill="#262626" />
       <g>
-        <line x1="${margin.left}" y1="${baselineY}" x2="${width - margin.right}" y2="${baselineY}" stroke="#d1d5db" stroke-width="1.5" />
-        <line x1="${margin.left}" y1="${margin.top}" x2="${margin.left}" y2="${baselineY}" stroke="#d1d5db" stroke-width="1.5" />
+        <line x1="${margin.left}" y1="${baselineY}" x2="${width - margin.right}" y2="${baselineY}" stroke="white" stroke-width="1.5" />
+        <line x1="${margin.left}" y1="${margin.top}" x2="${margin.left}" y2="${baselineY}" stroke="white" stroke-width="1.5" />
       </g>
 
       <g>
@@ -173,7 +185,7 @@ const generateChartSvg = (
         ${yAxisLabels.join("\n")}
       </g>
 
-      <path d="${areaPath}" fill="none" stroke="#1447e5" stroke-width="3" stroke-linejoin="round" />
+      <path d="${areaPath}" fill="none" stroke="white" stroke-width="3" stroke-linejoin="round" />
 
       <g>
         ${points
@@ -194,7 +206,7 @@ export async function GET(
 ) {
   const { address: userAddress } = await params;
 
-  const logoAbsPath = path.join(process.cwd(), "public", "logo-dark.svg");
+  const logoAbsPath = path.join(process.cwd(), "public", "logo.svg");
   const logoFile = readFileSync(logoAbsPath).toString("utf-8");
 
   const rewardEvents = await fetch(`${appConfig.NOTIFY_URL}/history/${userAddress}`).then(res => res.json()).catch(() => []);
@@ -204,19 +216,21 @@ export async function GET(
   const symbol = frdTokenMeta?.symbol ?? "FRD";
 
   const balanceSeries = buildTotalBalanceSeries(rewardEvents, decimals);
+  const chartSeries = prependZeroBalanceDay(balanceSeries);
 
   const minimumBalanceValue =
-    minBy(balanceSeries, (point) => point.totalBalance)?.totalBalance ?? 0;
+    minBy(chartSeries, (point) => point.totalBalance)?.totalBalance ?? 0;
 
-  const latestTotalBalance = balanceSeries.at(-1)?.totalBalance ?? 0;
+  const latestTotalBalance = chartSeries.at(-1)?.totalBalance ?? 0;
 
   // chart
 
-  const chartSvg = generateChartSvg(balanceSeries, minimumBalanceValue, decimals, symbol);
+  const chartSvg = generateChartSvg(chartSeries, minimumBalanceValue, decimals, symbol);
 
   try {
     const SVG = `
-      <svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+      <svg width="1200" height="630"
+       xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
@@ -242,7 +256,7 @@ export async function GET(
         </defs>
 
         <!-- Background -->
-        <rect width="1200" height="630" fill="url(#bgGradient)" />
+        <rect width="1200" height="630" fill="#0b0809" />
 
         <!-- Logo and Title Group (centered) -->
         <g transform="translate(-15, 10)">
@@ -258,7 +272,7 @@ export async function GET(
             font-family="Arial, sans-serif"
             font-size="72"
             font-weight="700"
-            fill="#000"
+            fill="white"
             text-anchor="start"
             dominant-baseline="middle"
           >
@@ -279,7 +293,7 @@ export async function GET(
               font-family="Arial, sans-serif"
               font-size="54"
               font-weight="400"
-              fill="#57534d"
+              fill="white"
               text-anchor="middle"
             >
               My balance: ${toLocalString((latestTotalBalance).toPrecision(4))} ${symbol}

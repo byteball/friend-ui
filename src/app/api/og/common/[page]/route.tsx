@@ -39,7 +39,7 @@ export async function GET(
 
   if (currentLine) lines.push(currentLine);
 
-  const logoAbsPath = path.join(process.cwd(), "public", "logo-dark.svg");
+  const logoAbsPath = path.join(process.cwd(), "public", "logo.svg");
   const logoFile = readFileSync(logoAbsPath).toString("utf-8");
 
   try {
@@ -70,11 +70,7 @@ export async function GET(
         </defs>
 
         <!-- Background -->
-        <rect width="1200" height="630" fill="url(#bgGradient)" />
-
-        <!-- Decorative circles -->
-        <circle cx="100" cy="100" r="80" fill="rgba(29, 78, 184, 0.05)" />
-        <circle cx="1100" cy="530" r="100" fill="rgba(37, 99, 235, 0.05)" />
+        <rect width="1200" height="630" fill="#0b0809" />
 
         <!-- Logo and Title Group (centered) -->
         <g transform="translate(-15, 10)">
@@ -91,7 +87,7 @@ export async function GET(
             font-family="Arial, sans-serif"
             font-size="72"
             font-weight="700"
-            fill="#000"
+            fill="white"
             text-anchor="start"
             dominant-baseline="middle"
           >
@@ -108,7 +104,7 @@ export async function GET(
             font-family="Arial, sans-serif"
             font-size="${lines.length === 1 ? 106 : 84}"
             font-weight="400"
-            fill="#000"
+            fill="white"
             text-anchor="middle"
           >
             ${lines.map((line, i) => `<tspan x="600" dy="${i === 0 ? 0 : 104}">${line}</tspan>`).join('')}

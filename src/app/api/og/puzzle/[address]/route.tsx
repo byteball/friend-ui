@@ -50,7 +50,7 @@ export async function GET(
   const currentGhostImageBuffer = readFileSync(currentGhostImagePath);
   const currentGhostImageBase64 = `data:image/png;base64,${currentGhostImageBuffer.toString('base64')}`;
 
-  const logoAbsPath = path.join(process.cwd(), "public", "logo-dark.svg");
+  const logoAbsPath = path.join(process.cwd(), "public", "logo.svg");
   const logoFile = readFileSync(logoAbsPath).toString("utf-8");
 
   const ghost = generatePuzzleSvg({
@@ -90,7 +90,7 @@ export async function GET(
         </defs>
 
         <!-- Background -->
-        <rect width="1200" height="630" fill="url(#bgGradient)" />
+        <rect width="1200" height="630" fill="#0b0809" />
 
         <!-- Logo and Title Group (centered) -->
         <g transform="translate(-15, 10)">
@@ -106,7 +106,7 @@ export async function GET(
             font-family="Arial, sans-serif"
             font-size="72"
             font-weight="700"
-            fill="#000"
+            fill="white"
             text-anchor="start"
             dominant-baseline="middle"
           >
@@ -126,7 +126,7 @@ export async function GET(
             font-family="Arial, sans-serif"
             font-size="64"
             font-weight="700"
-            fill="#1f2937"
+            fill="white"
           >
             ${username}
           </text>
@@ -139,7 +139,7 @@ export async function GET(
               font-family="Arial, sans-serif"
               font-size="48"
               font-weight="400"
-              fill="#57534d"
+              fill="white"
             >
               Current streak:
             </text>
@@ -162,7 +162,7 @@ export async function GET(
               font-family="Arial, sans-serif"
               font-size="48"
               font-weight="300"
-              fill="#57534d"
+              fill="white"
             >
               <tspan x="580" dy="0">days to become friends</tspan>
               <tspan x="580" dy="60">with ${allGhosts[currentGhostIndex].name}</tspan>

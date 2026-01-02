@@ -9,7 +9,7 @@ import { toLocalString } from "@/lib/to-local-string";
 export async function GET(
   _req: NextRequest,
 ) {
-  const logoAbsPath = path.join(process.cwd(), "public", "logo-dark.svg");
+  const logoAbsPath = path.join(process.cwd(), "public", "logo.svg");
   const logoFile = readFileSync(logoAbsPath).toString("utf-8");
 
   try {
@@ -59,7 +59,7 @@ export async function GET(
         </defs>
 
         <!-- Background -->
-        <rect width="1200" height="630" fill="url(#bgGradient)" />
+        <rect width="1200" height="630" fill="#0b0809" />
 
         <!-- Decorative circles -->
         <circle cx="100" cy="100" r="80" fill="rgba(29, 78, 184, 0.05)" />
@@ -80,7 +80,7 @@ export async function GET(
             font-family="Arial, sans-serif"
             font-size="72"
             font-weight="700"
-            fill="#000"
+            fill="white"
             text-anchor="start"
             dominant-baseline="middle"
           >
@@ -95,7 +95,7 @@ export async function GET(
             font-family="Arial, sans-serif"
             font-size="64"
             font-weight="600"
-            fill="#000"
+            fill="white"
             text-anchor="middle"
           >
             Leaderboard
