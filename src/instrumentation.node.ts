@@ -19,7 +19,7 @@ export async function register() {
       const port = parseInt(process.env.SOCKET_PORT || '3001', 10);
       const corsOrigin = process.env.NEXT_PUBLIC_SOCKET_CORS_ORIGIN
         ? process.env.NEXT_PUBLIC_SOCKET_CORS_ORIGIN.split(',')
-        : ['http://localhost:3000', 'https://friends.obby.space'];
+        : ['http://localhost:3000', 'https://friends.obyte.org'];
 
       console.log('[Socket.IO] Port:', port);
       console.log('[Socket.IO] CORS origins:', corsOrigin);
