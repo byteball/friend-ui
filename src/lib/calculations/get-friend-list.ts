@@ -5,6 +5,7 @@ interface IFriendData {
   address: string;
   date: number;
   rewards: IFriendRewards;
+  isReferrer?: boolean;
 }
 
 export interface IFriendRewards {
@@ -14,6 +15,7 @@ export interface IFriendRewards {
 }
 
 export const getFriendList = (state: IAaState, address: string): IFriendData[] => {
+
   return Object.entries(state)
     .filter(([key]) => key.startsWith(`friend_${address}_`))
     .map(([key, value]) => {
@@ -31,6 +33,8 @@ export const getFriendList = (state: IAaState, address: string): IFriendData[] =
         ? state[`friendship_${address}_${value}`]
         : state[`friendship_${value}_${address}`];
 
+      const referrers = Object.keys(friendship?.initial?.rewards?.referrers || {});
+
       let rewards: IFriendRewards = {
         liquid: 0,
         locked: 0,
@@ -47,7 +51,8 @@ export const getFriendList = (state: IAaState, address: string): IFriendData[] =
       return ({
         address: value,
         date: date.getTime() / 1000,
-        rewards
+        rewards,
+        isReferrer: referrers.includes(address),
       });
     })
 }

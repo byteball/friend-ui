@@ -32,6 +32,7 @@ export const FriendsList: FC<IFriendsListProps> = async ({ address }) => {
         rewards={friend.rewards}
         friendAddress={friend.address}
         date={friend.date}
+        isReferrer={friend.isReferrer}
       />)}
     </div>
   </>
