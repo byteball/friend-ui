@@ -89,25 +89,25 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
         <Collapsible open={!collapsedTotalBalance} onOpenChange={() => setCollapsedTotalBalance(!collapsedTotalBalance)}>
           <CollapsibleTrigger asChild className="mt-2 text-2xl lg:text-3xl">
             <div className={cn(showCollapse ? "cursor-pointer select-none" : "")}>
-              {toLocalString(Number(totalBalance / 10 ** frdDecimals).toPrecision(frdDecimals))} <small>{frdSymbol}</small>
+              {toLocalString(Number((totalBalance || 0) / 10 ** frdDecimals).toPrecision(frdDecimals))} <small>{frdSymbol}</small>
               {showCollapse ? <>
                 {collapsedTotalBalance
-                  ? <ChevronDown className="inline-block ml-2 rotate-0 transition-transform duration-200" size={24} />
-                  : <ChevronDown className="inline-block ml-2 -rotate-180 transition-transform duration-200" size={24} />}
+                  ? <ChevronDown className="inline-block ml-2 transition-transform duration-200 rotate-0" size={24} />
+                  : <ChevronDown className="inline-block ml-2 transition-transform duration-200 -rotate-180" size={24} />}
               </> : null}
             </div>
 
           </CollapsibleTrigger>
 
-          <CollapsibleContent className="CollapsibleContent mt-2 grid text-sm gap-3">
-            <Separator orientation="horizontal" className="mt-2 w-full" />
+          <CollapsibleContent className="grid gap-3 mt-2 text-sm CollapsibleContent">
+            <Separator orientation="horizontal" className="w-full mt-2" />
 
             {Object.entries(userData?.balances || [])
               .sort(sortBalancesByPriority)
               .map(([asset, balance]) => (
                 <Suspense fallback={<div className="grid gap-1">
-                  <Skeleton className="h-6 w-full" />
-                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="w-full h-6" />
+                  <Skeleton className="w-full h-10" />
                 </div>} key={asset}>
                   <ProfileAssetBalanceItem
                     asset={asset}
@@ -123,7 +123,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
           </CollapsibleContent>
         </Collapsible>
 
-        {userData?.unlock_date ? <div className="mt-2 flex justify-between items-center">
+        {userData?.unlock_date ? <div className="flex items-center justify-between mt-2">
           <div className="text-md text-muted-foreground">
             Unlock date: {formatDateAsUTC(parseDateFromAA(userData.unlock_date))}
           </div>
