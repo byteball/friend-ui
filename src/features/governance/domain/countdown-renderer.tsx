@@ -29,7 +29,7 @@ export const challengingCountdownRenderer = (props: CountdownRenderProps, commit
     if (days) date += `${days}d `;
     if (hours) date += `${hours}h `;
     if (minutes) date += `${minutes}m `;
-    if (seconds || (!days && !hours && !minutes)) date += `${seconds}s`;
+    if (seconds && (!days && !hours && !minutes)) date += `${seconds}s`;
 
     return date
   }
