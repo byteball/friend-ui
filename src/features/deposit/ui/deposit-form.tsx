@@ -31,7 +31,7 @@ interface DepositFormProps { }
 export const DepositForm: FC<DepositFormProps> = () => {
   const [currency, setCurrency] = useState<TokenMeta>(GBYTE_TOKEN_META);
   const btnRef = useRef<HTMLButtonElement>(null);
-  const [amount, setAmount] = useState<string>("0.1");
+  const [amount, setAmount] = useState<string>("10");
   const [term, setTerm] = useState<number>(0);
   const data = useData();
   const frdToken = data.getFrdToken();
