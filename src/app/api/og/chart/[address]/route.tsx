@@ -194,7 +194,7 @@ export async function GET(
 ) {
   const { address: userAddress } = await params;
 
-  const logoAbsPath = path.join(process.cwd(), "public", "logo.svg");
+  const logoAbsPath = path.join(process.cwd(), "public", "logo-dark.svg");
   const logoFile = readFileSync(logoAbsPath).toString("utf-8");
 
   const rewardEvents = await fetch(`${appConfig.NOTIFY_URL}/history/${userAddress}`).then(res => res.json()).catch(() => []);

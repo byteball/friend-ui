@@ -50,7 +50,7 @@ export async function GET(
   const currentGhostImageBuffer = readFileSync(currentGhostImagePath);
   const currentGhostImageBase64 = `data:image/png;base64,${currentGhostImageBuffer.toString('base64')}`;
 
-  const logoAbsPath = path.join(process.cwd(), "public", "logo.svg");
+  const logoAbsPath = path.join(process.cwd(), "public", "logo-dark.svg");
   const logoFile = readFileSync(logoAbsPath).toString("utf-8");
 
   const ghost = generatePuzzleSvg({
