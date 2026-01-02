@@ -107,7 +107,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
     <div className="grid gap-4 text-muted-foreground">
       <div>Before depositing, you must be attested on <a href={appConfig.TELEGRAM_BOT_URL}>telegram</a> and/or <a href={appConfig.DISCORD_BOT_URL}>discord</a>. This is important to notify you about follow-up rewards in the future.</div>
 
-      <div>If you deposit less than {toLocalString(agentParams.min_balance_instead_of_real_name / 10 ** (frdMeta?.decimals ?? 0))} {frdMeta?.symbol} (or equivalent), you must be <a href="#">real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
+      <div>If you deposit less than {toLocalString(agentParams.min_balance_instead_of_real_name / 10 ** (frdMeta?.decimals ?? 0))} {frdMeta?.symbol} (or equivalent), you must be <a href={appConfig.REAL_NAME_BOT_URL}>real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
     </div>
 
     <FieldSet>
