@@ -85,7 +85,7 @@ const CookieConsent = React.forwardRef<HTMLDivElement, CookieConsentProps>(
       className: cn(
         containerClasses,
         variant === "mini"
-          ? "left-0 right-0 sm:left-4 bottom-4 w-full sm:max-w-3xl"
+          ? "left-0 right-0 sm:left-4 bottom-4 w-full sm:max-w-lg"
           : "bottom-0 left-0 right-0 sm:left-4 sm:bottom-4 w-full sm:max-w-md",
       ),
       ...props,
