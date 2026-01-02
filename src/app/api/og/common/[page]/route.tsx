@@ -39,7 +39,7 @@ export async function GET(
 
   if (currentLine) lines.push(currentLine);
 
-  const logoAbsPath = path.join(process.cwd(), "public", "logo.svg");
+  const logoAbsPath = path.join(process.cwd(), "public", "logo-dark.svg");
   const logoFile = readFileSync(logoAbsPath).toString("utf-8");
 
   try {

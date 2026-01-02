@@ -9,7 +9,7 @@ import { toLocalString } from "@/lib/to-local-string";
 export async function GET(
   _req: NextRequest,
 ) {
-  const logoAbsPath = path.join(process.cwd(), "public", "logo.svg");
+  const logoAbsPath = path.join(process.cwd(), "public", "logo-dark.svg");
   const logoFile = readFileSync(logoAbsPath).toString("utf-8");
 
   try {
@@ -28,7 +28,7 @@ export async function GET(
       return {
         rank: index + 1,
         username: username || user.address.slice(0, 8) + "...",
-        amount: toLocalString(+Number(user.amount / 10 ** decimals).toFixed(6)),
+        amount: toLocalString(+Number(user.amount / 10 ** decimals).toPrecision(4)),
         friends: user.friends,
       };
     });
@@ -146,7 +146,7 @@ export async function GET(
                   text-anchor="start"
                   dominant-baseline="middle"
                 >
-                  ${user.username.length > 20 ? user.username.slice(0, 20) + '...' : user.username}
+                  ${user.username.length > 14 ? user.username.slice(0, 12) + '...' : user.username.slice(0, 14)}
                 </text>
                 
                 <!-- Amount -->
