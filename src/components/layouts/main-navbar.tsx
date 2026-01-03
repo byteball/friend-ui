@@ -1,4 +1,3 @@
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { getCookie } from 'cookies-next/server';
 import { Menu } from "lucide-react";
 import { cookies } from "next/headers";
@@ -17,7 +16,7 @@ import { NavbarLinkItem, NavigationLink } from "./navbar-link-item";
 
 import { WALLET_COOKIE_NAME } from "@/constants";
 import { AddWalletModal } from "../modals/add-wallet";
-import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 
 const name = "Obyte Friends"
 
@@ -37,51 +36,44 @@ export default async function MainNavbar({ className }: NavbarProps) {
   return (
     <header className={cn("relative top-0 z-50 mb-10 px-8 pb-4 font-semibold", className)}>
       <div className="absolute left-0 w-full h-24 fade-bottom bg-background/15"></div>
-      <div className="relative mx-auto max-w-container">
-        <NavbarComponent>
-          <NavbarLeft>
-            <Link
-              href="/"
-              prefetch={false}
-              className="flex items-center gap-2 text-xl font-bold  ui-link"
-            >
-              <Image src="/logo.svg" alt="Logo" width={32} height={32} />
-              {name}
-            </Link>
-
-            {menu.map((link) => (
-              <NavbarLinkItem
-                key={link.href}
-                link={link}
-                className="hidden text-sm text-muted-foreground hover:text-white md:block"
+      <Sheet>
+        <div className="relative mx-auto max-w-container">
+          <NavbarComponent>
+            <NavbarLeft>
+              <Link
+                href="/"
                 prefetch={false}
+                className="flex items-center gap-2 text-xl font-bold  ui-link"
+              >
+                <Image src="/logo.svg" alt="Logo" width={32} height={32} />
+                {name}
+              </Link>
+
+              {menu.map((link) => (
+                <NavbarLinkItem
+                  key={link.href}
+                  link={link}
+                  className="hidden text-sm text-muted-foreground hover:text-white md:block"
+                  prefetch={false}
+                />
+              ))}
+
+            </NavbarLeft>
+            <NavbarRight>
+              {walletAddress ? (
+                <NavbarLinkItem
+                  link={{ text: "Profile", href: `/${walletAddress}` }}
+                  className="hidden text-sm text-muted-foreground hover:text-white/50 md:block"
+                  prefetch={false}
+                />
+              ) : null}
+
+              <AddWalletModal
+                walletAddress={walletAddress}
+                triggerClassName="!mr-0 hidden md:block"
               />
-            ))}
 
-          </NavbarLeft>
-          <NavbarRight>
-            {/* <Link
-              href="https://obyte.org/#download"
-              target="_blank"
-              className="hidden text-sm md:block"
-            >
-              Download wallet
-            </Link> */}
 
-            {walletAddress ? (
-              <NavbarLinkItem
-                link={{ text: "Profile", href: `/${walletAddress}` }}
-                className="hidden text-sm text-muted-foreground hover:text-white/50 md:block"
-                prefetch={false}
-              />
-            ) : null}
-
-            <AddWalletModal
-              walletAddress={walletAddress}
-              triggerClassName="!mr-0 hidden md:block"
-            />
-
-            <Sheet>
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
@@ -93,34 +85,38 @@ export default async function MainNavbar({ className }: NavbarProps) {
                 </Button>
               </SheetTrigger>
 
-              <SheetContent side="right">
-                <VisuallyHidden asChild>
-                  <SheetTitle />
-                </VisuallyHidden>
-                <nav className="grid gap-6 text-lg font-medium">
-                  <Link
-                    href="/"
-                    prefetch={false}
-                    className="flex items-center gap-2 text-xl font-bold ui-link"
-                  >
-                    <Image src="/logo.svg" alt="Logo" width={32} height={32} /> <span>{name}</span>
-                  </Link>
 
-                  {menu.map((link) => (
-                    <SheetClose key={link.href} asChild>
-                      <NavbarLinkItem
-                        link={link}
-                        className="text-muted-foreground hover:text-foreground"
-                        prefetch={false}
-                      />
-                    </SheetClose>
-                  ))}
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </NavbarRight>
-        </NavbarComponent>
-      </div>
+            </NavbarRight>
+          </NavbarComponent>
+        </div>
+
+        <SheetContent side="right">
+          <SheetHeader>
+            <SheetTitle>
+              <Link
+                href="/"
+                prefetch={false}
+                className="flex items-center gap-2 text-xl font-bold ui-link"
+              >
+                <Image src="/logo.svg" alt="Logo" width={32} height={32} /> <span>{name}</span>
+              </Link>
+            </SheetTitle>
+            <SheetDescription />
+          </SheetHeader>
+
+          <nav className="grid gap-6 text-lg font-medium px-4">
+            {menu.map((link) => (
+              <NavbarLinkItem
+                key={link.href}
+                link={link}
+                className="text-muted-foreground hover:text-foreground"
+                prefetch={false}
+              />
+            ))}
+          </nav>
+          <SheetFooter />
+        </SheetContent>
+      </Sheet>
     </header>
   );
 }

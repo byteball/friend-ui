@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { SheetClose } from "../ui/sheet"
 
 export interface NavigationLink {
   text: string
@@ -37,13 +38,15 @@ export function NavbarLinkItem({
   }, [pathname, link.href])
 
   return (
-    <Link
-      href={link.href}
-      prefetch={prefetch}
-      className={cn(className, isActive && activeClassName, "ui-link text-md")}
-      {...props}
-    >
-      {link.text}
-    </Link>
+    <SheetClose asChild>
+      <Link
+        href={link.href}
+        prefetch={prefetch}
+        className={cn(className, isActive && activeClassName, "ui-link text-md")}
+        {...props}
+      >
+        {link.text}
+      </Link>
+    </SheetClose>
   )
 }
