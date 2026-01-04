@@ -95,7 +95,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
     from_address: walletAddress,
     data: {
       deposit: 1,
-      deposit_asset: currency?.asset === 'base' ? undefined : currency?.asset,
+      deposit_asset: currency?.asset === 'base' || currency?.asset === frdAsset ? undefined : currency?.asset,
       term: selectedTerm,
       ref: addReferralAsData ? referralAddress : undefined
     }
