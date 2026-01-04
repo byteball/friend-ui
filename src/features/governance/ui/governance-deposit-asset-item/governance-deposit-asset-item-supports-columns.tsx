@@ -10,6 +10,7 @@ import { toLocalString } from "@/lib/to-local-string";
 
 import { QRButton } from "@/components/ui/qr-button";
 import { generateLink } from "@/lib/generate-link";
+import { getVPBySqrtBalance } from "@/lib/get-vp-by-sqrt-balance";
 import { IAggregatedData } from "../../domain/get-aggregated-votes";
 
 interface TableMeta {
@@ -41,7 +42,7 @@ export const governanceDepositAssetItemSupportsColumns: ColumnDef<IAggregatedDat
       return <Dialog>
         <DialogTrigger asChild>
           <Button variant="link" className="p-0 m-0 link-style">
-            {toLocalString(amount / 10 ** meta.frdToken.decimals)}
+            {toLocalString(getVPBySqrtBalance(amount, meta.frdToken.decimals))}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
