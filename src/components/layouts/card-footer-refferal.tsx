@@ -97,7 +97,7 @@ export const CardFooterReferral: FC<CardFooterReferralProps> = ({ hasDeposit = f
               timeAgo="Just now"
               avatarUrl="/logo.svg"
               ogTitle="Obyte Friends"
-              ogImageUrl={`/api/og/${type === "streak" ? "puzzle" : type}/${address}`}
+              ogImageUrl={`/api/og/${type === "streak" ? "puzzle" : type}/${address}?t=${Math.floor(Date.now() / (60 * 1000))}`}
               tweetText={tweetTextByType[type]}
             />
           </div>

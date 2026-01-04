@@ -8,6 +8,7 @@ import { env } from "@/env";
 import { getRequiredStreak } from "@/features/ghost/domain/get-required-streak";
 import { getGhostsFromVars } from "@/features/profile/domain/get-ghosts-from-vars";
 import { getFriendList } from "@/lib/calculations/get-friend-list";
+import { getCurrentStreak } from "@/lib/get-current-streak";
 import { getNumberByAddress } from "@/lib/get-number-by-address";
 import { isValidAddress } from "@/lib/is-valid-address";
 
@@ -22,6 +23,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ add
   const state = __GLOBAL_STORE__?.getState();
   const userData = state?.[`user_${userAddress}`] as IUserData | undefined;
   const requiredStreak = getRequiredStreak(userData?.current_ghost_num);
+  const currentStreak = getCurrentStreak(userData);
 
   const allGhosts = getGhostsFromVars(state ?? {});
   const userFriends = getFriendList(state ?? {}, userAddress);
@@ -54,7 +56,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ add
     height: PUZZLE_IMAGE_SIZE,
     rows: Math.sqrt(requiredStreak),
     columns: Math.sqrt(requiredStreak),
-    filledCells: requiredStreak - (userData?.current_streak || 0),
+    filledCells: requiredStreak - currentStreak,
   });
 
   let buffer: Buffer;

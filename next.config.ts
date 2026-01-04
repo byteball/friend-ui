@@ -6,6 +6,13 @@ const nextConfig: NextConfig = {
   },
   reactCompiler: true,
   output: "standalone",
+  images: {
+    localPatterns: [
+      {
+        pathname: '/*/**',
+      }
+    ]
+  },
   async rewrites() {
     return [
       {

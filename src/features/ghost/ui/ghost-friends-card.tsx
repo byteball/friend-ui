@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { WALLET_COOKIE_NAME } from "@/constants";
 import { generateLink } from "@/lib/generate-link";
+import { getCurrentStreak } from "@/lib/get-current-streak";
 import cn from "classnames";
 import { useReactiveGetCookie } from "cookies-next";
 import Image from 'rc-image';
@@ -35,6 +36,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
   const requiredStreak = getRequiredStreak(userData?.current_ghost_num);
   const getCookie = useReactiveGetCookie();
   const walletAddress = getCookie(WALLET_COOKIE_NAME);
+  const currentStreak = getCurrentStreak(userData);
 
   const url = generateLink({
     amount: 1e4,
@@ -52,7 +54,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
         <CardTitle className="min-h-12">
           {isLoading
             ? <Skeleton className="w-[calc(100%-20px)] h-12" />
-            : <div className="max-w-lg leading-6">On {userData?.current_streak || 0} out of {requiredStreak} days streak to become friends with the ghost of {ghostName}</div>}
+            : <div className="max-w-lg leading-6">On {currentStreak} out of {requiredStreak} days streak to become friends with the ghost of {ghostName}</div>}
         </CardTitle>
       </CardHeader>
       <CardContent
@@ -89,7 +91,7 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
               <Skeleton className="w-full h-4" />
               <Skeleton className="w-full h-4" />
             </div> : <div className="gap-2 mt-4">
-              <div>Current streak: {userData?.current_streak || 0} / {requiredStreak} days</div>
+              <div>Current streak: {currentStreak} / {requiredStreak} days</div>
               <div>Total streak: {userData?.total_streak || 0} day(s)</div>
             </div>}
 
@@ -99,12 +101,12 @@ export const GhostFriendsCard: FC<IGhostFriendsProps> = ({ userData, address }) 
                 : <Tooltip>
                   <TooltipTrigger asChild>
                     <div>
-                      <QRButton href={url} disabled={isLoading || (userData?.current_streak || 0) < requiredStreak}>
+                      <QRButton href={url} disabled={isLoading || currentStreak < requiredStreak}>
                         Become friends
                       </QRButton>
                     </div>
                   </TooltipTrigger>
-                  {((userData?.current_streak || 0) < requiredStreak) && <TooltipContent className="max-w-[320px]">
+                  {(currentStreak < requiredStreak) && <TooltipContent className="max-w-[320px]">
                     <p>
                       You need to complete the <b>{requiredStreak}-day</b> streak to become friends with <b>{ghostName}</b>
                     </p>

@@ -8,6 +8,7 @@ import { env } from "@/env";
 import { getRequiredStreak } from "@/features/ghost/domain/get-required-streak";
 import { getGhostsFromVars } from "@/features/profile/domain/get-ghosts-from-vars";
 import { getFriendList } from "@/lib/calculations/get-friend-list";
+import { getCurrentStreak } from "@/lib/get-current-streak";
 import { getNumberByAddress } from "@/lib/get-number-by-address";
 import { getProfileUsername } from "@/lib/get-profile-username.server";
 import { isValidAddress } from "@/lib/is-valid-address";
@@ -30,6 +31,7 @@ export async function GET(
 
   const userGhostFriends = userFriends.filter(f => !isValidAddress(f.address));
   const ghostFriendsIds = userGhostFriends.map(f => allGhosts.findIndex(g => g.name === f.address));
+  const currentStreak = getCurrentStreak(userData);
 
   const selectedGhost = await fetch(`${env.NEXT_PUBLIC_NOTIFY_URL}/user-ghost/${userAddress}`)
     .then(res => res.json()).then(data => data.ghost_name || null as string | null)
@@ -59,7 +61,7 @@ export async function GET(
     height: 400,
     rows: Math.sqrt(requiredStreak),
     columns: Math.sqrt(requiredStreak),
-    filledCells: requiredStreak - (userData?.current_streak || 0),
+    filledCells: requiredStreak - currentStreak,
   });
 
   try {
@@ -153,7 +155,7 @@ export async function GET(
               font-weight="700"
               fill="#1d4ed8"
             >
-              ${userData?.current_streak || 0} out of ${requiredStreak}
+              ${currentStreak} out of ${requiredStreak}
             </text>
 
             <text

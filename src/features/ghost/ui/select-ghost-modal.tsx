@@ -5,6 +5,7 @@ import { PuzzleImage } from "@/components/ui/puzzle-image";
 import { QRButton } from "@/components/ui/qr-button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getCurrentStreak } from "@/lib/get-current-streak";
 import { FC, ReactElement, useState } from "react";
 import { getRequiredStreak } from "../domain/get-required-streak";
 import { useUserGhost } from "../domain/use-user-ghost";
@@ -26,7 +27,7 @@ export const SelectGhostModal: FC<ISelectGhostModalProps> = ({ children, address
   const userData = getUserData(address);
 
   const requiredStreak = getRequiredStreak(userData?.current_ghost_num);
-  const currentStreak = userData?.current_streak || 0;
+  const currentStreak = getCurrentStreak(userData || undefined);
   const currentGhostId = allGhosts.findIndex(g => g.name === ghostName);
   const selectedGhostId = selectedGhostIndex !== null ? selectedGhostIndex : currentGhostId;
 

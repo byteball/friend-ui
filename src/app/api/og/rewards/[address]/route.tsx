@@ -6,6 +6,7 @@ import sharp from "sharp";
 import { generatePuzzleSvg } from "@/components/ui/puzzle-image-unoptimized";
 import { getRequiredStreak } from "@/features/ghost/domain/get-required-streak";
 import { ghostList } from "@/ghost-list";
+import { getCurrentStreak } from "@/lib/get-current-streak";
 import { getProfileUsername } from "@/lib/get-profile-username.server";
 
 export const dynamic = "force-dynamic"; // Avoid caching during development
@@ -19,6 +20,7 @@ export async function GET(
   const state = __GLOBAL_STORE__?.getState();
   const userData = state?.[`user_${address}`] as IUserData | undefined;
   const username = (await getProfileUsername(address)) || "Anonymous";
+  const currentStreak = getCurrentStreak(userData);
 
   const requiredStreak = getRequiredStreak(userData?.current_ghost_num);
 
@@ -37,7 +39,7 @@ export async function GET(
     height: 400,
     rows: Math.sqrt(requiredStreak),
     columns: Math.sqrt(requiredStreak),
-    filledCells: userData?.current_streak || 0,
+    filledCells: currentStreak,
   });
 
   try {
@@ -131,7 +133,7 @@ export async function GET(
             font-weight="700"
             fill="#1d4ed8"
           >
-            ${userData?.current_streak || 0} out of ${requiredStreak}
+            ${currentStreak} out of ${requiredStreak}
           </text>
 
         <text
