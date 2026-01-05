@@ -80,7 +80,7 @@ const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
               ref={ref}
               className={cn("rounded-tl-none rounded-bl-none cursor-pointer",
                 { "pointer-events-none opacity-50 select-none": disabled },
-                props.variant === "link" ? "pl-0 py-0 h-auto link-style" : "pl-2",
+                props.variant === "link" ? "p-0 h-auto link-style" : "pl-2",
               )}
             >
               <a href={href} tabIndex={-1}>
