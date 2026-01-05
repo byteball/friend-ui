@@ -26,7 +26,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
   address
 }) => {
   const username = await getProfileUsername(address) ?? address.slice(0, 6) + "..." + address.slice(-4);
-  const isActive = isActiveUser(userData);
+  const isActiveProfile = isActiveUser(userData);
 
   const store = globalThis.__GLOBAL_STORE__;
 
@@ -36,6 +36,11 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
     console.error("error(getProfileUsername): global store missing");
     return null;
   }
+
+  const userCookies = await cookies()
+  const walletAddress = userCookies.get(WALLET_COOKIE_NAME)?.value;
+
+  const isActiveWallet = walletAddress ? isActiveUser(store.state.get(`user_${walletAddress}`) as (IUserData | undefined)) : false;
 
   const tgAttestation = await store.getTgAttestation(address);
   const discordAttestation = await store.getDiscordAttestation(address);
@@ -55,8 +60,6 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
     }
   });
 
-  const userCookies = await cookies()
-  const walletAddress = userCookies.get(WALLET_COOKIE_NAME)?.value;
 
   return (
     <>
@@ -66,21 +69,26 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
             {username}
           </h1>
 
-          <ActiveUserLabel isActive={isActive} />
+          <ActiveUserLabel isActive={isActiveProfile} />
         </div>
 
-        {walletAddress !== address ? <div className="flex flex-col mt-4 sm:mt-0 sm:text-right  sm:items-end gap-2">
+        {walletAddress && walletAddress !== address ? <div className="flex flex-col mt-4 sm:mt-0 sm:text-right  sm:items-end gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
               <div>
-                <QRButton href={connectUrl} disabled={!isActive} variant="secondary">
+                <QRButton href={connectUrl} disabled={!isActiveProfile || !isActiveWallet} variant="link">
                   Add friend
                 </QRButton>
               </div>
             </TooltipTrigger>
-            {!isActive ? <TooltipContent>
+            {!isActiveProfile && isActiveWallet ? <TooltipContent>
               {username} doesn't have <b>locked</b> balance
             </TooltipContent> : null}
+
+            {!isActiveWallet ? <TooltipContent>
+              You don't have <b>locked</b> balance
+            </TooltipContent> : null}
+
           </Tooltip>
           <span className="text-md text-muted-foreground">Please contact {username} first</span>
         </div> : null}
