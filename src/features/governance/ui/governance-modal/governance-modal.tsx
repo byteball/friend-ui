@@ -26,8 +26,9 @@ interface GovernanceModalProps<K extends keyof AgentParams> {
 
 export const GovernanceModal = <K extends keyof AgentParams>({ children, name, defaultValue, isNew = true }: GovernanceModalProps<K>) => {
   const [state, setState] = useState<AgentParams[K] | null>();
-  const { getGovernanceAA } = useData();
+  const { getGovernanceAA, getFrdToken } = useData();
   const btnRef = useRef<HTMLButtonElement>(null);
+  const frdToken = getFrdToken();
 
   const voteUrl = state ? generateLink({
     amount: 10000,
@@ -90,6 +91,7 @@ export const GovernanceModal = <K extends keyof AgentParams>({ children, name, d
 
         {name === "min_balance_instead_of_real_name"
           ? <GovernanceModalContentAmount
+            suffix={frdToken ? frdToken.symbol : undefined}
             defaultValue={defaultValue ? Number(defaultValue) : undefined}
             onChange={(value) => setState((value) as AgentParams[K])}
             actionBtnRef={btnRef}

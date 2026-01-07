@@ -7,10 +7,11 @@ interface GovernanceModalContentAmountProps<K extends keyof AgentParams> {
   onChange?: (value: AgentParams[K] | null) => void;
   actionBtnRef: RefObject<HTMLButtonElement | null>;
   isNew?: boolean;
+  suffix?: string;
 }
 
 
-export const GovernanceModalContentAmount: FC<GovernanceModalContentAmountProps<keyof AgentParams>> = ({ onChange, defaultValue, isNew = true, actionBtnRef }) => {
+export const GovernanceModalContentAmount: FC<GovernanceModalContentAmountProps<keyof AgentParams>> = ({ onChange, defaultValue, isNew = true, actionBtnRef, suffix }) => {
   const [value, setValue] = useState(defaultValue ? String(defaultValue / 10 ** 9) : '');
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export const GovernanceModalContentAmount: FC<GovernanceModalContentAmountProps<
         allowLeadingZeros={false}
         onKeyDown={handleKeyDown}
         // pass custom input
-        customInput={(props) => <Input suffix="GB" {...props} />}
+        customInput={(props) => <Input suffix={suffix} {...props} />}
         // returns parsed values; values.value is numeric string like "0.5"
         onValueChange={(values: NumberFormatValues) => {
           let value = values.value ?? '';
