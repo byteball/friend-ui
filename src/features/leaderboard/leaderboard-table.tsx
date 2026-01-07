@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { useData } from "@/app/context";
 import { DataTableProps, ILeaderboardTableMeta } from "./domain/types";
@@ -35,11 +35,11 @@ export function LeaderboardTable({
     { id: "amount", desc: true },
   ]);
 
-  const meta: ILeaderboardTableMeta = {
+  const meta: ILeaderboardTableMeta = useMemo(() => ({
     frdDecimals,
     frdSymbol,
     usernames
-  }
+  }), [frdDecimals, frdSymbol, usernames])
 
   const table = useReactTable<UserRank>({
     data: leaderboardData,

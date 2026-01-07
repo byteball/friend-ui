@@ -4,6 +4,7 @@ import { getGhostsFromVars, IGhost } from '@/features/profile/domain/get-ghosts-
 import { getFriendList } from '@/lib/calculations/get-friend-list';
 import { getNumberByAddress } from '@/lib/get-number-by-address';
 import { isValidAddress } from '@/lib/is-valid-address';
+import { useMemo } from 'react';
 import useSWR from 'swr';
 
 interface ICurrentGhost {
@@ -25,12 +26,12 @@ interface IUseCurrentGhostResult {
 
 export function useUserGhost(address: string): IUseCurrentGhostResult {
   const { state } = useData();
-  const allGhosts = getGhostsFromVars(state ?? {});
+  const allGhosts = useMemo(() => getGhostsFromVars(state ?? {}), [state]);
   const { data, error, isLoading } = useSWR<ICurrentGhost>(`${appConfig.NOTIFY_URL}/user-ghost/${address}`);
 
-  const userFriends = getFriendList(state ?? {}, address);
-  const userGhostFriends = userFriends.filter(f => !isValidAddress(f.address));
-  const ghostFriendIds = userGhostFriends.map(f => allGhosts.findIndex(g => g.name === f.address));
+  const userFriends = useMemo(() => getFriendList(state ?? {}, address), [state, address]);
+  const userGhostFriends = useMemo(() => userFriends.filter(f => !isValidAddress(f.address)), [userFriends]);
+  const ghostFriendIds = useMemo(() => userGhostFriends.map(f => allGhosts.findIndex(g => g.name === f.address)), [userGhostFriends, allGhosts]);
 
   let ghostName = data?.ghost_name || null;
 

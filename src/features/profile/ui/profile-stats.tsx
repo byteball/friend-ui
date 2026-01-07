@@ -3,7 +3,7 @@
 import { useGetCookie } from "cookies-next";
 import { isAfter, parseISO } from "date-fns";
 import { toZonedTime } from 'date-fns-tz';
-import { FC, Suspense, useState } from "react";
+import { FC, Suspense, useMemo, useState } from "react";
 
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { WALLET_COOKIE_NAME } from "@/constants";
@@ -52,7 +52,7 @@ export const ProfileStats: FC<ProfileStatsProps> = ({ address, totalBalance }) =
 
   const totalRewards = liquidRewards + lockedRewards; // newUserRewards are not included in locked rewards
 
-  const friends = getFriendList(state, address);
+  const friends = useMemo(() => getFriendList(state, address), [state, address]);
 
 
   const unlockDate = userData?.unlock_date ? parseISO(userData.unlock_date) : undefined;
