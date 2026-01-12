@@ -9,69 +9,93 @@ import { appConfig } from "@/app-config";
 const REQUEST_CONFIG = {
   refreshInterval: 30_000, // refresh every 30 seconds
   dedupingInterval: 15_000,
-}
+};
 
-export const useExchangeRate = (inputAsset: string, outputAsset: string | null) => {
+type ExchangeRateKey = ["exchange-rate", string, string, boolean];
+
+export const useExchangeRate = (inputAsset: string | null, outputAsset: string | null, isRawValue: boolean = false) => {
   const aaData = useData();
   const frdToken = aaData.getFrdToken();
   const tokens = aaData.tokens;
 
-  const tInput = tokens[inputAsset];
-  const tOutput = outputAsset ? tokens[outputAsset] : null;
+  const swrKey: ExchangeRateKey | null = inputAsset && outputAsset ? [
+    "exchange-rate",
+    inputAsset,
+    outputAsset,
+    isRawValue
+  ] : null;
 
-  const { data, isLoading, error, isValidating, } = useSWR([inputAsset, outputAsset], async ([inputAsset, outputAsset]: [string, string, string]) => {
+  const fetchExchangeRate = async ([, from, to]: ExchangeRateKey): Promise<number> => {
+    if (!from || !to) return 0;
+    if (from === to) return 1;
 
-    if (!inputAsset || !outputAsset) return 0;
-    if (inputAsset === outputAsset) return 1;
+    const inputToken = tokens[from];
+    const outputToken = tokens[to];
 
-    if (inputAsset !== "base" && outputAsset !== "base") {
-      // both are deposit tokens
-
-      const asset = inputAsset === frdToken.asset ? outputAsset : inputAsset;
-      const ceilingPrice = getCeilingPrice(aaData.state.constants);
-
-      const depositAssetRateRange = await executeGetter(appConfig.AA_ADDRESS, 'get_deposit_asset_exchange_rates', [asset]) as { min: number; max: number };
-
-      const depositAssetRate = depositAssetRateRange.max;
-
-      const decimals = 10 ** (tInput.decimals - tOutput.decimals);
-
-      if (inputAsset === frdToken.asset) { // FRD to other asset (not GBYTE)
-        return (ceilingPrice / depositAssetRate) * decimals;
-      } else if (outputAsset === frdToken.asset) { // other asset (not GBYTE) to FRD
-        return (depositAssetRate / ceilingPrice) * decimals;
-
-      } else {
-        throw new Error('Invalid asset combination');
-      }
-
-    } else if (
-      (inputAsset === "base" || outputAsset === "base")
-      && (inputAsset === frdToken.asset || outputAsset === frdToken.asset)
-    ) {
-
-      const ceilingPrice = getCeilingPrice(aaData.state.constants);
-
-      if (inputAsset === frdToken.asset) { // FRD to GBYTE 
-        return ceilingPrice;
-      } else if (outputAsset === frdToken.asset) { // GBYTE to FRD
-        return 1 / ceilingPrice;
-      } else {
-        throw new Error('Invalid asset combination');
-      }
-
-    } else {
-      throw new Error('Invalid asset combination');
+    if (!inputToken || !outputToken) {
+      throw new Error("Unknown asset provided to exchange rate fetcher");
     }
-  },
-    REQUEST_CONFIG
+
+    const ceilingPrice = getCeilingPrice(aaData.state.constants);
+
+    if (from !== "base" && to !== "base") {
+      // both are deposit tokens
+      const asset = from === frdToken.asset ? to : from;
+
+      const { max } = await executeGetter(
+        appConfig.AA_ADDRESS,
+        "get_deposit_asset_exchange_rates",
+        [asset],
+      ) as { min: number; max: number };
+
+      const decimals = 10 ** (inputToken.decimals - outputToken.decimals);
+
+      const depositAssetRate = isRawValue ? max / 1.1 : max;
+
+      if (from === frdToken.asset) {
+        // FRD to other asset (not GBYTE)
+        return (ceilingPrice / depositAssetRate) * decimals;
+      }
+
+      if (to === frdToken.asset) {
+        // other asset (not GBYTE) to FRD
+        return (depositAssetRate / ceilingPrice) * decimals;
+      }
+
+      throw new Error("Invalid asset combination");
+    }
+
+    if (
+      (from === "base" || to === "base")
+      && (from === frdToken.asset || to === frdToken.asset)
+    ) {
+      if (from === frdToken.asset) {
+        // FRD to GBYTE
+        return ceilingPrice;
+      }
+
+      if (to === frdToken.asset) {
+        // GBYTE to FRD
+        return 1 / ceilingPrice;
+      }
+
+      throw new Error("Invalid asset combination");
+    }
+
+    throw new Error("Invalid asset combination");
+  };
+
+  const { data, isLoading, error, isValidating } = useSWR<number>(
+    swrKey,
+    fetchExchangeRate,
+    REQUEST_CONFIG,
   );
 
   return {
     data,
     isValidating,
     isLoading,
-    error
-  }
+    error,
+  };
 };
 
