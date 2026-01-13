@@ -1,10 +1,14 @@
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Geist } from "next/font/google";
+
 
 import Navbar from "@/components/layouts/main-navbar";
 
 import { ClientProviders } from "./client-providers";
 
 import CookieConsent from "@/components/blocks/cookie-consent";
+
+import { env } from "@/env";
 
 import "./globals.css";
 
@@ -128,6 +132,10 @@ export default async function RootLayout({
 
         <CookieConsent variant="mini" />
       </body>
+
+      {env.NEXT_PUBLIC_GA_MEASUREMENT_ID ? (
+        <GoogleAnalytics gaId={env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+      ) : null}
     </html>
   );
 }
