@@ -37,7 +37,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
   const frdToken = data.getFrdToken();
 
   const getCookie = useGetCookie();
-  const { data: rate, isLoading: isRateLoading } = useExchangeRate(currency.asset, data.state.constants.asset, true);
+  const { data: rate, isLoading: isRateLoading } = useExchangeRate(currency.asset, data.state.constants.asset);
 
   const walletAddress = getCookie(WALLET_COOKIE_NAME) as string | undefined;
   const referralAddress = getCookie(REF_COOKIE_NAME) as string | undefined;
