@@ -11,6 +11,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SITE_URL: z.string().default("http://localhost:3000"),
     NEXT_PUBLIC_SOCKET_URL: z.string().default("http://localhost:3001"),
     NEXT_PUBLIC_NOTIFY_URL: z.string().default("http://localhost:3050"),
+    NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().optional(),
     NEXT_PUBLIC_SOCKET_CORS_ORIGIN: z.string().default("http://localhost:3000"),
     // Default to empty string so Docker builds don't fail when the env var is missing; real deployments should override.
     NEXT_PUBLIC_NOTIFY_PAIRING_URL: z.string().default(""),
@@ -24,6 +25,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SOCKET_URL: process.env.NEXT_PUBLIC_SOCKET_URL,
     NEXT_PUBLIC_NOTIFY_URL: process.env.NEXT_PUBLIC_NOTIFY_URL,
     NEXT_PUBLIC_NOTIFY_PAIRING_URL: process.env.NEXT_PUBLIC_NOTIFY_PAIRING_URL,
+    NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
     WS_NO_BUFFER_UTIL: process.env.WS_NO_BUFFER_UTIL ? Number(process.env.WS_NO_BUFFER_UTIL) : undefined,
     WS_NO_UTF_8_VALIDATE: process.env.WS_NO_UTF_8_VALIDATE ? Number(process.env.WS_NO_UTF_8_VALIDATE) : undefined
   }

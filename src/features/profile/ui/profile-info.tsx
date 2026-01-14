@@ -1,11 +1,11 @@
 import { FC } from "react";
 import "server-only";
 
-import { QRButton } from "@/components/ui/qr-button";
 import { BOUNCE_FEES, WALLET_COOKIE_NAME } from "@/constants";
 import { generateLink } from "@/lib/generate-link";
 
 import { ActiveUserLabel } from "./active-user-label";
+import { AddFriendButton } from "./add-friend-button";
 
 import { getProfileUsername } from "@/lib/get-profile-username.server";
 import { isActiveUser } from "@/lib/is-active-user";
@@ -60,7 +60,6 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
     }
   });
 
-
   return (
     <>
       <div className="flex flex-col sm:gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -76,9 +75,11 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
           <Tooltip>
             <TooltipTrigger asChild>
               <div>
-                <QRButton href={connectUrl} disabled={!isActiveProfile || !isActiveWallet} variant="link">
-                  Add friend
-                </QRButton>
+                <AddFriendButton
+                  href={connectUrl}
+                  disabled={!isActiveProfile || !isActiveWallet}
+                  walletAdded={!!walletAddress}
+                />
               </div>
             </TooltipTrigger>
             {!isActiveProfile && isActiveWallet ? <TooltipContent>

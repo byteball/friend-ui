@@ -21,6 +21,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 import { useExchangeRate } from "@/hooks/use-exchange-rate";
+import { sendGAEvent } from "@next/third-parties/google";
 import Link from "next/link";
 
 const MAX_LOCKED_TERM_DAYS = 365 * 5;
@@ -193,7 +194,19 @@ export const DepositForm: FC<DepositFormProps> = () => {
 
 
         <div className="flex flex-col md:flex-row gap-6 md:gap-4 items-center">
-          <QRButton ref={btnRef} disabled={!amount || Number(amount) <= 0} href={url}>
+          <QRButton
+            ref={btnRef}
+            disabled={!amount || Number(amount) <= 0}
+            href={url}
+            onClick={() => {
+              sendGAEvent('event', 'click_deposit', {
+                currency: currency.symbol,
+                amount: Number(amount),
+                term_days: selectedTerm,
+                wallet_added: !!walletAddress,
+              });
+            }}
+          >
             Send {!Number(amount) ? '' : toLocalString(amount)} {currency?.symbol.toUpperCase()}
           </QRButton>
         </div>

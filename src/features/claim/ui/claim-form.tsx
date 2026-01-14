@@ -19,6 +19,7 @@ import { toLocalString } from "@/lib/to-local-string";
 import { appConfig } from "@/app-config";
 import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { isValidAddress } from "@/lib/is-valid-address";
+import { sendGAEvent } from "@next/third-parties/google";
 import { useQueryState } from "nuqs";
 import { useRewards } from "../domain/use-rewards";
 
@@ -87,6 +88,12 @@ export const ClaimForm: FC<ClaimFormProps> = () => {
             href={url}
             disabled={!isValidFriendWallet || !!error || !friendWallet}
             ref={btnRef}
+            onClick={() => {
+              sendGAEvent('event', 'add_friend', {
+                wallet_added: !!walletAddress,
+                place: 'claim_form',
+              });
+            }}
           >
             Claim
           </QRButton>
