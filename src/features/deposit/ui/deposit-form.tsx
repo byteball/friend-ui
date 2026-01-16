@@ -14,6 +14,7 @@ import { generateLink } from "@/lib/generate-link";
 import { useData } from "@/app/context";
 import { toLocalString } from "@/lib/to-local-string";
 
+import { AnalyticLink } from "@/components/ui/analytic-link";
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { QRButton } from "@/components/ui/qr-button";
@@ -106,9 +107,22 @@ export const DepositForm: FC<DepositFormProps> = () => {
     <h2 className="text-3xl font-bold">New deposit</h2>
 
     <div className="grid gap-4 text-muted-foreground">
-      <div>Before depositing, you must be attested on <a href={appConfig.TELEGRAM_BOT_URL}>telegram</a> and/or <a href={appConfig.DISCORD_BOT_URL}>discord</a>. This is important to notify you about follow-up rewards in the future.</div>
+      <div>Before depositing, you must be attested on
+        <AnalyticLink
+          gaEvent="click_telegram_bot"
+          meta={{ place: 'deposit_form' }}
+          href={appConfig.TELEGRAM_BOT_URL}
+        >telegram</AnalyticLink> and/or <AnalyticLink
+          href={appConfig.DISCORD_BOT_URL}
+          gaEvent="click_discord_bot"
+          meta={{ place: 'deposit_form' }}
+        >discord</AnalyticLink>. This is important to notify you about follow-up rewards in the future.</div>
 
-      <div>If you deposit less than {toLocalString(agentParams.min_balance_instead_of_real_name / 10 ** (frdMeta?.decimals ?? 0))} {frdMeta?.symbol} (or equivalent), you must be <a href={appConfig.REAL_NAME_BOT_URL}>real-name attested</a>. This measure helps prevent multiple accounts by the same user.</div>
+      <div>If you deposit less than {toLocalString(agentParams.min_balance_instead_of_real_name / 10 ** (frdMeta?.decimals ?? 0))} {frdMeta?.symbol} (or equivalent), you must be <AnalyticLink
+        href={appConfig.REAL_NAME_BOT_URL}
+        gaEvent="click_real_name_bot"
+        meta={{ place: 'deposit_form' }}
+      >real-name attested</AnalyticLink>. This measure helps prevent multiple accounts by the same user.</div>
     </div>
 
     <FieldSet>
@@ -167,8 +181,15 @@ export const DepositForm: FC<DepositFormProps> = () => {
 
             <FieldDescription>
               {frdAsset === currency.asset
-                ? <>Buy on <Link href="https://oswap.io/swap/RYD36EAZWEZVNZ6T2KJI4HJJH6ABYYI5?reverse=1" target="_blank" rel="noopener">Oswap</Link></>
-                : <>Get on <Link href="https://getmein.ooo" target="_blank" rel="noopener">GetMeIn</Link></>}
+                ? <>Buy on <AnalyticLink href="https://oswap.io/swap/RYD36EAZWEZVNZ6T2KJI4HJJH6ABYYI5?reverse=1" target="_blank" rel="noopener"
+                  gaEvent="click_oswap"
+                  meta={{ place: 'deposit_form' }}
+                >Oswap</AnalyticLink></>
+                : <>Get on <AnalyticLink href="https://getmein.ooo"
+                  gaEvent="click_getmein"
+                  meta={{ place: 'deposit_form' }}
+                  target="_blank"
+                  rel="noopener">GetMeIn</AnalyticLink></>}
             </FieldDescription>
           </Field>
         </div>

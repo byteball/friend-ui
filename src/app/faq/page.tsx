@@ -7,6 +7,7 @@ import Faq from "@/features/faq";
 import { toLocalString } from "@/lib/to-local-string";
 
 import { appConfig } from "@/app-config";
+import { AnalyticLink } from "@/components/ui/analytic-link";
 import { env } from "@/env";
 
 export const dynamic = "force-dynamic";
@@ -244,11 +245,14 @@ export default async function FaqPage() {
           </Faq.Title>
           <Faq.Content>
             <p>
-              Before depositing funds you need to be attested on <Link href={appConfig.TELEGRAM_BOT_URL}>telegram</Link> and/or <Link href={appConfig.DISCORD_BOT_URL}>discord</Link>. The attestations link your Obyte address to your telegram or discord username, allowing us to notify you when it&rsquo;s time to receive your follow-up rewards.
+              Before depositing funds you need to be attested on <AnalyticLink gaEvent="click_telegram_bot" meta={{ place: 'faq_page' }}
+                href={appConfig.TELEGRAM_BOT_URL}>telegram</AnalyticLink> and/or <AnalyticLink gaEvent="click_discord_bot"
+                  meta={{ place: 'faq_page' }}
+                  href={appConfig.DISCORD_BOT_URL}>discord</AnalyticLink>. The attestations link your Obyte address to your telegram or discord username, allowing us to notify you when it&rsquo;s time to receive your follow-up rewards.
             </p>
 
             <p>
-              If you deposit less than {toLocalString(min_balance_instead_of_real_name / 10 ** decimals)} {symbol} (or equivalent in other tokens), you need to be <Link href={appConfig.REAL_NAME_BOT_URL}>real-name attested</Link> too. You don&rsquo;t need to disclose your real name to anyone (except the verification service) but this requirement helps to ensure that the system is not abused by creating multiple accounts belonging to the same person, making them friends with each other, and receiving rewards without bringing any real users in.
+              If you deposit less than {toLocalString(min_balance_instead_of_real_name / 10 ** decimals)} {symbol} (or equivalent in other tokens), you need to be <AnalyticLink gaEvent="click_real_name_bot" meta={{ place: 'faq_page' }} href={appConfig.REAL_NAME_BOT_URL}>real-name attested</AnalyticLink> too. You don&rsquo;t need to disclose your real name to anyone (except the verification service) but this requirement helps to ensure that the system is not abused by creating multiple accounts belonging to the same person, making them friends with each other, and receiving rewards without bringing any real users in.
             </p>
           </Faq.Content>
         </Faq.Item>
@@ -424,7 +428,11 @@ export default async function FaqPage() {
             </p>
 
             <p>
-              You can also replace external tokens such as USDC and ETH for {symbol}. For external tokens, a combination of the ceiling price and the token&rsquo;s price against GBYTE from an <Link href="https://oswap.io/" target="_blank" rel="noopener">Oswap</Link> pool is used to determine the replacement ratio. The <Link href="/governance">governance</Link> decides which Oswap pool is used.
+              You can also replace external tokens such as USDC and ETH for {symbol}. For external tokens, a combination of the ceiling price and the token&rsquo;s price against GBYTE from an <AnalyticLink href="https://oswap.io/"
+                target="_blank"
+                rel="noopener"
+                gaEvent="click_oswap"
+                meta={{ place: 'faq_page' }}>Oswap</AnalyticLink> pool is used to determine the replacement ratio. The <Link href="/governance">governance</Link> decides which Oswap pool is used.
             </p>
 
           </Faq.Content>
@@ -500,7 +508,7 @@ export default async function FaqPage() {
           <Faq.Title>How does governance work?</Faq.Title>
           <Faq.Content>
             <p>
-              Every user who has locked funds in Obyte Friends can participate in its <Link href="/governance">governance</Link>. Anyone can suggest changes in any of the governable parameters of Obyte Friends. A bot watches for such suggestions and automatically sends notifications to <Link href="https://discord.obyte.org" target="_blank" rel="noopener">Obyte discord</Link>. Other community members learn about the suggestions from these notifications and can:
+              Every user who has locked funds in Obyte Friends can participate in its <Link href="/governance">governance</Link>. Anyone can suggest changes in any of the governable parameters of Obyte Friends. A bot watches for such suggestions and automatically sends notifications to <AnalyticLink href="https://discord.obyte.org" target="_blank" rel="noopener" gaEvent="click_discord" meta={{ place: 'faq_page' }}>Obyte discord</AnalyticLink>. Other community members learn about the suggestions from these notifications and can:
             </p>
 
             <ul>
