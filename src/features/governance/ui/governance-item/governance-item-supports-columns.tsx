@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toLocalString } from "@/lib/to-local-string";
 
+import { getVPBySqrtBalance } from "@/lib/get-vp-by-sqrt-balance";
 import { transformValue } from "../../domain/transform-value";
 import { GovernanceModal } from "../governance-modal";
 import { SupportedValuesData } from "./governance-item-supports-table";
@@ -39,7 +40,6 @@ export const governanceItemSupportsColumns: ColumnDef<SupportedValuesData>[] = [
       const value = row.getValue("value");
 
       const meta = table.options.meta as TableMeta;
-
       const thisValueVoters = Object.entries(invertBy(meta.choices))
         .filter((v) => v[0] === String(value))
         .map(v => v[1])[0] || [];
@@ -47,7 +47,7 @@ export const governanceItemSupportsColumns: ColumnDef<SupportedValuesData>[] = [
       return <Dialog>
         <DialogTrigger asChild>
           <Button variant="link" className="p-0 m-0 link-style">
-            {toLocalString(amount / 10 ** meta.frdToken.decimals)}
+            {toLocalString(getVPBySqrtBalance(amount, meta.frdToken.decimals))}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">

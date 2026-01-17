@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { getDepositAssetsData } from "../domain/get-deposit-assets-data";
@@ -12,7 +12,7 @@ import { useData } from "@/app/context";
 
 export const GovernanceDepositAssetList: FC = () => {
   const data = useData();
-  const depositAssetsData = getDepositAssetsData(data.governanceState ?? {});
+  const depositAssetsData = useMemo(() => getDepositAssetsData(data.governanceState ?? {}), [data.governanceState]);
 
   return <div>
     <div className="flex mb-4 justify-end">
