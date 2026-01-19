@@ -11,6 +11,7 @@ import { toLocalString } from "@/lib/to-local-string";
 import { RefCookieApplier } from "@/components/ref-cookie-applier";
 import { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
 
@@ -19,6 +20,15 @@ export async function generateMetadata(
   { params, searchParams }: { params: Promise<{ address: string }>; searchParams: Promise<Record<string, string | string[]>> }
 ): Promise<Metadata> {
   const { address } = await params;
+
+  if (!address || !isValidAddress(address)) {
+    return {
+      title: 'Obyte Friends - Not Found',
+      description: 'The page you are looking for does not exist.',
+      robots: { index: false, follow: false }
+    }
+  }
+
   const username = await getProfileUsername(address) || "Anonymous";
   const state = globalThis.__GLOBAL_STORE__?.getState() ?? {};
   const queryParams = await searchParams;
@@ -56,7 +66,7 @@ export async function generateMetadata(
 export default async function ProfilePage({ params }: { params: Promise<{ address: string }> }) {
   const { address } = await params;
 
-  if (!address || !isValidAddress(address)) return <div>Address not provided</div>
+  if (!address || !isValidAddress(address)) return notFound();
 
   const state = globalThis.__GLOBAL_STORE__?.getState() ?? {};
 
