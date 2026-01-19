@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useMemo } from "react";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
@@ -9,10 +9,10 @@ import {
   getSortedRowModel,
   useReactTable
 } from "@tanstack/react-table";
+
 import { getAggregatedVotes } from "../../domain/get-aggregated-votes";
 import { DepositAssetVote } from "../../domain/get-deposit-assets-data";
 import { governanceDepositAssetItemSupportsColumns } from "./governance-deposit-asset-item-supports-columns";
-
 
 interface GovernanceItemSupportsTableProps {
   votes: DepositAssetVote[];
@@ -27,9 +27,16 @@ export const GovernanceDepositAssetItemSupportsTable: FC<GovernanceItemSupportsT
   asset,
   governanceAa
 }) => {
+  const data = useMemo(() => getAggregatedVotes(votes), [votes]);
+  const sortingState = useMemo(() => ([
+    {
+      id: "sqrt_amount",
+      desc: true
+    }
+  ]), []);
 
   const table = useReactTable({
-    data: getAggregatedVotes(votes),
+    data,
     columns: governanceDepositAssetItemSupportsColumns,
     meta: {
       frdToken,
@@ -39,12 +46,7 @@ export const GovernanceDepositAssetItemSupportsTable: FC<GovernanceItemSupportsT
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     state: {
-      sorting: [
-        {
-          id: "sqrt_amount",
-          desc: true
-        }
-      ]
+      sorting: sortingState
     },
   });
 
