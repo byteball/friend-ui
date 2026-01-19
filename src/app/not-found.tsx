@@ -4,6 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Obyte friends - Not Found',
   description: 'The page you are looking for does not exist.',
+  robots: { index: false, follow: false },
 }
 
 export default () => <div className="mx-auto mt-20 max-w-2xl text-center sm:mt-24">
