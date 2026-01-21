@@ -20,7 +20,7 @@ export type GovernanceItemContentProps<K extends keyof AgentParams = keyof Agent
   currentValue: AgentParams[K];
   supportsValues?: Record<string, number>;
   challengingPeriodStartTs?: number;
-  choices: Record<string, AgentParams[K]>;
+  choices: Record<string, { value: AgentParams[K], sqrt_balance?: number } | undefined>;
 };
 
 export const GovernanceItemContent: FC<GovernanceItemContentProps> = ({ name, leaderValue, supportsValues, currentValue, choices, challengingPeriodStartTs = 0 }) => {

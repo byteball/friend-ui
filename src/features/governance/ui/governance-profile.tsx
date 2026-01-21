@@ -7,6 +7,7 @@ import { useData } from "@/app/context";
 import { AddWalletModal } from "@/components/modals/add-wallet";
 import { Button } from "@/components/ui/button";
 import { getCeilingPrice } from "@/lib/calculations/get-rewards";
+import { getVPByBalance } from "@/lib/calculations/get-vp-by-balance";
 import { toLocalString } from "@/lib/to-local-string";
 
 interface GovernanceProfileProps {
@@ -19,10 +20,7 @@ export const GovernanceProfile: FC<GovernanceProfileProps> = ({ walletAddress })
   const ceilingPrice = getCeilingPrice(data.state.constants);
 
   const userBaseBalance = data.state[`user_${walletAddress}`]?.balances;
-  const votingPower =
-    Math.sqrt(
-      ((userBaseBalance?.frd ?? 0) + ((userBaseBalance?.base ?? 0) / ceilingPrice)) / 10 ** frdToken.decimals
-    );
+  const votingPower = getVPByBalance(userBaseBalance, ceilingPrice, frdToken.decimals);
 
   if (!walletAddress) {
     return <div className="font-medium">

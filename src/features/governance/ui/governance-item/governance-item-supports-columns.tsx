@@ -1,12 +1,12 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { invertBy } from "lodash";
-import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toLocalString } from "@/lib/to-local-string";
 
+import { getVPBySqrtBalance } from "@/lib/calculations/get-vp-by-sqrt-balance";
+import Link from "next/link";
 import { transformValue } from "../../domain/transform-value";
 import { GovernanceModal } from "../governance-modal";
 import { SupportedValuesData } from "./governance-item-supports-table";
@@ -14,7 +14,7 @@ import { SupportedValuesData } from "./governance-item-supports-table";
 interface TableMeta {
   frdToken: TokenMeta;
   name: keyof AgentParams;
-  choices: Record<string, AgentParams[keyof AgentParams]>;
+  choices: Record<string, UserChoice<AgentParams[keyof AgentParams]> | undefined>;
 }
 
 export const governanceItemSupportsColumns: ColumnDef<SupportedValuesData>[] = [
@@ -40,14 +40,13 @@ export const governanceItemSupportsColumns: ColumnDef<SupportedValuesData>[] = [
 
       const meta = table.options.meta as TableMeta;
 
-      const thisValueVoters = Object.entries(invertBy(meta.choices))
-        .filter((v) => v[0] === String(value))
-        .map(v => v[1])[0] || [];
+      const votesByValue = Object.entries(meta.choices)
+        .filter((v) => String(v[1]?.value) === String(value));
 
       return <Dialog>
         <DialogTrigger asChild>
           <Button variant="link" className="p-0 m-0 link-style">
-            {toLocalString(amount / 10 ** meta.frdToken.decimals)}
+            {toLocalString(getVPBySqrtBalance(amount, meta.frdToken.decimals))}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
@@ -56,8 +55,9 @@ export const governanceItemSupportsColumns: ColumnDef<SupportedValuesData>[] = [
           </DialogHeader>
 
           <div className="grid gap-2">
-            {thisValueVoters.map(voter => <div key={voter}>
-              <Link href={`/${voter}`}>{voter}</Link>
+            {votesByValue.map(vote => <div key={vote[0]}>
+              <Link href={`/${vote[0]}`}>{vote[0]}</Link>
+              <div className="text-muted-foreground">{getVPBySqrtBalance(vote[1]?.sqrt_balance || 0, meta.frdToken.decimals)}</div>
             </div>)}
           </div>
         </DialogContent>

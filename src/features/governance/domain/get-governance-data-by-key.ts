@@ -2,12 +2,12 @@ import { getHash } from "@/lib/get-hash";
 
 export interface IGovernanceItemData<T extends string | number | symbol> {
   challenging_period_start_ts?: number;
-  choices: Record<string, T>;
+  choices: Record<string, { value: T, sqrt_balance?: number } | undefined>;
   leader?: T;
   supports: Record<T, number>;
 }
 
-export const getGovernanceDataByKey = <K extends keyof AgentParams>(key: K, governanceState: Record<string, any>) => {
+export const getGovernanceDataByKey = <K extends keyof AgentParams>(key: K, state: Record<string, any>) => {
   const data: IGovernanceItemData<AgentParams[K]> = {
     choices: {},
     supports: {} as Record<AgentParams[K], number>,
@@ -15,13 +15,14 @@ export const getGovernanceDataByKey = <K extends keyof AgentParams>(key: K, gove
 
   const hashToValue: Record<string, string> = {};
 
-  Object.entries(governanceState).forEach(([varKey, value]) => {
+  Object.entries(state).forEach(([varKey, value]) => {
     if (varKey === `challenging_period_start_ts_${key}`) {
       data.challenging_period_start_ts = value as number;
     } else if (varKey.startsWith("choice_") && varKey.endsWith(`_${key}`)) {
       const splitted = varKey.split("_");
       const address = splitted[1];
-      data.choices[address] = value as AgentParams[K];
+
+      data.choices[address] = state[`votes_${address}`][key] as UserChoice<AgentParams[K]>;
 
       if (varKey.includes("messaging_attestors")) {
         const hash = getHash(value as string)

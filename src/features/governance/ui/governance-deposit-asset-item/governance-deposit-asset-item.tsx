@@ -17,13 +17,15 @@ export type GovernanceItemProps = {
   asset: string;
   challengingPeriodStartTs?: number;
   votes?: DepositAssetVote[];
+  supportedValues?: Record<string, number>; // pool address -> total support amount
 };
 
 export const GovernanceDepositAssetItem: FC<GovernanceItemProps> = ({
   leaderValue,
   challengingPeriodStartTs,
   votes,
-  asset
+  asset,
+  supportedValues
 }) => {
   const { state, getGovernanceAA } = useData();
   const { symbol, loading } = useToken({ asset });
@@ -43,6 +45,7 @@ export const GovernanceDepositAssetItem: FC<GovernanceItemProps> = ({
         currentValue={state[`deposit_asset_${asset}`]}
         votes={votes}
         asset={asset}
+        supportedValues={supportedValues}
         challengingPeriodStartTs={challengingPeriodStartTs}
       />
 
