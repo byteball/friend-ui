@@ -1,8 +1,8 @@
 import "server-only";
 
 import { LRUCache } from "lru-cache";
-import { EventEmitter } from "stream";
 import type { Server as SocketIOServer } from 'socket.io';
+import { EventEmitter } from "stream";
 
 import { appConfig } from "./app-config";
 import { STORE_EVENTS } from "./constants";
@@ -257,9 +257,8 @@ export class GlobalStore extends EventEmitter {
 
   sendGovernanceStateUpdate(update: Record<string, any>) {
     // Server-side deduplication for governance updates
-    // Use lightweight hash instead of JSON.stringify to avoid blocking event loop
-    const keys = Object.keys(update);
-    const hash = `gov:${keys.length}:${keys[0] || ''}`;
+    // Use value-sensitive hash to avoid dropping valid updates
+    const hash = JSON.stringify(update);
     if (hash === this.lastGovernanceUpdateHash) {
       console.log('log(GlobalStore): GOVERNANCE_STATE_UPDATE deduplicated on server');
       return;

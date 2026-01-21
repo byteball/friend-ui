@@ -112,7 +112,8 @@ export function DataProvider({
 
   const resolvedInitialValue = useMemo(() => value ?? DEFAULT_SNAPSHOT, [value]);
   const [data, setData] = useState<IClientSnapshot>(resolvedInitialValue);
-  const lastEventRef = useRef<string | number>(null);
+  const lastStateEventRef = useRef<string | number>(null);
+  const lastGovernanceEventRef = useRef<string | number>(null);
   const socketRef = useRef<Socket | null>(null);
   const isMountedRef = useRef(true);
   const isFirstConnectRef = useRef(true); // Track first connection
@@ -222,11 +223,11 @@ export function DataProvider({
         const updateFirstKey = Object.keys(update)[0];
         const simpleHash = `${updateKeyCount}:${updateFirstKey}`;
 
-        if (simpleHash === lastEventRef.current) {
+        if (simpleHash === lastStateEventRef.current) {
           console.log('%c[Client] STATE_UPDATE deduplicated', 'color: yellow');
           return;
         }
-        lastEventRef.current = simpleHash;
+        lastStateEventRef.current = simpleHash;
 
         console.log('%c[Client] Processing STATE_UPDATE', 'color: cyan', Object.keys(update).length, 'keys');
 
@@ -246,16 +247,14 @@ export function DataProvider({
       if (eventType === STORE_EVENTS.GOVERNANCE_STATE_UPDATE) {
         const governanceUpdate = (eventData ?? {}) as Record<string, any>;
 
-        // Lightweight deduplication - avoid expensive JSON.stringify
-        const updateKeyCount = Object.keys(governanceUpdate).length;
-        const updateFirstKey = Object.keys(governanceUpdate)[0];
-        const simpleHash = `gov:${updateKeyCount}:${updateFirstKey}`;
+        // Value-sensitive deduplication to avoid dropping valid updates
+        const simpleHash = JSON.stringify(governanceUpdate);
 
-        if (simpleHash === lastEventRef.current) {
+        if (simpleHash === lastGovernanceEventRef.current) {
           console.log('%c[Client] GOVERNANCE_STATE_UPDATE deduplicated', 'color: yellow');
           return;
         }
-        lastEventRef.current = simpleHash;
+        lastGovernanceEventRef.current = simpleHash;
 
         console.log('%c[Client] Processing GOVERNANCE_STATE_UPDATE', 'color: cyan');
         setData((prev) => ({

@@ -32,7 +32,7 @@ export const GovernanceItemSupportsTable: FC<GovernanceItemSupportsTableProps> =
         id: value,
         value: value,
         amount: amount
-      }))
+      })).filter(item => item.amount > 0)
       : []
   ), [supportsValues]);
 
@@ -58,7 +58,7 @@ export const GovernanceItemSupportsTable: FC<GovernanceItemSupportsTableProps> =
     },
   });
 
-  return <div className="overflow-hidden rounded-md border">
+  return <div className="overflow-hidden border rounded-md">
     <Table>
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (
