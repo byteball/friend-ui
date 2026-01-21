@@ -16,7 +16,7 @@ interface GovernanceItemSupportsTableProps {
   supportsValues: Record<string, number>; // supporter value -> amount
   name: keyof AgentParams;
   frdToken: TokenMeta;
-  choices: Record<string, AgentParams[keyof AgentParams]>;
+  choices: Record<string, { value: AgentParams[keyof AgentParams], sqrt_balance?: number } | undefined>;
 }
 
 export type SupportedValuesData = {

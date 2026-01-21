@@ -94,3 +94,8 @@ type AgentParams = {
   followup_reward_share: number;
   min_balance_instead_of_real_name: number;
 }
+
+type UserChoice<T> = {
+  value: T;
+  sqrt_balance: number;
+}
