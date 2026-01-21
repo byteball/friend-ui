@@ -1,6 +1,5 @@
 import { Dialog } from "@radix-ui/react-dialog";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
@@ -11,6 +10,7 @@ import { toLocalString } from "@/lib/to-local-string";
 import { QRButton } from "@/components/ui/qr-button";
 import { getVPBySqrtBalance } from "@/lib/calculations/get-vp-by-sqrt-balance";
 import { generateLink } from "@/lib/generate-link";
+import Link from "next/link";
 import { IAggregatedData } from "../../domain/get-aggregated-votes";
 
 interface TableMeta {
@@ -32,17 +32,16 @@ export const governanceDepositAssetItemSupportsColumns: ColumnDef<IAggregatedDat
     },
   },
   {
-    accessorKey: "sqrt_amount",
+    accessorKey: "total_sqrt_support_amount",
     header: () => "Support",
     cell: ({ row, table }) => {
       const meta = table.options.meta as TableMeta;
-      const amount = parseFloat(row.getValue("sqrt_amount"))
-      const voters = row.original.voters;
+      const totalSupportAmountByValue = parseFloat(row.getValue("total_sqrt_support_amount"));
 
       return <Dialog>
         <DialogTrigger asChild>
           <Button variant="link" className="p-0 m-0 link-style">
-            {toLocalString(getVPBySqrtBalance(amount, meta.frdToken.decimals))}
+            {toLocalString(getVPBySqrtBalance(totalSupportAmountByValue, meta.frdToken.decimals))}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
@@ -51,8 +50,9 @@ export const governanceDepositAssetItemSupportsColumns: ColumnDef<IAggregatedDat
           </DialogHeader>
 
           <div className="grid gap-2">
-            {voters?.map(voter => <div key={voter}>
-              <Link href={`/${voter}`}>{voter}</Link>
+            {row.original.votes?.map(voter => <div key={voter.voter_address}>
+              <Link href={`/${voter.voter_address}`}>{voter.voter_address}</Link>
+              <div className="text-muted-foreground">{toLocalString(getVPBySqrtBalance(voter.sqrt_amount, meta.frdToken.decimals))}</div>
             </div>)}
           </div>
         </DialogContent>

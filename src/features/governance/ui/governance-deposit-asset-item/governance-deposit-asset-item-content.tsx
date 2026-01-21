@@ -24,6 +24,7 @@ export interface GovernanceDepositAssetItemContent {
   asset: string;
   challengingPeriodStartTs?: number;
   votes: DepositAssetVote[] | undefined;
+  supportedValues?: Record<string, number>; // pool address -> total support amount
 };
 
 export const GovernanceDepositAssetItemContent: FC<GovernanceDepositAssetItemContent> = ({
@@ -31,7 +32,8 @@ export const GovernanceDepositAssetItemContent: FC<GovernanceDepositAssetItemCon
   currentValue,
   challengingPeriodStartTs = 0,
   votes = [],
-  asset
+  asset,
+  supportedValues
 }) => {
   const { getFrdToken, getGovernanceAA } = useData();
   const frdToken = getFrdToken();
@@ -66,6 +68,7 @@ export const GovernanceDepositAssetItemContent: FC<GovernanceDepositAssetItemCon
       <GovernanceDepositAssetItemSupportsTable
         asset={asset}
         votes={votes}
+        supportedValues={supportedValues}
         frdToken={frdToken}
         governanceAa={governanceAa}
       />

@@ -19,18 +19,21 @@ interface GovernanceItemSupportsTableProps {
   frdToken: TokenMeta;
   governanceAa: string;
   asset: string;
+  supportedValues?: Record<string, number>; // pool address -> total support amount
 }
 
 export const GovernanceDepositAssetItemSupportsTable: FC<GovernanceItemSupportsTableProps> = ({
   votes,
   frdToken,
   asset,
-  governanceAa
+  governanceAa,
+  supportedValues
 }) => {
-  const data = useMemo(() => getAggregatedVotes(votes), [votes]);
+  const data = useMemo(() => getAggregatedVotes(votes, supportedValues), [votes, supportedValues]);
+
   const sortingState = useMemo(() => ([
     {
-      id: "sqrt_amount",
+      id: "total_sqrt_support_amount",
       desc: true
     }
   ]), []);
@@ -41,7 +44,8 @@ export const GovernanceDepositAssetItemSupportsTable: FC<GovernanceItemSupportsT
     meta: {
       frdToken,
       governanceAa,
-      asset
+      asset,
+      supportedValues
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -50,7 +54,7 @@ export const GovernanceDepositAssetItemSupportsTable: FC<GovernanceItemSupportsT
     },
   });
 
-  return <div className="overflow-hidden rounded-md border">
+  return <div className="overflow-hidden border rounded-md">
     <Table>
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (

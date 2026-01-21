@@ -15,7 +15,7 @@ export const GovernanceDepositAssetList: FC = () => {
   const depositAssetsData = getDepositAssetsData(data.governanceState ?? {});
 
   return <div>
-    <div className="flex mb-4 justify-end">
+    <div className="flex justify-end mb-4">
       <AddNewDepositAssetModal governanceAa={data.getGovernanceAA()}>
         <Button>
           <Plus /> Add new deposit asset
@@ -31,6 +31,7 @@ export const GovernanceDepositAssetList: FC = () => {
           leaderValue={value.leader}
           challengingPeriodStartTs={value.challengingPeriodStartTs}
           votes={value.votes}
+          supportedValues={value.support}
         />
       ))}
     </div>
