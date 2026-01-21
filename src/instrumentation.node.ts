@@ -119,9 +119,12 @@ export async function register() {
       console.log('log(bootstrap): watching main AA', appConfig.AA_ADDRESS);
 
       if (constants?.governance_aa) {
+
         await client.justsaying("light/new_aa_to_watch", {
           aa: constants.governance_aa
         });
+
+        console.log('log(bootstrap): watching governance AA', constants.governance_aa);
 
         initGovernanceState = await getAllStateVars(client, constants.governance_aa);
 
