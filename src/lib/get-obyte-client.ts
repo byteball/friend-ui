@@ -13,9 +13,19 @@ const getObyteClient = async () => {
     reconnect: AUTO_RECONNECT
   });
 
-  // Prevent multiple subscribe() calls on HMR or reconnect
-  if (!globalThis.__OBYTE_SUBSCRIBED__) {
-    globalThis.__OBYTE_SUBSCRIBED__ = true;
+  globalThis.__OBYTE_CLIENT__.onConnect(async () => {
+
+    // clear existing heartbeat if any
+    if (globalThis.__OBYTE_HEARTBEAT__) {
+      clearInterval(globalThis.__OBYTE_HEARTBEAT__);
+      globalThis.__OBYTE_HEARTBEAT__ = undefined;
+    }
+
+    if (!globalThis.__OBYTE_CLIENT__) {
+      console.error("error(bootstrap): obyte client missing");
+      return;
+    }
+
 
     globalThis.__OBYTE_CLIENT__.subscribe((err, result) => {
       if (err) {
@@ -85,20 +95,6 @@ const getObyteClient = async () => {
     });
 
     console.log('log(bootstrap): Obyte client subscribed to events');
-  }
-
-  globalThis.__OBYTE_CLIENT__.onConnect(async () => {
-
-    // clear existing heartbeat if any
-    if (globalThis.__OBYTE_HEARTBEAT__) {
-      clearInterval(globalThis.__OBYTE_HEARTBEAT__);
-      globalThis.__OBYTE_HEARTBEAT__ = undefined;
-    }
-
-    if (!globalThis.__OBYTE_CLIENT__) {
-      console.error("error(bootstrap): obyte client missing");
-      return;
-    }
 
     globalThis.__OBYTE_HEARTBEAT__ = setInterval(async () => {
       if (!globalThis.__OBYTE_CLIENT__) {
