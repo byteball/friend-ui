@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { toLocalString } from "@/lib/to-local-string";
 import { ILeaderboardTableMeta } from "./domain/types";
 
+const SELECTED_FILTER_STYLES = "bg-accent/50 text-accent-foreground";
 
 export const columns: ColumnDef<UserRank>[] = [
   {
@@ -32,6 +33,7 @@ export const columns: ColumnDef<UserRank>[] = [
       variant="ghost"
       size="sm"
       onClick={() => column.toggleSorting(true)}
+      className={column.getIsSorted() ? SELECTED_FILTER_STYLES : ""}
     >
       Total balance
       <ArrowDownWideNarrow className="w-4 h-4 ml-2" />
@@ -50,6 +52,7 @@ export const columns: ColumnDef<UserRank>[] = [
       variant="ghost"
       size="sm"
       onClick={() => column.toggleSorting(true)}
+      className={column.getIsSorted() ? SELECTED_FILTER_STYLES : ""}
     >
       Friends
       <ArrowDownWideNarrow className="w-4 h-4 ml-2" />
@@ -64,6 +67,7 @@ export const columns: ColumnDef<UserRank>[] = [
           variant="ghost"
           size="sm"
           onClick={() => column.toggleSorting(true)}
+          className={column.getIsSorted() ? SELECTED_FILTER_STYLES : ""}
         >
           New users
           <ArrowDownWideNarrow className="w-4 h-4 ml-2" />

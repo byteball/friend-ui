@@ -49,6 +49,9 @@ export function LeaderboardTable({
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    initialState: {
+      pagination: { pageIndex: 0, pageSize: 100 }, // display 100 rows per page
+    },
     state: {
       sorting
     }
