@@ -17,4 +17,6 @@ export const getGhostsFromVars = (state: IAaState): IGhost[] => Object.entries(s
   } else {
     return null
   }
-}).filter(Boolean);
+})
+  .filter(Boolean)
+  .sort((a, b) => a.name.localeCompare(b.name, "en"));
