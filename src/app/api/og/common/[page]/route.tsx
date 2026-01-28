@@ -72,6 +72,7 @@ export async function GET(
         <!-- Background -->
         <rect width="1200" height="630" fill="#0b0809" />
 
+        <g transform="translate(0, ${lines.length === 1 ? 160 : 100})">
         <!-- Logo and Title Group (centered) -->
         <g transform="translate(-15, 10)">
 
@@ -95,12 +96,10 @@ export async function GET(
           </text>
         </g>
 
-        
-
           <!-- TITLE -->
           <text
             x="600"
-            y="${lines.length === 1 ? 370 : 300}"
+            y="260"
             font-family="Arial, sans-serif"
             font-size="${lines.length === 1 ? 106 : 84}"
             font-weight="400"
@@ -109,6 +108,7 @@ export async function GET(
           >
             ${lines.map((line, i) => `<tspan x="600" dy="${i === 0 ? 0 : 104}">${line}</tspan>`).join('')}
           </text>
+        </g>
 
       </svg>
     `;
