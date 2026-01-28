@@ -59,12 +59,12 @@ export const GovernanceModalContentAddresses: FC<GovernanceModalContentAddresses
             onChange={(e) => handleChange(e.target.value, address.id)}
             className={cn({
               "border-red-700": isValidAddress(address.value) === false && address.value.length > 0,
-              "mr-[32px]": !showRemoveBtn(index) && isNew
+              "mr-8": !showRemoveBtn(index) && addresses.length > 1
             })}
           />
 
           {showRemoveBtn(index)
-            ? <Button asChild variant="link" className="grow-0 shrink-0 p-0 w-[24px] m-0 self-start" onClick={() => removeAddress(address.id)}>
+            ? <Button asChild variant="link" className="grow-0 shrink-0 p-0 w-6 m-0 self-start" onClick={() => removeAddress(address.id)}>
               <XIcon className="text-red-700" />
             </Button>
             : null}
