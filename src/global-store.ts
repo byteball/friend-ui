@@ -24,6 +24,7 @@ interface IAttestation {
 }
 
 const ATTESTATION_TTL = 1000 * 60 * 60; // 1 hour
+const OSWAP_FRD_USD_RATE_TTL = 1000 * 60 * 1; // 1 minute
 
 export class GlobalStore extends EventEmitter {
   client: typeof globalThis.__OBYTE_CLIENT__;
@@ -38,6 +39,12 @@ export class GlobalStore extends EventEmitter {
   socketIO?: SocketIOServer;
   socketIOConnected: boolean = false;
   socketIOListenersSetup: boolean = false;
+
+  isUpdatingOswapFrdRateUSD: boolean = false;
+  frdUsdOswapRate: {
+    value: number;
+    updatedAt: number;
+  } = { value: 0, updatedAt: 0 };
 
   ready: boolean = false;
   stateUpdateId: number;
@@ -60,20 +67,6 @@ export class GlobalStore extends EventEmitter {
 
     // Set reasonable max listeners limit with monitoring
     this.setMaxListeners(50);
-
-    // Monitor listener count every minute to detect leaks early
-    setInterval(() => {
-      const snapshotListeners = this.listenerCount(STORE_EVENTS.SNAPSHOT);
-      const stateUpdateListeners = this.listenerCount(STORE_EVENTS.STATE_UPDATE);
-      const govListeners = this.listenerCount(STORE_EVENTS.GOVERNANCE_STATE_UPDATE);
-
-      if (snapshotListeners > 10 || stateUpdateListeners > 10 || govListeners > 10) {
-        console.warn(
-          `warn(GlobalStore): High listener count detected - possible memory leak!`,
-          { snapshotListeners, stateUpdateListeners, govListeners }
-        );
-      }
-    }, 60000); // Check every minute
 
     this.state = new LRUCache<string, any>({
       max: 10000,
@@ -166,16 +159,38 @@ export class GlobalStore extends EventEmitter {
     return this.gbytePriceUSD;
   }
 
-  getFrdPriceUSD(): number {
+  async updateOswapFrdPriceInUSD() {
     const constants = this.state.get('constants') as IConstants | undefined;
     if (!constants) return 0;
 
-    const frdToken = this.tokens.get(constants.asset);
-    if (!frdToken) return 0;
+    const ts = Date.now();
 
-    const ceilPrice = getCeilingPrice(constants);
+    try {
+      this.isUpdatingOswapFrdRateUSD = true;
 
-    return ceilPrice * this.gbytePriceUSD;
+      const rate = await fetch(appConfig.OSWAP_RATE_API_URL);
+      const rateJson = await rate.json();
+      const frdRate = rateJson[`${constants.asset}_USD`]
+
+      if (!frdRate) throw new Error("FRD to USD rate not found in response");
+
+      this.frdUsdOswapRate = { value: frdRate, updatedAt: ts };
+    } catch (e) {
+      console.error("error(GlobalStore): Failed to update FRD to USD rate", e, ts);
+    } finally {
+      console.log("log(GlobalStore): FRD to USD rate", this.frdUsdOswapRate.value);
+      this.isUpdatingOswapFrdRateUSD = false;
+    }
+  }
+
+  getOswapFrdPriceInUSD(): number {
+    if (Date.now() - this.frdUsdOswapRate.updatedAt > OSWAP_FRD_USD_RATE_TTL) {
+      if (!this.isUpdatingOswapFrdRateUSD) {
+        this.updateOswapFrdPriceInUSD();
+      }
+    }
+
+    return this.frdUsdOswapRate.value;
   }
 
   sendSnapshot() {
