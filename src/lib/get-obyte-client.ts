@@ -40,7 +40,17 @@ const getObyteClient = async () => {
           const rates = result[1].body;
 
           if (globalThis.__GLOBAL_STORE__ && rates) {
+            const constants = globalThis.__GLOBAL_STORE__?.state?.get('constants') as IConstants | undefined;
+
             globalThis.__GLOBAL_STORE__.gbytePriceUSD = rates['GBYTE_USD'] || 0;
+
+            if (constants?.asset) {
+              globalThis.__GLOBAL_STORE__.frdPriceUSD = rates[`${constants?.asset}_USD`] || 0;
+              console.error('log(bootstrap): updated FRD price', globalThis.__GLOBAL_STORE__.frdPriceUSD);
+            } else {
+              console.error('warn(bootstrap): asset not found in constants yet. We can\'t fetch price');
+            }
+
             console.error('log(bootstrap): updated GBYTE price', globalThis.__GLOBAL_STORE__.gbytePriceUSD);
           }
 

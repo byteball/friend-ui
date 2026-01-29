@@ -10,7 +10,7 @@ import { appConfig } from "@/app-config";
 
 export const HowItWorksBlock = () => {
   const frd = __GLOBAL_STORE__?.getOwnToken();
-  const frdToUsd = __GLOBAL_STORE__?.getFrdPriceUSD()?.toFixed(2) ?? 'N/A';
+  const frdToUsd = __GLOBAL_STORE__?.getOswapFrdPriceInUSD()?.toFixed(2) ?? 'N/A';
 
   return (<div>
     <div className="grid max-w-6xl grid-cols-3 gap-8 mx-auto">

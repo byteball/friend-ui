@@ -39,6 +39,8 @@ export class GlobalStore extends EventEmitter {
   socketIOConnected: boolean = false;
   socketIOListenersSetup: boolean = false;
 
+  frdPriceUSD: number = 0;
+
   ready: boolean = false;
   stateUpdateId: number;
   gbytePriceUSD: number = 0;
@@ -60,20 +62,6 @@ export class GlobalStore extends EventEmitter {
 
     // Set reasonable max listeners limit with monitoring
     this.setMaxListeners(50);
-
-    // Monitor listener count every minute to detect leaks early
-    setInterval(() => {
-      const snapshotListeners = this.listenerCount(STORE_EVENTS.SNAPSHOT);
-      const stateUpdateListeners = this.listenerCount(STORE_EVENTS.STATE_UPDATE);
-      const govListeners = this.listenerCount(STORE_EVENTS.GOVERNANCE_STATE_UPDATE);
-
-      if (snapshotListeners > 10 || stateUpdateListeners > 10 || govListeners > 10) {
-        console.warn(
-          `warn(GlobalStore): High listener count detected - possible memory leak!`,
-          { snapshotListeners, stateUpdateListeners, govListeners }
-        );
-      }
-    }, 60000); // Check every minute
 
     this.state = new LRUCache<string, any>({
       max: 10000,
@@ -166,16 +154,8 @@ export class GlobalStore extends EventEmitter {
     return this.gbytePriceUSD;
   }
 
-  getFrdPriceUSD(): number {
-    const constants = this.state.get('constants') as IConstants | undefined;
-    if (!constants) return 0;
-
-    const frdToken = this.tokens.get(constants.asset);
-    if (!frdToken) return 0;
-
-    const ceilPrice = getCeilingPrice(constants);
-
-    return ceilPrice * this.gbytePriceUSD;
+  getOswapFrdPriceInUSD(): number {
+    return this.frdPriceUSD;
   }
 
   sendSnapshot() {
