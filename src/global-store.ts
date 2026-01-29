@@ -24,7 +24,6 @@ interface IAttestation {
 }
 
 const ATTESTATION_TTL = 1000 * 60 * 60; // 1 hour
-const OSWAP_FRD_USD_RATE_TTL = 1000 * 60 * 1; // 1 minute
 
 export class GlobalStore extends EventEmitter {
   client: typeof globalThis.__OBYTE_CLIENT__;
