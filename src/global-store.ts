@@ -40,11 +40,7 @@ export class GlobalStore extends EventEmitter {
   socketIOConnected: boolean = false;
   socketIOListenersSetup: boolean = false;
 
-  isUpdatingOswapFrdRateUSD: boolean = false;
-  frdUsdOswapRate: {
-    value: number;
-    updatedAt: number;
-  } = { value: 0, updatedAt: 0 };
+  frdPriceUSD: number = 0;
 
   ready: boolean = false;
   stateUpdateId: number;
@@ -159,38 +155,8 @@ export class GlobalStore extends EventEmitter {
     return this.gbytePriceUSD;
   }
 
-  async updateOswapFrdPriceInUSD() {
-    const constants = this.state.get('constants') as IConstants | undefined;
-    if (!constants) return 0;
-
-    const ts = Date.now();
-
-    try {
-      this.isUpdatingOswapFrdRateUSD = true;
-
-      const rate = await fetch(appConfig.OSWAP_RATE_API_URL);
-      const rateJson = await rate.json();
-      const frdRate = rateJson[`${constants.asset}_USD`]
-
-      if (!frdRate) throw new Error("FRD to USD rate not found in response");
-
-      this.frdUsdOswapRate = { value: frdRate, updatedAt: ts };
-    } catch (e) {
-      console.error("error(GlobalStore): Failed to update FRD to USD rate", e, ts);
-    } finally {
-      console.log("log(GlobalStore): FRD to USD rate", this.frdUsdOswapRate.value);
-      this.isUpdatingOswapFrdRateUSD = false;
-    }
-  }
-
   getOswapFrdPriceInUSD(): number {
-    if (Date.now() - this.frdUsdOswapRate.updatedAt > OSWAP_FRD_USD_RATE_TTL) {
-      if (!this.isUpdatingOswapFrdRateUSD) {
-        this.updateOswapFrdPriceInUSD();
-      }
-    }
-
-    return this.frdUsdOswapRate.value;
+    return this.frdPriceUSD;
   }
 
   sendSnapshot() {
