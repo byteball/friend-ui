@@ -43,9 +43,9 @@ export default async function MainNavbar({ className }: NavbarProps) {
               <Link
                 href="/"
                 prefetch={false}
-                className="flex items-center gap-2 text-xl font-bold  ui-link"
+                className="flex items-center gap-x-2 text-sm font-bold  ui-link leading-none!"
               >
-                <Image src="/logo.svg" alt="Logo" width={32} height={32} />
+                <Image src="/logo.svg" alt="Logo" width={30} height={30} />
                 {name}
               </Link>
 
@@ -53,7 +53,7 @@ export default async function MainNavbar({ className }: NavbarProps) {
                 <NavbarLinkItem
                   key={link.href}
                   link={link}
-                  className="hidden text-sm text-muted-foreground hover:text-white md:block"
+                  className="hidden text-sm! leading-none! text-muted-foreground hover:text-white md:block"
                   prefetch={false}
                 />
               ))}
@@ -63,7 +63,7 @@ export default async function MainNavbar({ className }: NavbarProps) {
               {walletAddress ? (
                 <NavbarLinkItem
                   link={{ text: "Profile", href: `/${walletAddress}` }}
-                  className="hidden text-sm text-muted-foreground hover:text-white/50 md:block"
+                  className="hidden leading-none! text-sm! text-muted-foreground hover:text-white/50 md:block"
                   prefetch={false}
                 />
               ) : null}
