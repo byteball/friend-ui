@@ -192,6 +192,13 @@ export async function register() {
       if (globalThis.__GLOBAL_STORE__.ready) {
         console.log("log(bootstrap): GlobalStore is ready");
 
+        // @ts-expect-error no error
+        globalThis.__OBYTE_CLIENT__.client.request("hub/get_exchange_rates", null, (err, rates) => {
+          if (err) return console.error("hub/get_exchange_rates error");
+
+          globalThis.__GLOBAL_STORE__?.updateRates(rates);
+        });
+
         // Ensure Socket.IO connection
         globalThis.__GLOBAL_STORE__.connectSocketIO();
       } else {

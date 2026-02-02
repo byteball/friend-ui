@@ -247,6 +247,34 @@ export class GlobalStore extends EventEmitter {
     this.send(STORE_EVENTS.GOVERNANCE_STATE_UPDATE, update);
   }
 
+  async updateRates(rates: Record<string, number>) {
+    // GBYTE
+    const gbyteRate = rates?.['GBYTE_USD'];
+
+    if (typeof gbyteRate === 'number' && gbyteRate > 0) {
+      this.gbytePriceUSD = gbyteRate;
+      console.error('log(GlobalStore): updated GBYTE price', gbyteRate);
+    } else {
+      console.error('error(GlobalStore): Invalid GBYTE_USD rate received');
+    }
+
+    // FRD
+    const constants = this.state.get('constants') as IConstants | undefined;
+
+    if (constants?.asset) {
+      const frdRate = rates?.[`${constants.asset}_USD`];
+
+      if (typeof frdRate === 'number' && frdRate > 0) {
+        this.frdPriceUSD = frdRate;
+        console.error('log(GlobalStore): updated FRD price', frdRate);
+      } else {
+        console.error('error(GlobalStore): Invalid FRD_USD rate received');
+      }
+    } else {
+      console.error('warn(GlobalStore): asset not found in constants yet. We can\'t fetch FRD price');
+    }
+  }
+
   async revalidateLeaderboardData() {
     const startTime = Date.now();
     const friends: { [key: string]: string[] } = {};
