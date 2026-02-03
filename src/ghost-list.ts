@@ -9,11 +9,11 @@ export const ghostList = {
   },
   "Phil Zimmermann": {
     name: "Phil Zimmermann",
-    image: "/ghosts/phil-zimmermann.jpg",
+    image: "/ghosts/phil-zimmermann.png",
   },
   "Nick Szabo": {
     name: "Nick Szabo",
-    image: "/ghosts/nick-szabo.jpg",
+    image: "/ghosts/nick-szabo.png",
   },
   "Adam Back": {
     name: "Adam Back",
@@ -25,6 +25,6 @@ export const ghostList = {
   },
   "Satoshi Nakamoto": {
     name: "Satoshi Nakamoto",
-    image: "/ghosts/default.png",
+    image: "/ghosts/satoshi.png",
   },
 } as const;
