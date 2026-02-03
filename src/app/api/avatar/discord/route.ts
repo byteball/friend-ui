@@ -36,7 +36,7 @@ export async function GET(req: Request) {
     });
 
     if (!userRes.ok) {
-      // 401/403 — токен/права, 404 — юзер не найден или недоступен
+      // 401/403 — token/permissions issue, 404 — user not found or inaccessible
       return new Response(`Discord API error (${userRes.status})`, { status: 502 });
     }
 
