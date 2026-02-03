@@ -9,7 +9,7 @@ import { toLocalString } from "@/lib/to-local-string";
 export async function GET(
   _req: NextRequest,
 ) {
-  const logoAbsPath = path.join(process.cwd(), "public", "logo.svg");
+  const logoAbsPath = path.join(process.cwd(), "public", "logo-og.svg");
   const logoFile = readFileSync(logoAbsPath).toString("utf-8");
 
   try {

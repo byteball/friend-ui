@@ -27,7 +27,7 @@ export async function GET(
   const ghostImageUrl = ghostList["Tim May"].image; // select image based on user data
   const ghostImageAbsPath = path.join(process.cwd(), "public", ghostImageUrl);
 
-  const logoAbsPath = path.join(process.cwd(), "public", "logo.svg");
+  const logoAbsPath = path.join(process.cwd(), "public", "logo-og.svg");
   const logoFile = readFileSync(logoAbsPath).toString("utf-8");
 
   const imageBuffer = readFileSync(ghostImageAbsPath);
