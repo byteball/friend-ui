@@ -14,6 +14,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { getContactUrlByUsername } from "@/lib/get-contact-url-by-username";
 
 import { appConfig } from "@/app-config";
+import { ChainedAvatar } from "@/components/layouts/chained-avatar";
 import { cookies } from "next/headers";
 
 interface ProfileInfoProps {
@@ -62,37 +63,53 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
 
   return (
     <>
-      <div className="flex flex-col sm:gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex space-x-4">
-          <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-6xl first-letter:uppercase">
-            {username}
-          </h1>
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-4">
+          <ChainedAvatar
+            className="size-16 md:size-20"
+            tgUserId={tgAttestation?.userId}
+            discordUserId={discordAttestation?.userId}
+            fallbackText={username.slice(0, 2).toUpperCase()}
+          />
 
-          <ActiveUserLabel isActive={isActiveProfile} />
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl md:text-5xl first-letter:uppercase">
+                {username}
+              </h1>
+              <ActiveUserLabel isActive={isActiveProfile} />
+            </div>
+          </div>
         </div>
 
-        {walletAddress && walletAddress !== address ? <div className="flex flex-col mt-4 sm:mt-0 sm:text-right  sm:items-end gap-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div>
-                <AddFriendButton
-                  href={connectUrl}
-                  disabled={!isActiveProfile || !isActiveWallet}
-                  walletAdded={!!walletAddress}
-                />
-              </div>
-            </TooltipTrigger>
-            {!isActiveProfile && isActiveWallet ? <TooltipContent>
-              {username} doesn't have <b>locked</b> balance
-            </TooltipContent> : null}
-
-            {!isActiveWallet ? <TooltipContent>
-              You don't have <b>locked</b> balance
-            </TooltipContent> : null}
-
-          </Tooltip>
-          <span className="text-md text-muted-foreground">Please contact {username} first</span>
-        </div> : null}
+        {walletAddress && walletAddress !== address ? (
+          <div className="flex flex-col items-start gap-2 sm:items-end">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <AddFriendButton
+                    href={connectUrl}
+                    disabled={!isActiveProfile || !isActiveWallet}
+                    walletAdded={!!walletAddress}
+                  />
+                </div>
+              </TooltipTrigger>
+              {!isActiveProfile && isActiveWallet ? (
+                <TooltipContent>
+                  {username} doesn't have <b>locked</b> balance
+                </TooltipContent>
+              ) : null}
+              {!isActiveWallet ? (
+                <TooltipContent>
+                  You don't have <b>locked</b> balance
+                </TooltipContent>
+              ) : null}
+            </Tooltip>
+            <span className="text-sm text-muted-foreground">
+              Please contact {username} first
+            </span>
+          </div>
+        ) : null}
       </div>
 
       <div className="flex space-x-4 flex-wrap gap-y-2">
