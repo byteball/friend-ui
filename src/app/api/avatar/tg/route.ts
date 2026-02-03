@@ -1,5 +1,3 @@
-// app/api/avatar/route.ts
-
 import { env } from "@/env";
 
 export const runtime = "nodejs";
