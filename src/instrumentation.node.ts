@@ -225,6 +225,17 @@ export async function register() {
         console.log('log(shutdown): GlobalStore listeners cleaned up');
       }
 
+
+      // Disconnect Telegram client
+      const telegramClient = (globalThis as unknown as { telegramClient?: { connected?: boolean; disconnect?: () => Promise<void> } }).telegramClient;
+      if (telegramClient?.connected) {
+        telegramClient.disconnect?.();
+        console.error('log(shutdown): Telegram client disconnecting...');
+      } else {
+        console.error('log(shutdown): Telegram client was not connected');
+      }
+
+
       // Close Socket.IO server
       if (globalThis.__SOCKET_IO__) {
         await new Promise<void>((resolve) => {

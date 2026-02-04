@@ -67,7 +67,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
         <div className="flex items-center gap-4">
           <ChainedAvatar
             className="size-16 md:size-20"
-            tgUserId={tgAttestation?.userId}
+            tgUsername={tgAttestation?.username}
             discordUserId={discordAttestation?.userId}
             fallbackText={username.slice(0, 2).toUpperCase()}
           />

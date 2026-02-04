@@ -4,19 +4,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import * as React from "react";
 
 type Props = {
-  tgUserId?: string | null
+  tgUsername?: string | null
   discordUserId?: string | null
   fallbackText?: string
   className?: string
 }
 
 export function ChainedAvatar({
-  tgUserId,
+  tgUsername,
   discordUserId,
   fallbackText = "CN",
   className = "w-20 h-20",
 }: Props) {
-  const tgSrc = tgUserId ? `/api/avatar/tg?userId=${tgUserId}` : null
+  const tgSrc = tgUsername ? `/api/avatar/tg?username=${tgUsername}` : null
   const dcSrc = discordUserId ? `/api/avatar/discord?userId=${discordUserId}` : null
 
   const [step, setStep] = React.useState<"tg" | "dc" | "text">(() => {

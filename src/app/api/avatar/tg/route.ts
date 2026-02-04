@@ -1,99 +1,104 @@
-import { env } from "@/env";
+import { getTelegramClient } from "@/lib/telegram-client";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-async function tg<T>(method: string, params: Record<string, unknown>): Promise<T> {
-  if (!env.TELEGRAM_BOT_TOKEN) throw new Error("BOT_TOKEN is not set");
-
-  const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/${method}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    // Don't cache Telegram API responses in Next.js fetch cache
-    cache: "no-store",
-    body: JSON.stringify(params),
-  });
-
-  const json = await res.json().catch(() => null);
-  if (!res.ok || !json?.ok) {
-    const msg = json?.description || `Telegram API error (${res.status})`;
-    throw new Error(msg);
+/**
+ * Detect image MIME type from buffer magic bytes
+ */
+function getImageMimeType(buffer: Buffer): string {
+  // JPEG: starts with FF D8 FF
+  if (buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) {
+    return "image/jpeg";
   }
-  return json.result as T;
+  // PNG: starts with 89 50 4E 47 0D 0A 1A 0A
+  if (
+    buffer[0] === 0x89 &&
+    buffer[1] === 0x50 &&
+    buffer[2] === 0x4e &&
+    buffer[3] === 0x47
+  ) {
+    return "image/png";
+  }
+  // GIF: starts with GIF87a or GIF89a
+  if (
+    buffer[0] === 0x47 &&
+    buffer[1] === 0x49 &&
+    buffer[2] === 0x46
+  ) {
+    return "image/gif";
+  }
+  // WebP: starts with RIFF....WEBP
+  if (
+    buffer[0] === 0x52 &&
+    buffer[1] === 0x49 &&
+    buffer[2] === 0x46 &&
+    buffer[3] === 0x46 &&
+    buffer[8] === 0x57 &&
+    buffer[9] === 0x45 &&
+    buffer[10] === 0x42 &&
+    buffer[11] === 0x50
+  ) {
+    return "image/webp";
+  }
+  // Default to JPEG
+  return "image/jpeg";
 }
-
-type TgPhotoSize = { file_id: string; file_size?: number };
-type TgGetUserProfilePhotos = { total_count: number; photos: TgPhotoSize[][] };
-type TgGetFile = { file_path: string };
 
 export async function GET(req: Request) {
   try {
-    if (!env.TELEGRAM_BOT_TOKEN) {
-      return new Response("BOT_TOKEN is not set", { status: 500 });
-    }
-
     const { searchParams } = new URL(req.url);
-    const userIdRaw = searchParams.get("userId");
+    const username = searchParams.get("username");
 
-    if (!userIdRaw || !/^\d+$/.test(userIdRaw)) {
-      return new Response("Missing or invalid userId", { status: 400 });
+    if (!username) {
+      return new Response("Missing username parameter", { status: 400 });
     }
 
-    const userId = Number(userIdRaw);
+    // Normalize username (remove @ if present)
+    const normalizedUsername = username.startsWith("@")
+      ? username.slice(1)
+      : username;
 
-    // 1) Get profile photos (first photo only)
-    let photos: TgGetUserProfilePhotos;
+    // Validate Telegram username format:
+    // - 5-32 characters
+    // - Only letters, digits, and underscores
+    // - Must start with a letter
+    if (!/^[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(normalizedUsername)) {
+      return new Response("Invalid username format", { status: 400 });
+    }
+
+    const tgClient = await getTelegramClient();
+
+    if (!tgClient) {
+      return new Response("Telegram service not configured", { status: 503 });
+    }
+
+    // Get user entity by username
+    let entity;
     try {
-      photos = await tg<TgGetUserProfilePhotos>("getUserProfilePhotos", {
-        user_id: userId,
-        limit: 1,
-      });
-    } catch (e) {
-      // Handle "user not found" or similar Telegram API errors
-      const message = e instanceof Error ? e.message : "Unknown error";
-      if (message.includes("user not found") || message.includes("Bad Request")) {
-        return new Response("User not found", { status: 404 });
-      }
-      throw e;
+      entity = await tgClient.getEntity(normalizedUsername);
+    } catch {
+      return new Response("User not found", { status: 404 });
     }
 
-    if (!photos.total_count || !photos.photos?.length || !photos.photos[0]?.length) {
+    // Download profile photo as Buffer
+    const photoBuffer = await tgClient.downloadProfilePhoto(entity, {
+      isBig: true,
+    });
+
+    if (!photoBuffer || (typeof photoBuffer === "string") || photoBuffer.length === 0) {
       return new Response("No profile photo", { status: 404 });
     }
 
-    // 2) Pick the biggest size from the first photo set
-    const sizes = photos.photos[0];
-    const biggest = sizes.reduce((a, b) => {
-      const as = a.file_size ?? 0;
-      const bs = b.file_size ?? 0;
-      return bs > as ? b : a;
-    }, sizes[0]);
+    const mimeType = getImageMimeType(photoBuffer);
+    const extension = mimeType.split("/")[1];
 
-    // 3) Resolve file_path
-    const file = await tg<TgGetFile>("getFile", { file_id: biggest.file_id });
-    if (!file?.file_path) {
-      return new Response("Failed to resolve file path", { status: 502 });
-    }
-
-    // 4) Stream the image back to client (no saving)
-    const fileUrl = `https://api.telegram.org/file/bot${env.TELEGRAM_BOT_TOKEN}/${file.file_path}`;
-    const fileRes = await fetch(fileUrl, { cache: "no-store" });
-
-    if (!fileRes.ok || !fileRes.body) {
-      return new Response("Failed to fetch image", { status: 502 });
-    }
-
-    const contentType =
-      fileRes.headers.get("content-type") || "application/octet-stream";
-
-    return new Response(fileRes.body, {
+    return new Response(new Uint8Array(photoBuffer), {
       status: 200,
       headers: {
-        "Content-Type": contentType,
-        // Inline display in browser; change filename if you want
-        "Content-Disposition": 'inline; filename="avatar.jpg"',
-        // Tune caching if needed
-        "Cache-Control": "private, max-age=360",
+        "Content-Type": mimeType,
+        "Content-Disposition": `inline; filename="avatar.${extension}"`,
+        "Cache-Control": "public, max-age=3600",
       },
     });
   } catch (e: unknown) {
