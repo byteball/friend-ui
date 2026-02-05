@@ -56,8 +56,7 @@ export async function GET(req: Request) {
       entity = null;
     }
 
-    // Step 3: Verify userId matches (to prevent spoofing)
-
+    // 3) Verify userId matches (prevents username spoofing)
     if (!entity || entity.id.toString() !== (String(userId))) {
       return new Response("User not found or user ID does not match", { status: 404 });
     }
