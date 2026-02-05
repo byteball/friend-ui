@@ -225,12 +225,10 @@ export async function register() {
         console.log('log(shutdown): GlobalStore listeners cleaned up');
       }
 
-
       // Disconnect Telegram client
       const { disconnectTelegramClient } = await import("@/lib/telegram-client");
-      await disconnectTelegramClient();
-      console.error('log(shutdown): Telegram client disconnected');
-
+      const wasTgConnected = await disconnectTelegramClient();
+      console.error(`log(shutdown): Telegram client ${wasTgConnected ? 'disconnected' : 'was not connected'}`);
 
       // Close Socket.IO server
       if (globalThis.__SOCKET_IO__) {

@@ -17,7 +17,7 @@ globalForTelegram.telegramConnecting ??= null;
 /**
  * Returns a singleton TelegramClient instance.
  * Thread-safe: concurrent calls will wait for the same connection promise.
- * 
+ *
  * Note: The client persists for the lifetime of the Node.js process.
  * This is intentional to avoid reconnection overhead on each request.
  * Memory usage is minimal (~few MB) and connections are managed by gramjs.
@@ -85,10 +85,13 @@ export async function getTelegramClient(): Promise<TelegramClient | null> {
  * Disconnects the Telegram client if connected.
  * Useful for graceful shutdown.
  */
-export async function disconnectTelegramClient(): Promise<void> {
+export async function disconnectTelegramClient(): Promise<boolean> {
   if (globalForTelegram.telegramClient?.connected) {
     await globalForTelegram.telegramClient.disconnect();
     globalForTelegram.telegramClient = null;
     globalForTelegram.telegramConnecting = null;
+    return true;
   }
+
+  return false;
 }
