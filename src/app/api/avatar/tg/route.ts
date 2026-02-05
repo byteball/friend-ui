@@ -1,3 +1,4 @@
+import { getImageExtension } from "@/lib/get-image-extension";
 import { getImageMimeType } from "@/lib/get-image-mime-type";
 import { getTgUserPhotoByBotInChannel } from "@/lib/get-tg-user-photo-by-bot-in-channel";
 import { getTelegramClient } from "@/lib/telegram-client";
@@ -80,7 +81,7 @@ export async function GET(req: Request) {
 
 function servePhoto(photoBuffer: Buffer) {
   const mimeType = getImageMimeType(photoBuffer);
-  const extension = mimeType.split("/")[1];
+  const extension = getImageExtension(mimeType);
 
   return new Response(new Uint8Array(photoBuffer), {
     status: 200,

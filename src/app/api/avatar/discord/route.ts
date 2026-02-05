@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import { getImageExtension } from "@/lib/get-image-extension";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -69,12 +70,13 @@ export async function GET(req: Request) {
     }
 
     const contentType = imgRes.headers.get("content-type") || "application/octet-stream";
+    const ext = getImageExtension(contentType);
 
     return new Response(imgRes.body, {
       status: 200,
       headers: {
         "Content-Type": contentType,
-        "Content-Disposition": 'inline; filename="discord-avatar.png"',
+        "Content-Disposition": `inline; filename="discord-avatar.${ext}"`,
         "Cache-Control": "public, max-age=3600",
       },
     });
