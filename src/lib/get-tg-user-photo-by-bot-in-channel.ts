@@ -10,6 +10,7 @@ const TG_BOT_API = "https://api.telegram.org/bot";
  *
  * Returns the photo as a Buffer, or null if:
  * - TELEGRAM_BOT_TOKEN or TELEGRAM_CHANNEL is not configured
+ * - the bot cannot access the channel or check membership
  * - the user is not a member of the channel
  * - the user has no profile photo
  */
@@ -55,6 +56,7 @@ export async function getTgUserPhotoByBotInChannel(
     const fileData = await fileRes.json();
 
     if (!fileData.ok) {
+      console.error("[TG Avatar API] Failed to get file path for user", userId);
       return null;
     }
 
@@ -64,12 +66,14 @@ export async function getTgUserPhotoByBotInChannel(
     );
 
     if (!imageRes.ok) {
+      console.error("[TG Avatar API] Failed to download photo for user", userId);
       return null;
     }
 
+    console.error(`[TG Avatar API] User ${userId} found in channel, serving photo`);
     return Buffer.from(await imageRes.arrayBuffer());
   } catch (e) {
-    console.error("[TG Avatar API] Channel lookup failed:", (e as Error).message);
+    console.error("[TG Avatar API] Channel lookup failed:", e);
     return null;
   }
 }
