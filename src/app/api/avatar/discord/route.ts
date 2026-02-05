@@ -18,7 +18,9 @@ function isSnowflake(id: string) {
 
 export async function GET(req: Request) {
   try {
-    if (!env.DISCORD_BOT_TOKEN) return new Response("DISCORD_BOT_TOKEN is not set", { status: 500 });
+    if (!env.DISCORD_BOT_TOKEN) {
+      return new Response("DISCORD_BOT_TOKEN is not set", { status: 500 });
+    }
 
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");
