@@ -15,16 +15,17 @@ export async function GET(req: Request) {
       return new Response("Missing userId parameter", { status: 400 });
     }
 
-    // Step 1: Try to find user in Telegram channel by userId (fast path)
+    // 1) Try Bot API + channel membership (fast path)
     const avatarBuffer = await getTgUserPhotoByBotInChannel(userId);
 
     if (avatarBuffer) {
+      console.error(`tg(avatar): User ${userId} found in channel, serving photo`);
       return servePhoto(avatarBuffer);
     }
 
-
-    // Step 2: If we can't find by userId and username provided, try to fetch profile photo via Telegram API
+    // 2) Fallback: fetch profile photo via GramJS (requires username)
     if (!username) {
+      console.error(`tg(avatar): Missing username parameter for user ${userId}`);
       return new Response("Missing username parameter", { status: 400 });
     }
 
@@ -38,6 +39,7 @@ export async function GET(req: Request) {
     // - Only letters, digits, and underscores
     // - Must start with a letter
     if (!/^[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(normalizedUsername)) {
+      console.error(`tg(avatar): Invalid username format for user ${userId}`);
       return new Response("Invalid username format", { status: 400 });
     }
 
@@ -61,16 +63,18 @@ export async function GET(req: Request) {
     }
 
     const photoBuffer = await tgClient.downloadProfilePhoto(entity, {
-      isBig: true
+      isBig: true,
     });
 
     if (!photoBuffer || (typeof photoBuffer === "string") || photoBuffer.length === 0) {
+      console.error(`tg(avatar): User ${userId} found but has no profile photo`);
       return new Response("No profile photo", { status: 404 });
     }
 
+    console.error(`tg(avatar): User ${userId} found via GramJS, serving photo`);
     return servePhoto(photoBuffer);
   } catch (error) {
-    console.error("Error in GET /api/avatar/tg:", error);
+    console.error("tg(avatar): Unhandled error", error);
     return new Response("Internal Server Error", { status: 500 });
   }
 }

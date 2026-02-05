@@ -24,6 +24,7 @@ export async function GET(req: Request) {
     const userId = searchParams.get("userId");
 
     if (!userId || !isSnowflake(userId)) {
+      console.error(`discord(avatar): Missing or invalid userId: ${userId}`);
       return new Response("Missing or invalid userId", { status: 400 });
     }
 
@@ -37,6 +38,7 @@ export async function GET(req: Request) {
 
     if (!userRes.ok) {
       // 401/403 — token/permissions issue, 404 — user not found or inaccessible
+      console.error(`discord(avatar): Discord API error for user ${userId}: ${userRes.status}`);
       return new Response(`Discord API error (${userRes.status})`, { status: 502 });
     }
 
@@ -60,6 +62,7 @@ export async function GET(req: Request) {
     // 3) Stream image back (proxy)
     const imgRes = await fetch(avatarUrl, { cache: "no-store" });
     if (!imgRes.ok || !imgRes.body) {
+      console.error(`discord(avatar): Failed to fetch avatar image for user ${userId}: ${imgRes.status}`);
       return new Response("Failed to fetch avatar image", { status: 502 });
     }
 
