@@ -68,6 +68,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
           <ChainedAvatar
             className="size-16 md:size-20"
             tgUsername={tgAttestation?.username}
+            tgUserId={tgAttestation?.userId}
             discordUserId={discordAttestation?.userId}
             fallbackText={username.slice(0, 2).toUpperCase()}
           />

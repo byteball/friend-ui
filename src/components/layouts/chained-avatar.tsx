@@ -5,6 +5,7 @@ import * as React from "react";
 
 type Props = {
   tgUsername?: string | null
+  tgUserId?: string | null
   discordUserId?: string | null
   fallbackText?: string
   className?: string
@@ -12,11 +13,14 @@ type Props = {
 
 export function ChainedAvatar({
   tgUsername,
+  tgUserId,
   discordUserId,
   fallbackText = "CN",
   className = "w-20 h-20",
 }: Props) {
-  const tgSrc = tgUsername ? `/api/avatar/tg?username=${tgUsername}` : null
+  const tgSrc = tgUserId
+    ? `/api/avatar/tg?userId=${tgUserId}${tgUsername ? `&username=${tgUsername}` : ''}`
+    : null
   const dcSrc = discordUserId ? `/api/avatar/discord?userId=${discordUserId}` : null
 
   const [step, setStep] = React.useState<"tg" | "dc" | "text">(() => {

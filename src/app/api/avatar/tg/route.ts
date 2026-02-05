@@ -1,4 +1,5 @@
 import { getImageMimeType } from "@/lib/get-image-mime-type";
+import { getTgUserPhotoByBotInChannel } from "@/lib/get-tg-user-photo-by-bot-in-channel";
 import { getTelegramClient } from "@/lib/telegram-client";
 
 export const runtime = "nodejs";
@@ -8,7 +9,21 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const username = searchParams.get("username");
+    const userId = searchParams.get("userId");
 
+    if (!userId) {
+      return new Response("Missing userId parameter", { status: 400 });
+    }
+
+    // Step 1: Try to find user in Telegram channel by userId (fast path)
+    const avatarBuffer = await getTgUserPhotoByBotInChannel(userId);
+
+    if (avatarBuffer) {
+      return servePhoto(avatarBuffer);
+    }
+
+
+    // Step 2: If we can't find by userId and username provided, try to fetch profile photo via Telegram API
     if (!username) {
       return new Response("Missing username parameter", { status: 400 });
     }
@@ -32,36 +47,44 @@ export async function GET(req: Request) {
       return new Response("Telegram service not configured", { status: 503 });
     }
 
-    // Get user entity by username
     let entity;
     try {
       entity = await tgClient.getEntity(normalizedUsername);
     } catch {
-      return new Response("User not found", { status: 404 });
+      entity = null;
     }
 
-    // Download profile photo as Buffer
+    // Step 3: Verify userId matches (to prevent spoofing)
+
+    if (!entity || entity.id.toString() !== (String(userId))) {
+      return new Response("User not found or user ID does not match", { status: 404 });
+    }
+
     const photoBuffer = await tgClient.downloadProfilePhoto(entity, {
-      isBig: true,
+      isBig: true
     });
 
     if (!photoBuffer || (typeof photoBuffer === "string") || photoBuffer.length === 0) {
       return new Response("No profile photo", { status: 404 });
     }
 
-    const mimeType = getImageMimeType(photoBuffer);
-    const extension = mimeType.split("/")[1];
-
-    return new Response(new Uint8Array(photoBuffer), {
-      status: 200,
-      headers: {
-        "Content-Type": mimeType,
-        "Content-Disposition": `inline; filename="avatar.${extension}"`,
-        "Cache-Control": "public, max-age=3600",
-      },
-    });
-  } catch (e: unknown) {
-    console.error("[TG Avatar API]", e);
-    return new Response("Failed to fetch avatar", { status: 500 });
+    return servePhoto(photoBuffer);
+  } catch (error) {
+    console.error("Error in GET /api/avatar/tg:", error);
+    return new Response("Internal Server Error", { status: 500 });
   }
+}
+
+function servePhoto(photoBuffer: Buffer) {
+  const mimeType = getImageMimeType(photoBuffer);
+  const extension = mimeType.split("/")[1];
+
+  return new Response(new Uint8Array(photoBuffer), {
+    status: 200,
+    headers: {
+      "Content-Type": mimeType,
+      "Content-Disposition": `inline; filename="avatar.${extension}"`,
+      "Cache-Control": "public, max-age=3600",
+    },
+  });
 }
