@@ -107,7 +107,7 @@ export const DepositForm: FC<DepositFormProps> = () => {
     <h2 className="text-3xl font-bold">New deposit</h2>
 
     <div className="grid gap-4 text-muted-foreground">
-      <div>Before depositing, you must be attested on
+      <div>Before depositing, you must be attested on {" "}
         <AnalyticLink
           gaEvent="click_telegram_bot"
           meta={{ place: 'deposit_form' }}
