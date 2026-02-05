@@ -70,7 +70,7 @@ export async function GET(req: Request) {
       headers: {
         "Content-Type": contentType,
         "Content-Disposition": 'inline; filename="discord-avatar.png"',
-        "Cache-Control": "private, max-age=360",
+        "Cache-Control": "public, max-age=3600",
       },
     });
   } catch (e: unknown) {
