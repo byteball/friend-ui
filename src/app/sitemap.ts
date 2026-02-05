@@ -3,6 +3,8 @@ import "server-only";
 
 import { env } from "@/env";
 
+export const dynamic = "force-dynamic";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = env.NEXT_PUBLIC_SITE_URL;
 
