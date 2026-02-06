@@ -233,8 +233,8 @@ function buildPuzzlePaths(
     for (let j = 0; j < cols; j++) {
       const x1 = j * cellW;
       const x2 = (j + 1) * cellW;
-      // Alternate knob direction up/down in a checker pattern
-      const dir: 1 | -1 = (i + j) % 2 === 0 ? 1 : -1; // 1 = down, -1 = up (SVG y grows downward)
+      // Alternate knob direction in a checker pattern
+      const dir: 1 | -1 = (i + j) % 2 === 0 ? 1 : -1; // 1 = down, -1 = up
       const centerT = randomizeKnobPosition ? (minT + (maxT - minT) * rng()) : 0.5;
       // store center & dir for this horizontal edge: index row i-1, col j
       if (horizCenters[i - 1]) {
@@ -251,8 +251,8 @@ function buildPuzzlePaths(
     for (let i = 0; i < rows; i++) {
       const y1 = i * cellH;
       const y2 = (i + 1) * cellH;
-      // Alternate knob direction left/right in a checker pattern
-      const dir: 1 | -1 = (i + j) % 2 === 0 ? 1 : -1; // 1 = right, -1 = left
+      // Flipped checker pattern so each cell gets a mix of tabs and slots
+      const dir: 1 | -1 = (i + j) % 2 === 0 ? -1 : 1; // 1 = right, -1 = left
       const centerT = randomizeKnobPosition ? (minT + (maxT - minT) * rng()) : 0.5;
       // store center & dir for this vertical edge: index col j-1, row i
       if (vertCenters[j - 1]) {
@@ -280,7 +280,7 @@ export const PuzzleImage: FC<PuzzleImageProps> = ({
   overlayPointerEvents = "none",
   cornerJitter = 0.02,
   randomSeed,
-  randomizeKnobPosition = true,
+  randomizeKnobPosition = false,
 
   knobScale = 0.55,
   knobWidthScale = 0.55,
