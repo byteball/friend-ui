@@ -77,7 +77,7 @@ export async function GET(req: Request) {
       headers: {
         "Content-Type": contentType,
         "Content-Disposition": `inline; filename="discord-avatar.${ext}"`,
-        "Cache-Control": "public, max-age=3600",
+        "Cache-Control": "public, max-age=604800", // 1 week cache
       },
     });
   } catch (e: unknown) {

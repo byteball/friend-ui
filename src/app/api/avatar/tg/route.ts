@@ -17,11 +17,16 @@ export async function GET(req: Request) {
     }
 
     // 1) Try Bot API + channel membership (fast path)
-    const avatarBuffer = await getTgUserPhotoByBotInChannel(userId);
+    const botPhotoResult = await getTgUserPhotoByBotInChannel(userId);
 
-    if (avatarBuffer) {
+    if (botPhotoResult.status === "ok") {
       console.error(`tg(avatar): User ${userId} found in channel, serving photo`);
-      return servePhoto(avatarBuffer);
+      return servePhoto(botPhotoResult.buffer);
+    }
+
+    if (botPhotoResult.status === "not_found") {
+      console.error(`tg(avatar): User ${userId} found but has no profile photo`);
+      return new Response("No profile photo", { status: 404 });
     }
 
     // 2) Fallback: fetch profile photo via GramJS (requires username)
@@ -88,7 +93,7 @@ function servePhoto(photoBuffer: Buffer) {
     headers: {
       "Content-Type": mimeType,
       "Content-Disposition": `inline; filename="avatar.${extension}"`,
-      "Cache-Control": "public, max-age=3600",
+      "Cache-Control": "public, max-age=604800", // 1 week cache
     },
   });
 }
