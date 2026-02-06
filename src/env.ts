@@ -5,6 +5,15 @@ export const env = createEnv({
   server: {
     WS_NO_BUFFER_UTIL: z.number().default(1),
     WS_NO_UTF_8_VALIDATE: z.number().default(1),
+    DISCORD_BOT_TOKEN: z.string().min(10).optional(),
+
+    TELEGRAM_BOT_TOKEN: z.string().min(10).optional(),
+    TELEGRAM_CHANNEL: z.string().min(1).optional(),
+
+    TELEGRAM_API_ID: z.number().optional(),
+    TELEGRAM_API_HASH: z.string().min(10).optional(),
+    TELEGRAM_SESSION: z.string().min(10).optional(),
+
   },
   client: {
     NEXT_PUBLIC_TESTNET: z.boolean().default(false),
@@ -27,6 +36,16 @@ export const env = createEnv({
     NEXT_PUBLIC_NOTIFY_PAIRING_URL: process.env.NEXT_PUBLIC_NOTIFY_PAIRING_URL,
     NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
     WS_NO_BUFFER_UTIL: process.env.WS_NO_BUFFER_UTIL ? Number(process.env.WS_NO_BUFFER_UTIL) : undefined,
-    WS_NO_UTF_8_VALIDATE: process.env.WS_NO_UTF_8_VALIDATE ? Number(process.env.WS_NO_UTF_8_VALIDATE) : undefined
+    WS_NO_UTF_8_VALIDATE: process.env.WS_NO_UTF_8_VALIDATE ? Number(process.env.WS_NO_UTF_8_VALIDATE) : undefined,
+    DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN,
+
+    TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
+    TELEGRAM_CHANNEL: process.env.TELEGRAM_CHANNEL,
+
+    TELEGRAM_API_ID: process.env.TELEGRAM_API_ID
+      ? Number(process.env.TELEGRAM_API_ID)
+      : undefined,
+    TELEGRAM_API_HASH: process.env.TELEGRAM_API_HASH,
+    TELEGRAM_SESSION: process.env.TELEGRAM_SESSION,
   }
 });
