@@ -1,10 +1,13 @@
 import { getImageExtension } from "@/lib/get-image-extension";
 import { getImageMimeType } from "@/lib/get-image-mime-type";
-import { getTgUserPhotoByBotInChannel } from "@/lib/get-tg-user-photo-by-bot-in-channel";
+import { getTgUserEntity } from "@/lib/get-tg-user-entity";
 import { getTelegramClient } from "@/lib/telegram-client";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+const IS_BIG_PHOTO = false; // For avatar, we want the small version of the profile photo
+const PHOTO_CACHE_TTL = 604800; // 1 week in seconds
 
 export async function GET(req: Request) {
   try {
@@ -16,35 +19,12 @@ export async function GET(req: Request) {
       return new Response("Missing userId parameter", { status: 400 });
     }
 
-    // 1) Try Bot API + channel membership (fast path)
-    const botPhotoResult = await getTgUserPhotoByBotInChannel(userId);
-
-    if (botPhotoResult.status === "ok") {
-      console.error(`tg(avatar): User ${userId} found in channel, serving photo`);
-      return servePhoto(botPhotoResult.buffer);
-    }
-
-    if (botPhotoResult.status === "not_found") {
-      console.error(`tg(avatar): User ${userId} found but has no profile photo`);
-      return new Response("No profile photo", { status: 404 });
-    }
-
-    // 2) Fallback: fetch profile photo via GramJS (requires username)
-    if (!username) {
-      console.error(`tg(avatar): Missing username parameter for user ${userId}`);
-      return new Response("Missing username parameter", { status: 400 });
-    }
-
     // Normalize username (remove @ if present)
-    const normalizedUsername = username.startsWith("@")
+    const normalizedUsername = username?.startsWith("@")
       ? username.slice(1)
       : username;
 
-    // Validate Telegram username format:
-    // - 5-32 characters
-    // - Only letters, digits, and underscores
-    // - Must start with a letter
-    if (!/^[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(normalizedUsername)) {
+    if (normalizedUsername && !/^[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(normalizedUsername)) {
       console.error(`tg(avatar): Invalid username format for user ${userId}`);
       return new Response("Invalid username format", { status: 400 });
     }
@@ -55,20 +35,22 @@ export async function GET(req: Request) {
       return new Response("Telegram service not configured", { status: 503 });
     }
 
+    // Step 1: Try to get user entity by username or userId
+
     let entity;
     try {
-      entity = await tgClient.getEntity(normalizedUsername);
+      entity = await getTgUserEntity({ username: normalizedUsername, userId });
     } catch {
       entity = null;
     }
 
-    // 3) Verify userId matches (prevents username spoofing)
-    if (!entity || entity.id.toString() !== (String(userId))) {
-      return new Response("User not found or user ID does not match", { status: 404 });
+    // Step 2: download profile photo if entity found
+    if (!entity) {
+      return new Response("User not found", { status: 404 });
     }
 
     const photoBuffer = await tgClient.downloadProfilePhoto(entity, {
-      isBig: true,
+      isBig: IS_BIG_PHOTO
     });
 
     if (!photoBuffer || (typeof photoBuffer === "string") || photoBuffer.length === 0) {
@@ -76,7 +58,7 @@ export async function GET(req: Request) {
       return new Response("No profile photo", { status: 404 });
     }
 
-    console.error(`tg(avatar): User ${userId} found via GramJS, serving photo`);
+    console.error(`tg(avatar): User ${userId} found, serving photo`);
     return servePhoto(photoBuffer);
   } catch (error) {
     console.error("tg(avatar): Unhandled error", error);
@@ -93,7 +75,7 @@ function servePhoto(photoBuffer: Buffer) {
     headers: {
       "Content-Type": mimeType,
       "Content-Disposition": `inline; filename="avatar.${extension}"`,
-      "Cache-Control": "public, max-age=604800", // 1 week cache
+      "Cache-Control": `public, max-age=${PHOTO_CACHE_TTL}`, // 1 week cache
     },
   });
 }
