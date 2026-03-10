@@ -114,13 +114,19 @@ export default async function FollowupPage({ params }: { params: Promise<{ pair:
 
   // Calculate estimated follow-up rewards
   const constants = state.constants as IConstants | undefined;
-  const followupRewardShare = (state.variables as AgentParams | undefined)?.followup_reward_share ?? appConfig.initialParamsVariables.followup_reward_share;
+  const followupRewardShare = friendship.followup_reward_share
+    ?? (state.variables as AgentParams | undefined)?.followup_reward_share
+    ?? appConfig.initialParamsVariables.followup_reward_share;
   const rewardsConfig = appConfig.initialRewardsVariables;
+
+  // AA skips balance_cap when one user's first friend is the other (or either is new)
+  const bNewUser = !userData1?.last_date || !userData2?.last_date;
+  const skipCap = bNewUser || userData1?.first_friend === addr2 || userData2?.first_friend === addr1;
 
   const [rewards1, rewards2] = constants
     ? await Promise.all([
-        getFollowupRewards(userData1?.balances ?? {}, constants, followupRewardShare, rewardsConfig),
-        getFollowupRewards(userData2?.balances ?? {}, constants, followupRewardShare, rewardsConfig),
+        getFollowupRewards(userData1?.balances, constants, followupRewardShare, rewardsConfig, skipCap),
+        getFollowupRewards(userData2?.balances, constants, followupRewardShare, rewardsConfig, skipCap),
       ])
     : [null, null];
 

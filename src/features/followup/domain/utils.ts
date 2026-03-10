@@ -112,19 +112,21 @@ export interface IFollowupRewards {
 }
 
 export async function getFollowupRewards(
-  balances: Balances,
+  balances: Balances | undefined,
   constants: IConstants,
   followupRewardShare: number,
   rewardsConfig: { locked_reward_share: number; liquid_reward_share: number; balance_cap: number },
+  skipCap: boolean,
 ): Promise<IFollowupRewards> {
   const { getCeilingPrice, getTotalBalance } = await import("@/lib/calculations/get-rewards");
   const { locked_reward_share, liquid_reward_share, balance_cap } = rewardsConfig;
+  const safeBalances: Balances = { frd: 0, base: 0, ...balances };
   const ceilingPrice = getCeilingPrice(constants);
-  const totalBalance = (await getTotalBalance(balances, ceilingPrice)).with_reducers;
-  const capped = Math.min(totalBalance, balance_cap);
+  const totalBalance = (await getTotalBalance(safeBalances, ceilingPrice)).with_reducers;
+  const capped = skipCap ? totalBalance : Math.min(totalBalance, balance_cap);
 
   return {
-    locked: Math.floor(capped * locked_reward_share * followupRewardShare),
-    liquid: Math.floor(capped * liquid_reward_share * followupRewardShare),
+    locked: Math.floor(Math.floor(capped * locked_reward_share) * followupRewardShare),
+    liquid: Math.floor(Math.floor(capped * liquid_reward_share) * followupRewardShare),
   };
 }
