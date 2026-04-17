@@ -29,7 +29,7 @@ export const HowItWorksBlock = () => {
         <div className="flex flex-col items-center gap-4 md:flex-row md:items-start">
           <div className="flex items-center justify-center w-10 h-10 text-lg font-semibold border rounded-full bg-primary/10 border-primary/30 text-primary md:text-xl shrink-0">3</div>
           <div className="text-lg leading-relaxed text-gray-200">
-            Claim rewards for becoming friends. Each of you gets {toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% added to your locked balance, plus {toLocalString(appConfig.initialRewardsVariables.liquid_reward_share * 100)}% in liquid {frd?.symbol} (Friend) tokens, which you can spend immediately. Additionally, you get a {toLocalString(appConfig.initialRewardsVariables.new_user_reward / 10 ** (frd?.decimals ?? 0))} {frd?.symbol} new user reward and a {toLocalString(appConfig.initialRewardsVariables.referral_reward / 10 ** (frd?.decimals ?? 0))} {frd?.symbol} referral reward (1 {frd?.symbol} &asymp; ${frdToUsd}).
+            Claim rewards for becoming friends. Each of you gets {toLocalString(appConfig.initialRewardsVariables.locked_reward_share * 100)}% added to your locked balance, plus {toLocalString(appConfig.initialRewardsVariables.liquid_reward_share * 100)}% in liquid {frd?.symbol} (Friend) tokens, which you can spend immediately. Additionally, you get a {toLocalString(appConfig.initialRewardsVariables.new_user_reward / 10 ** (frd?.decimals ?? 0))} {frd?.symbol} new user reward and a {toLocalString(appConfig.initialRewardsVariables.referral_reward / 10 ** (frd?.decimals ?? 0))} {frd?.symbol} referral reward (1 {frd?.symbol} &asymp; ${frdToUsd}) if any of you is new to Obyte Friends.
           </div>
         </div>
 
