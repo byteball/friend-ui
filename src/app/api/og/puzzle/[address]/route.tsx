@@ -104,13 +104,12 @@ export async function GET(
           <!-- Title -->
           <text
             x="435"
-            y="70"
+            y="96"
             font-family="Arial, sans-serif"
             font-size="72"
             font-weight="700"
             fill="white"
             text-anchor="start"
-            dominant-baseline="middle"
           >
             Obyte Friends
           </text>

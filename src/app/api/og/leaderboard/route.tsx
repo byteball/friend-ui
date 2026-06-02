@@ -76,13 +76,12 @@ export async function GET(
           <!-- Title -->
           <text
             x="435"
-            y="70"
+            y="96"
             font-family="Arial, sans-serif"
             font-size="72"
             font-weight="700"
             fill="white"
             text-anchor="start"
-            dominant-baseline="middle"
           >
             Obyte Friends
           </text>
@@ -106,7 +105,10 @@ export async function GET(
       const yPosition = 300 + (index * 100);
       const cardY = yPosition - 40;
       const cardHeight = 80;
-      const textY = cardY + (cardHeight / 2);
+      // Alphabetic baseline (deterministic across librsvg versions) instead of
+      // dominant-baseline="middle" (resolved differently on macOS vs Alpine).
+      // Offset by ~0.36*font-size (34px) to keep the text vertically centered in the card.
+      const textY = cardY + (cardHeight / 2) + 12;
 
       return `
               <!-- User ${user.rank} Card -->
@@ -130,7 +132,6 @@ export async function GET(
                   font-size="34"
                   fill="#6b7280"
                   text-anchor="middle"
-                  dominant-baseline="middle"
                 >
                   #${index + 1}
                 </text>
@@ -144,7 +145,6 @@ export async function GET(
                   font-weight="600"
                   fill="#111827"
                   text-anchor="start"
-                  dominant-baseline="middle"
                 >
                   ${user.username.length > 14 ? user.username.slice(0, 12) + '...' : user.username.slice(0, 14)}
                 </text>
@@ -158,7 +158,6 @@ export async function GET(
                   font-weight="500"
                   fill="#1d4ed8"
                   text-anchor="end"
-                  dominant-baseline="middle"
                 >
                   ${user.amount} ${symbol}
                 </text>
@@ -171,7 +170,6 @@ export async function GET(
                   font-size="34"
                   fill="#6b7280"
                   text-anchor="end"
-                  dominant-baseline="middle"
                 >
                   ${user.friends} friends
                 </text>

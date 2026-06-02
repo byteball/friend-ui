@@ -67,7 +67,7 @@ const generateChartSvg = (
     return `
       <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
         <rect width="${width}" height="${height}" rx="16" fill="#262626" />
-        <text x="50%" y="50%" fill="#6b7280" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" dominant-baseline="middle">
+        <text x="50%" y="50%" dy="7" fill="#6b7280" font-family="Arial, sans-serif" font-size="20" text-anchor="middle">
           No balance history yet
         </text>
       </svg>
@@ -137,7 +137,7 @@ const generateChartSvg = (
     const formattedValue = toLocalString(roundedValue);
     const y = margin.top + ratio * innerHeight;
     const label = `${formattedValue} ${symbol}`.trim();
-    return `<text x="${margin.left - 12}" y="${(y + 4).toFixed(2)}" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="end" dominant-baseline="central">${label}</text>`;
+    return `<text x="${margin.left - 12}" y="${(y + 10).toFixed(2)}" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="end">${label}</text>`;
   });
 
   const tickCount = Math.min(4, displayNormalizedSeries.length);
@@ -268,13 +268,12 @@ export async function GET(
           <!-- Title -->
           <text
             x="435"
-            y="70"
+            y="96"
             font-family="Arial, sans-serif"
             font-size="72"
             font-weight="700"
             fill="white"
             text-anchor="start"
-            dominant-baseline="middle"
           >
             Obyte Friends
           </text>

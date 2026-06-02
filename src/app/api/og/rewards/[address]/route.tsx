@@ -83,14 +83,13 @@ export async function GET(
         
         <text
           x="${(1200 / 2) + 100 + 10}px"
-          y="70px"
+          y="103px"
           font-family="Arial, sans-serif"
           font-size="72"
           font-weight="700"
           fill="#000"
           width="100%"
           text-anchor="middle"
-          dominant-baseline="middle"
         >
           Obyte Friends
         </text>
