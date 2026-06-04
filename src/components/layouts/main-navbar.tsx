@@ -47,6 +47,7 @@ export default async function MainNavbar({ className }: NavbarProps) {
               >
                 <Image src="/logo.svg" alt="Logo" width={30} height={30} />
                 {name}
+                <sup className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">old</sup>
               </Link>
 
               {menu.map((link) => (
@@ -99,6 +100,7 @@ export default async function MainNavbar({ className }: NavbarProps) {
                 className="flex items-center gap-2 text-xl font-bold ui-link"
               >
                 <Image src="/logo.svg" alt="Logo" width={32} height={32} /> <span>{name}</span>
+                <sup className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">old</sup>
               </Link>
             </SheetTitle>
             <SheetDescription />

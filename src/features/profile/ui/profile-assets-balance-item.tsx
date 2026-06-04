@@ -74,9 +74,10 @@ export const ProfileAssetBalanceItem: FC<ProfileAssetBalanceItemProps> = ({
 
     router.replace(`/${address}?replace=${encodeURIComponent(asset)}`);
 
-    scroller.scrollTo('replace-form', {
+    scroller.scrollTo('replace-card', {
       duration: 800,
       delay: 0,
+      offset: -20,
       smooth: 'easeInOutQuart'
     });
   }

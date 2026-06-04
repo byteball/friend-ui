@@ -9,7 +9,7 @@ export const revalidate = 0;
 export const fetchCache = 'force-no-store';
 
 export const metadata: Metadata = {
-  title: "Obyte Friends — Leaderboard",
+  title: "Obyte Friends (Old) — Leaderboard",
   description: "Top performers in Obyte Friends",
   openGraph: {
     images: [

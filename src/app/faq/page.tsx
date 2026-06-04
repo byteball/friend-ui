@@ -13,7 +13,7 @@ import { env } from "@/env";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Obyte Friends — Frequently asked questions",
+  title: "Obyte Friends (Old) — Frequently asked questions",
   description: "Frequently asked questions and answers about Obyte Friends",
   openGraph: {
     images: [

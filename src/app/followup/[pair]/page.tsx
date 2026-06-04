@@ -34,7 +34,7 @@ export async function generateMetadata(
 
   if (!addresses) {
     return {
-      title: "Obyte Friends - Follow-up Rewards",
+      title: "Obyte Friends (Old) - Follow-up Rewards",
       robots: { index: false, follow: false },
     };
   }
@@ -44,7 +44,7 @@ export async function generateMetadata(
   const username2 = await getProfileUsername(addr2) || addr2.slice(0, 6) + "...";
 
   return {
-    title: `Follow-up Rewards — ${username1} & ${username2}`,
+    title: `Follow-up Rewards (Old) — ${username1} & ${username2}`,
     description: `Follow-up rewards between ${username1} and ${username2} on Obyte Friends`,
     robots: { index: true, follow: true },
     metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),

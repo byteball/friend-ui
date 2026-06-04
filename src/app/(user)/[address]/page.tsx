@@ -23,7 +23,7 @@ export async function generateMetadata(
 
   if (!address || !isValidAddress(address)) {
     return {
-      title: 'Obyte Friends - Not Found',
+      title: 'Obyte Friends (Old) - Not Found',
       description: 'The page you are looking for does not exist.',
       robots: { index: false, follow: false }
     }
@@ -44,7 +44,7 @@ export async function generateMetadata(
   const frdSymbol = frdTokenMeta?.symbol ?? "FRD";
 
   return ({
-    title: `Obyte Friends — ${username}`,
+    title: `Obyte Friends (Old) — ${username}`,
     description: `Profile of user ${username} in Obyte Friends: total ${friends.length} friends, ${toLocalString(totalBalance / 10 ** frdDecimals)} ${frdSymbol} locked`,
     openGraph: {
       images: [

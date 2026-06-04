@@ -7,7 +7,7 @@ export const HeroBlock = () => (
       <div>
 
         <h1 className="text-center w-full text-pretty text-6xl font-semibold tracking-tight text-foreground sm:text-7xl">
-          Obyte Friends
+          Obyte Friends (Old)
         </h1>
 
         <div className="text-gray-200 mx-auto mb-8 mt-12 text-balance leading-relaxed text-3xl text-center max-w-6xl">
@@ -17,6 +17,10 @@ export const HeroBlock = () => (
 
           <p>and spreading the word about <a href="https://obyte.org" className="font-semibold" target="_blank">Obyte</a>'s unstoppable, censorship-resistant tech</p>
         </div>
+
+        <p className="text-muted-foreground mx-auto text-balance text-center text-lg max-w-3xl">
+          This is an old version of Obyte Friends. See the current one at <a href="https://friends.obyte.org" className="font-semibold" target="_blank">friends.obyte.org</a>.
+        </p>
 
       </div>
     </div>
