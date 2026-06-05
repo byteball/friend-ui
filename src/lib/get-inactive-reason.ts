@@ -8,7 +8,7 @@ export type InactiveReason = "no_locked_balance" | "term_too_short";
  * - "no_locked_balance": the user has no locked balance at all
  * - "term_too_short": the user has a locked balance, but its term is shorter than the minimum (1 year)
  */
-export const getInactiveReason = (userData?: IUserData | undefined): InactiveReason | null => {
+export const getInactiveReason = (userData?: IUserData | null): InactiveReason | null => {
   if (!userData?.unlock_date) return "no_locked_balance";
 
   const unlockDate = parseISO(userData.unlock_date);
