@@ -8,7 +8,7 @@ import { ActiveUserLabel } from "./active-user-label";
 import { AddFriendButton } from "./add-friend-button";
 
 import { getProfileUsername } from "@/lib/get-profile-username.server";
-import { isActiveUser } from "@/lib/is-active-user";
+import { getInactiveReason } from "@/lib/get-inactive-reason";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { getContactUrlByUsername } from "@/lib/get-contact-url-by-username";
@@ -27,7 +27,8 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
   address
 }) => {
   const username = await getProfileUsername(address) ?? address.slice(0, 6) + "..." + address.slice(-4);
-  const isActiveProfile = isActiveUser(userData);
+  const profileReason = getInactiveReason(userData);
+  const isActiveProfile = profileReason === null;
 
   const store = globalThis.__GLOBAL_STORE__;
 
@@ -41,7 +42,8 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
   const userCookies = await cookies()
   const walletAddress = userCookies.get(WALLET_COOKIE_NAME)?.value;
 
-  const isActiveWallet = walletAddress ? isActiveUser(store.state.get(`user_${walletAddress}`) as (IUserData | undefined)) : false;
+  const walletReason = walletAddress ? getInactiveReason(store.state.get(`user_${walletAddress}`) as (IUserData | undefined)) : "no_locked_balance";
+  const isActiveWallet = walletReason === null;
 
   const tgAttestation = await store.getTgAttestation(address);
   const discordAttestation = await store.getDiscordAttestation(address);
@@ -95,14 +97,21 @@ export const ProfileInfo: FC<ProfileInfoProps> = async ({
                   />
                 </div>
               </TooltipTrigger>
-              {!isActiveProfile && isActiveWallet ? (
-                <TooltipContent>
-                  {username} doesn't have <b>locked</b> balance
-                </TooltipContent>
-              ) : null}
               {!isActiveWallet ? (
                 <TooltipContent>
-                  You don't have <b>locked</b> balance
+                  {walletReason === "term_too_short" ? (
+                    <>Your lock term is less than <b>1 year</b></>
+                  ) : (
+                    <>You don't have <b>locked</b> balance</>
+                  )}
+                </TooltipContent>
+              ) : !isActiveProfile ? (
+                <TooltipContent>
+                  {profileReason === "term_too_short" ? (
+                    <>{username}'s lock term is less than <b>1 year</b></>
+                  ) : (
+                    <>{username} doesn't have <b>locked</b> balance</>
+                  )}
                 </TooltipContent>
               ) : null}
             </Tooltip>
