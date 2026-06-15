@@ -24,7 +24,7 @@ export const appConfig = {
     referrer_bytes_deposit_reward_share: 0.01,
     referrer_deposit_asset_deposit_reward_share: 0.01,
     followup_reward_share: 0.1,
-    min_balance_instead_of_real_name: 50e9
+    min_balance_instead_of_real_name: 5e9
   } as AgentParams,
 
   initialRewardsVariables: { // variables from rewards AA
